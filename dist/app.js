@@ -1,12 +1,58 @@
 const money = new Intl.NumberFormat('ko-KR');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const images = typeof PACKAGED_IMAGES === 'undefined' ? {} : PACKAGED_IMAGES;
+const languageKey = 'brandplanning-language';
+const localeFields = ['', 'aria-label', 'alt', 'placeholder', 'aria-roledescription', 'title'];
+let language = 'ko';
+try {
+  if (localStorage.getItem(languageKey) === 'en') language = 'en';
+} catch { /* Continue with the default language. */ }
+
+function localizedValue(node, attribute) {
+  return attribute ? node.getAttribute(attribute) : node.textContent;
+}
+
+function showLocalized(node, korean, english, attribute) {
+  const value = language === 'en' ? english : korean;
+  if (attribute) node.setAttribute(attribute, value);
+  else node.textContent = value;
+}
+
+function setLocalized(node, korean, english = korean, attribute = '') {
+  const suffix = attribute ? '-' + attribute : '';
+  node.setAttribute('data-ko' + suffix, korean);
+  node.setAttribute('data-en' + suffix, english);
+  showLocalized(node, korean, english, attribute);
+}
+
+function applyLanguage(root) {
+  for (const attribute of localeFields) {
+    const suffix = attribute ? '-' + attribute : '';
+    for (const node of root.querySelectorAll('[data-en' + suffix + ']')) {
+      const korean = node.getAttribute('data-ko' + suffix) ?? localizedValue(node, attribute);
+      node.setAttribute('data-ko' + suffix, korean);
+      showLocalized(node, korean, node.getAttribute('data-en' + suffix), attribute);
+    }
+  }
+}
+
+function translateInterface() {
+  document.documentElement.lang = language;
+  applyLanguage(document);
+  document.querySelectorAll('template').forEach(template => applyLanguage(template.content));
+  document.querySelectorAll('[data-language]').forEach(button => {
+    button.setAttribute('aria-pressed', String(button.dataset.language === language));
+  });
+}
+
+translateInterface();
 
 function asset(name) {
   return images[name] || 'assets/' + name;
 }
 
 const deliveryTitles = { overseas: '해외', domestic: '국내' };
+const deliveryTitlesEn = { overseas: 'Overseas', domestic: 'Domestic' };
 const brandNames = new Map([
   ['BRUNELLO CUCINELLI', '브루넬로 쿠치넬리'], ['MONCLER', '몽클레르'],
   ['HERNO', '에르노'], ['BURBERRY', '버버리'], ['FENDI', '펜디'],
@@ -18,6 +64,10 @@ const maxMaraBrands = ['MAX MARA', "'S MAX MARA", 'MAX MARA STUDIO', 'WEEKEND MA
 const maxMaraGroup = 'max-mara-group';
 const genderOrder = ['남성', '여성'];
 const categoryOrder = ['아우터', '상의', '하의', '가방', '신발', '패션잡화', '주얼리', '스키웨어'];
+const facetTitlesEn = {
+  남성: 'Men', 여성: 'Women', 아우터: 'Outerwear', 상의: 'Tops', 하의: 'Bottoms',
+  가방: 'Bags', 신발: 'Shoes', 패션잡화: 'Accessories', 주얼리: 'Jewelry', 스키웨어: 'Skiwear',
+};
 
 function brandHref(brand) {
   if (brand === maxMaraGroup) return '#brand/max-mara';
@@ -29,16 +79,28 @@ function brandTitle(brand) {
   return brand === maxMaraGroup ? '막스마라' : brandNames.get(brand);
 }
 
+function brandTitleEn(brand) {
+  return brand === maxMaraGroup ? 'Max Mara' : brand;
+}
+
 const brandRoutes = new Map([maxMaraGroup, ...brandNames.keys()].map(brand => [brandHref(brand), brand]));
 
 function won(price) {
   return money.format(price) + '원';
 }
 
+function setPrice(node, price) {
+  setLocalized(node, won(price), '₩' + money.format(price));
+}
+
+function countEn(count) {
+  return money.format(count) + (count === 1 ? ' item' : ' items');
+}
+
 function describeDelivery(badge, product) {
   badge.dataset.delivery = product.delivery;
-  badge.textContent = deliveryTitles[product.delivery];
-  badge.setAttribute('aria-label', deliveryTitles[product.delivery] + '배송');
+  setLocalized(badge, deliveryTitles[product.delivery], deliveryTitlesEn[product.delivery]);
+  setLocalized(badge, deliveryTitles[product.delivery] + '배송', deliveryTitlesEn[product.delivery] + ' shipping', 'aria-label');
 }
 
 function productCard(product) {
@@ -47,9 +109,10 @@ function productCard(product) {
   item.querySelector('a').href = '#product/' + product.id;
   item.querySelector('img').src = asset(product.image);
   item.querySelector('.product-brand').textContent = product.brand;
-  item.querySelector('.product-name').textContent = product.name;
-  item.querySelector('.product-price').textContent = won(product.price);
-  item.querySelector('.product-size').textContent = product.sizes.length ? product.sizes.join(' · ') : '품절';
+  setLocalized(item.querySelector('.product-name'), product.name, PRODUCT_NAMES_EN[product.id]);
+  setPrice(item.querySelector('.product-price'), product.price);
+  if (product.sizes.length) item.querySelector('.product-size').textContent = product.sizes.join(' · ');
+  else setLocalized(item.querySelector('.product-size'), '품절', 'Sold out');
   describeDelivery(item.querySelector('.delivery'), product);
   return item;
 }
@@ -70,16 +133,16 @@ const recentTerms = [];
 const headerShell = document.querySelector('.site-header-shell');
 const siteHeader = headerShell.querySelector('.site-header');
 
-function openPanel(title, contents) {
-  panelTitle.textContent = title;
+function openPanel(title, contents, englishTitle = title) {
+  setLocalized(panelTitle, title, englishTitle);
   panelBody.replaceChildren(contents);
   if (!panel.open) panel.showModal();
   scheduleReview();
 }
 
-function description(text) {
+function description(text, english = text) {
   const p = document.createElement('p');
-  p.textContent = text;
+  setLocalized(p, text, english);
   return p;
 }
 
@@ -89,12 +152,16 @@ const collectionTitles = {
   all: '브랜드', men: '남성', women: '여성', weekly: '위클리',
   classic: '클래식', domestic: '국내배송', best: 'BEST', new: 'NEW', 'max-mara': '막스마라',
 };
+const collectionTitlesEn = {
+  all: 'Brands', men: 'Men', women: 'Women', weekly: 'Weekly',
+  classic: 'Classic', domestic: 'Domestic shipping', best: 'BEST', new: 'NEW', 'max-mara': 'Max Mara',
+};
 
 function showCatalogResults(term) {
   const query = term.toLocaleLowerCase('ko-KR').replace(/\s/g, '');
   const matching = allProducts.filter(product => (
     ((query === '막스마라' || query === 'maxmara') && maxMaraBrands.includes(product.brand))
-    || [product.brand, product.name, brandNames.get(product.brand)]
+    || [product.brand, product.name, PRODUCT_NAMES_EN[product.id], brandNames.get(product.brand)]
       .some(text => text?.toLocaleLowerCase('ko-KR').replace(/\s/g, '').includes(query))
   ));
 
@@ -105,8 +172,10 @@ function showCatalogResults(term) {
   if (recentTerms.length > 5) recentTerms.pop();
   searchKeywords.hidden = true;
   searchResults.hidden = false;
-  document.getElementById('search-count').textContent = matching.length
-    ? `‘${term}’ 검색 결과 ${matching.length}개` : `‘${term}’에 해당하는 상품이 없어요.`;
+  const count = matching.length;
+  setLocalized(document.getElementById('search-count'),
+    count ? `‘${term}’ 검색 결과 ${count}개` : `‘${term}’에 해당하는 상품이 없어요.`,
+    count ? `${countEn(count)} for “${term}”` : `No products match “${term}”.`);
   document.getElementById('search-products').replaceChildren(...matching.map(productCard));
 }
 
@@ -143,7 +212,8 @@ function openSearch() {
     button.textContent = term;
     return button;
   }));
-  if (!recentTerms.length) recent.append(description('최근 검색어가 없어요.'));
+  if (!recentTerms.length) recent.append(description('최근 검색어가 없어요.', 'No recent searches.'));
+  setMobileNav(false);
   positionSearchPanel();
   searchPanel.returnValue = '';
   searchPanel.showModal();
@@ -161,7 +231,7 @@ document.getElementById('search-form').addEventListener('submit', (event) => {
 });
 searchPanel.addEventListener('click', event => {
   const suggestion = event.target.closest('[data-search-term]');
-  if (suggestion) showCatalogResults(suggestion.dataset.searchTerm);
+  if (suggestion) showCatalogResults(suggestion.textContent);
   const productLink = event.target.closest('a[href^="#product/"]');
   if (productLink && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
     searchPanel.close('product');
@@ -175,9 +245,79 @@ searchPanel.addEventListener('close', () => {
   if (searchPanel.returnValue !== 'product') searchLaunch.focus({ preventScroll: true });
   scheduleReview();
 });
-document.querySelectorAll('[data-account]').forEach((button) => {
-  button.addEventListener('click', () => openPanel(button.dataset.account,
-    description('실제 회원과 주문 기능은 자사몰 연결 후 이용할 수 있어요.')));
+const languageSwitch = document.getElementById('language-switch');
+const languageToggle = languageSwitch.querySelector('summary');
+const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+const siteNav = document.getElementById('site-nav');
+const accountTitles = { 로그인: 'Log in', 회원가입: 'Sign up', 마이페이지: 'My account' };
+
+function setMobileNav(open) {
+  siteHeader.classList.toggle('is-menu-open', open);
+  mobileMenuToggle.setAttribute('aria-expanded', String(open));
+}
+
+languageSwitch.addEventListener('toggle', () => {
+  if (languageSwitch.open) setMobileNav(false);
+});
+languageSwitch.querySelectorAll('[data-language]').forEach(button => {
+  button.addEventListener('click', () => {
+    language = button.dataset.language;
+    try { localStorage.setItem(languageKey, language); } catch { /* Apply to this page. */ }
+    translateInterface();
+    updatePageTitle();
+    languageSwitch.open = false;
+    languageToggle.focus({ preventScroll: true });
+  });
+});
+mobileMenuToggle.addEventListener('click', event => {
+  languageSwitch.open = false;
+  const open = !siteHeader.classList.contains('is-menu-open');
+  setMobileNav(open);
+  if (open && event.detail === 0) siteNav.querySelector('a').focus({ preventScroll: true });
+});
+siteNav.addEventListener('click', event => {
+  if (event.target.closest('a')) setMobileNav(false);
+});
+matchMedia('(max-width: 520px)').addEventListener('change', () => setMobileNav(false));
+document.addEventListener('click', event => {
+  if (languageSwitch.open && !languageSwitch.contains(event.target)) languageSwitch.open = false;
+  if (!siteNav.contains(event.target) && !mobileMenuToggle.contains(event.target)) setMobileNav(false);
+});
+document.addEventListener('keydown', event => {
+  if (event.key !== 'Escape') return;
+  if (languageSwitch.open) {
+    languageSwitch.open = false;
+    languageToggle.focus({ preventScroll: true });
+  } else if (siteHeader.classList.contains('is-menu-open')) {
+    setMobileNav(false);
+    mobileMenuToggle.focus({ preventScroll: true });
+  }
+});
+
+function showAccount(title) {
+  openPanel(title, description('실제 회원과 주문 기능은 자사몰 연결 후 이용할 수 있어요.',
+    'Account and order services will be available when the store is connected.'), accountTitles[title]);
+}
+
+document.querySelectorAll('[data-account]').forEach(button => {
+  button.addEventListener('click', () => showAccount(button.dataset.account));
+});
+document.getElementById('mobile-account').addEventListener('click', () => {
+  setMobileNav(false);
+  const actions = document.createElement('div');
+  actions.className = 'mobile-account-actions';
+  for (const [korean, english] of Object.entries(accountTitles)) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'button outline';
+    setLocalized(button, korean, english);
+    button.addEventListener('click', () => {
+      showAccount(korean);
+      panel.querySelector('button').focus({ preventScroll: true });
+    });
+    actions.append(button);
+  }
+  openPanel('계정 메뉴', actions, 'Account menu');
 });
 
 const home = document.getElementById('main');
@@ -217,7 +357,7 @@ let collectionProducts = [];
 let currentCollectionHash;
 let detailReturnHash;
 
-function filterCheckbox(title, value = '', checked = false, field = 'brand') {
+function filterCheckbox(title, value = '', checked = false, field = 'brand', english = title) {
   const label = document.createElement('label');
   const checkbox = document.createElement('input');
   checkbox.type = 'checkbox';
@@ -226,7 +366,9 @@ function filterCheckbox(title, value = '', checked = false, field = 'brand') {
     checkbox.value = value;
   }
   checkbox.defaultChecked = checked;
-  label.append(checkbox, title);
+  const name = document.createElement('span');
+  setLocalized(name, title, english);
+  label.append(checkbox, name);
   return label;
 }
 
@@ -251,7 +393,7 @@ function updateCollection() {
   if (collectionSort.value === 'low') products.sort((a, b) => a.price - b.price);
   if (collectionSort.value === 'high') products.sort((a, b) => b.price - a.price);
   collectionList.replaceChildren(...products.map(productCard));
-  document.getElementById('collection-count').textContent = '상품 ' + products.length + '개';
+  setLocalized(document.getElementById('collection-count'), '상품 ' + products.length + '개', countEn(products.length));
   document.getElementById('collection-empty').hidden = products.length > 0;
 }
 
@@ -263,28 +405,28 @@ function renderBrandFilters(initialBrand) {
       if (!subBrands.length) continue;
       const block = document.createElement('div');
       block.className = 'brand-group';
-      const parent = filterCheckbox(title);
+      const parent = filterCheckbox(title, '', false, 'brand', brand);
       parent.firstElementChild.dataset.brandParent = '';
       const options = document.createElement('div');
       options.className = 'brand-group-options';
       options.setAttribute('role', 'group');
-      options.setAttribute('aria-label', '막스마라 하위 브랜드');
+      setLocalized(options, '막스마라 하위 브랜드', 'Max Mara lines', 'aria-label');
       for (const value of subBrands) {
-        const option = filterCheckbox(brandNames.get(value), value, value === initialBrand);
-        if (value === 'MAX MARA') option.firstElementChild.setAttribute('aria-label', '막스마라 단일 브랜드');
+        const option = filterCheckbox(brandNames.get(value), value, value === initialBrand, 'brand', value);
+        if (value === 'MAX MARA') setLocalized(option.firstElementChild, '막스마라 단일 브랜드', 'Max Mara main line', 'aria-label');
         options.append(option);
       }
       block.append(parent, options);
       collectionBrands.append(block);
     } else if (!maxMaraBrands.includes(brand) && availableBrands.has(brand)) {
-      collectionBrands.append(filterCheckbox(title, brand, brand === initialBrand));
+      collectionBrands.append(filterCheckbox(title, brand, brand === initialBrand, 'brand', brand));
     }
   }
 }
 
 function renderProductFacet(container, field, order, enabled) {
   const values = enabled ? order.filter(value => collectionProducts.some(product => product[field] === value)) : [];
-  container.replaceChildren(...values.map(value => filterCheckbox(value, value, false, field)));
+  container.replaceChildren(...values.map(value => filterCheckbox(value, value, false, field, facetTitlesEn[value])));
   container.parentElement.hidden = !values.length;
 }
 
@@ -310,17 +452,19 @@ function showCollection(group, initialBrand, scopedBrand) {
     for (const line of [maxMaraGroup, ...maxMaraBrands]) {
       const link = document.createElement('a');
       link.href = brandHref(line);
-      link.textContent = line === maxMaraGroup ? '막스마라 전체' : brandTitle(line);
+      setLocalized(link, line === maxMaraGroup ? '막스마라 전체' : brandTitle(line),
+        line === maxMaraGroup ? 'All Max Mara lines' : brandTitleEn(line));
       if (line === scopedBrand) link.setAttribute('aria-current', 'page');
       collectionBrandLines.append(link);
     }
   }
   collectionSort.value = 'recommended';
   collectionFilters.closest('details').open = true;
-  collectionTitle.textContent = scopedBrand ? brandTitle(scopedBrand) : collectionTitles[group];
+  setLocalized(collectionTitle, scopedBrand ? brandTitle(scopedBrand) : collectionTitles[group],
+    scopedBrand ? brandTitleEn(scopedBrand) : collectionTitlesEn[group]);
   document.getElementById('collection-deadline').hidden = group !== 'weekly';
   storeParent.href = scopedBrand ? '#brands/all' : location.hash;
-  storeParent.textContent = scopedBrand ? '브랜드' : collectionTitle.textContent;
+  setLocalized(storeParent, scopedBrand ? '브랜드' : collectionTitles[group], scopedBrand ? 'Brands' : collectionTitlesEn[group]);
   if (scopedBrand) storeParent.removeAttribute('aria-current');
   else storeParent.setAttribute('aria-current', 'page');
   updateCollection();
@@ -368,6 +512,7 @@ for (const letter of new Set(directoryBrands.map(brand => brand[0]))) {
     name.textContent = brand;
     const translated = document.createElement('span');
     translated.textContent = brandNames.get(brand);
+    translated.lang = 'ko';
     link.append(name, translated);
     item.append(link);
     list.append(item);
@@ -386,8 +531,9 @@ function updateDetailTotal() {
   const quantity = detailQuantity.valueAsNumber;
   quantityDecrease.disabled = quantity <= Number(detailQuantity.min);
   quantityIncrease.disabled = quantity >= Number(detailQuantity.max);
-  document.getElementById('detail-total').textContent = detailQuantity.validity.valid
-    ? won(currentProduct.price * quantity) : '—';
+  const total = document.getElementById('detail-total');
+  if (detailQuantity.validity.valid) setPrice(total, currentProduct.price * quantity);
+  else setLocalized(total, '—');
 }
 
 function changeDetailQuantity(step) {
@@ -403,20 +549,23 @@ function showProduct(product) {
   const group = groupFor(product);
   currentProduct = product;
   detailForm.reset();
-  detailStatus.textContent = '';
+  setLocalized(detailStatus, '');
   detailCartLink.hidden = true;
   const parentHash = detailReturnHash || '#catalog/' + group;
+  const parentBrand = brandRoutes.get(parentHash);
+  const parentGroup = parentHash.split(/[/?]/)[1];
   storeParent.href = parentHash;
-  storeParent.textContent = parentHash === '#cart' ? '장바구니'
-    : brandTitle(brandRoutes.get(parentHash)) || collectionTitles[parentHash.split(/[/?]/)[1]] || '상품 목록';
+  if (parentHash === '#cart') setLocalized(storeParent, '장바구니', 'Cart');
+  else setLocalized(storeParent, brandTitle(parentBrand) || collectionTitles[parentGroup] || '상품 목록',
+    brandTitleEn(parentBrand) || collectionTitlesEn[parentGroup] || 'Products');
   storeParent.removeAttribute('aria-current');
   const image = document.getElementById('detail-image');
   image.src = asset(product.image);
-  image.alt = product.name;
+  setLocalized(image, product.name, PRODUCT_NAMES_EN[product.id], 'alt');
   describeDelivery(document.getElementById('detail-delivery'), product);
   document.getElementById('detail-brand').textContent = product.brand;
-  detailName.textContent = product.name;
-  document.getElementById('detail-price').textContent = won(product.price);
+  setLocalized(detailName, product.name, PRODUCT_NAMES_EN[product.id]);
+  setPrice(document.getElementById('detail-price'), product.price);
   document.getElementById('detail-deadline').hidden = group !== 'weekly';
 
   const chips = document.getElementById('detail-sizes');
@@ -435,12 +584,18 @@ function showProduct(product) {
     chips.append(label);
   });
   detailForm.querySelector('button[type="submit"]').disabled = !product.sizes.length;
-  if (!product.sizes.length) chips.textContent = '품절';
+  if (!product.sizes.length) {
+    const soldOut = document.createElement('span');
+    setLocalized(soldOut, '품절', 'Sold out');
+    chips.append(soldOut);
+  }
   updateDetailTotal();
 }
 
 const cartKey = 'brandplanning-preview-cart';
 const cartLink = document.getElementById('cart-link');
+const cartLinkLabel = document.getElementById('cart-link-label');
+const cartIconCount = document.getElementById('cart-icon-count');
 const cartItems = document.getElementById('cart-items');
 const cartItemTemplate = document.getElementById('cart-item-template');
 const cartStatus = document.getElementById('cart-status');
@@ -466,11 +621,16 @@ let cart = readCart();
 function updateCartTotals() {
   const count = cart.reduce((total, row) => total + row.quantity, 0);
   const subtotal = cart.reduce((total, row) => total + byId.get(row.id).price * row.quantity, 0);
-  cartLink.textContent = count ? '장바구니 (' + count + ')' : '장바구니';
+  const label = count ? '장바구니 (' + count + ')' : '장바구니';
+  const labelEn = count ? 'Cart (' + count + ')' : 'Cart';
+  setLocalized(cartLinkLabel, label, labelEn);
+  setLocalized(cartLink, label, labelEn, 'aria-label');
+  cartIconCount.hidden = !count;
+  cartIconCount.textContent = count > 99 ? '99+' : count;
   cartEmpty.hidden = count > 0;
   cartFilled.hidden = !count;
-  cartCount.textContent = '총 ' + money.format(count) + '개';
-  cartTotal.textContent = won(subtotal);
+  setLocalized(cartCount, '총 ' + money.format(count) + '개', countEn(count));
+  setPrice(cartTotal, subtotal);
 }
 
 function saveCart() {
@@ -485,9 +645,9 @@ function cartItem(row) {
   productLink.href = '#product/' + product.id;
   productLink.querySelector('img').src = asset(product.image);
   productLink.querySelector('.product-brand').textContent = product.brand;
-  productLink.querySelector('.cart-product-name').textContent = product.name;
-  productLink.querySelector('.cart-size').textContent = '사이즈 ' + row.size;
-  productLink.querySelector('.cart-unit').textContent = won(product.price);
+  setLocalized(productLink.querySelector('.cart-product-name'), product.name, PRODUCT_NAMES_EN[product.id]);
+  setLocalized(productLink.querySelector('.cart-size'), '사이즈 ' + row.size, 'Size ' + row.size);
+  setPrice(productLink.querySelector('.cart-unit'), product.price);
 
   const quantity = item.querySelector('.cart-quantity');
   const decrease = item.querySelector('.cart-decrease');
@@ -495,12 +655,13 @@ function cartItem(row) {
   const subtotal = item.querySelector('.cart-subtotal');
   const remove = item.querySelector('.cart-remove');
   const option = product.name + ' · 사이즈 ' + row.size;
-  item.querySelector('.quantity-stepper').setAttribute('aria-label', option + ' 수량');
-  remove.setAttribute('aria-label', option + ' 삭제');
+  const optionEn = (PRODUCT_NAMES_EN[product.id] || product.name) + ' · Size ' + row.size;
+  setLocalized(item.querySelector('.quantity-stepper'), option + ' 수량', optionEn + ' quantity', 'aria-label');
+  setLocalized(remove, option + ' 삭제', 'Remove ' + optionEn, 'aria-label');
 
   function updateQuantity() {
     quantity.textContent = money.format(row.quantity);
-    subtotal.textContent = won(product.price * row.quantity);
+    setPrice(subtotal, product.price * row.quantity);
     decrease.disabled = row.quantity <= 1;
     increase.disabled = row.quantity >= Number.MAX_SAFE_INTEGER;
   }
@@ -511,7 +672,8 @@ function cartItem(row) {
     row.quantity += amount;
     updateQuantity();
     saveCart();
-    cartStatus.textContent = option + ' ' + row.quantity + '개로 변경했어요. 상품 합계 ' + cartTotal.textContent;
+    setLocalized(cartStatus, option + ' ' + row.quantity + '개로 변경했어요. 상품 합계 ' + cartTotal.dataset.ko,
+      `${optionEn} updated to ${row.quantity}. Subtotal ${cartTotal.dataset.en}.`);
     if (hadFocus && button.disabled) (amount < 0 ? increase : decrease).focus();
   }
 
@@ -522,7 +684,7 @@ function cartItem(row) {
     cart = cart.filter(entry => entry !== row);
     item.remove();
     saveCart();
-    cartStatus.textContent = option + ' 상품을 삭제했어요.';
+    setLocalized(cartStatus, option + ' 상품을 삭제했어요.', 'Removed ' + optionEn + '.');
     (next || cartEmpty.querySelector('a')).focus();
   });
   updateQuantity();
@@ -531,7 +693,7 @@ function cartItem(row) {
 
 function renderCart() {
   cartItems.replaceChildren(...cart.map(cartItem));
-  cartStatus.textContent = '';
+  setLocalized(cartStatus, '');
   updateCartTotals();
 }
 
@@ -547,7 +709,8 @@ detailForm.addEventListener('submit', event => {
   if (row) row.quantity = Math.min(Number.MAX_SAFE_INTEGER, row.quantity + quantity);
   else cart.push({ id: currentProduct.id, size: option, quantity });
   saveCart();
-  detailStatus.textContent = option + ' 사이즈 ' + quantity + '개를 장바구니에 담았어요.';
+  setLocalized(detailStatus, option + ' 사이즈 ' + quantity + '개를 장바구니에 담았어요.',
+    `Added ${countEn(quantity)} in size ${option} to your cart.`);
   detailCartLink.hidden = false;
 });
 window.addEventListener('storage', event => {
@@ -585,11 +748,17 @@ document.getElementById('inquiry-launch').addEventListener('click', () => {
     const recipient = document.querySelector('.site-footer a[href^="mailto:"]').getAttribute('href');
     mail.href = recipient + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
     mail.hidden = false;
-    note.textContent = '메일 앱에서 보내면 회사 이메일로 문의가 전달돼요.';
+    setLocalized(note, '메일 앱에서 보내면 회사 이메일로 문의가 전달돼요.',
+      'Send the draft from your email app to reach our team.');
     mail.focus({ preventScroll: true });
   });
-  openPanel('상품 문의', form);
+  openPanel('상품 문의', form, 'Product inquiry');
 });
+
+function updatePageTitle() {
+  const heading = storePage.hidden ? null : storePage.querySelector(':scope > :not([hidden]) h1');
+  document.title = heading ? heading.textContent + ' | BRAND PLANNING' : language === 'en' ? 'BRAND PLANNING' : siteTitle;
+}
 
 function renderRoute(moveFocus = false) {
   const hash = location.hash;
@@ -624,28 +793,25 @@ function renderRoute(moveFocus = false) {
   if (product) {
     detailReturnHash = wasCart ? '#cart' : currentCollectionHash;
     showProduct(product);
-    document.title = product.name + ' | BRAND PLANNING';
   } else if (group) {
     if (currentCollectionHash !== hash) {
       showCollection(group, new URLSearchParams(query).get('brand'), scopedBrand);
     }
     currentCollectionHash = hash;
-    document.title = collectionTitle.textContent + ' | BRAND PLANNING';
   } else {
     currentCollectionHash = undefined;
     detailReturnHash = undefined;
     if (heading) {
       const listPath = showCart ? '#cart' : showBrands ? '#brands/all' : showNotices || notice ? '#notices/all' : '#magazine/all';
       storeParent.href = listPath;
-      storeParent.textContent = showCart ? cartTitle.textContent : showBrands ? '브랜드' : showNotices || notice ? '공지사항' : '매거진';
+      const parent = showCart ? cartTitle : showBrands ? brandDirectoryTitle : showNotices || notice ? noticePageTitle : magazinePageTitle;
+      setLocalized(storeParent, parent.dataset.ko, parent.dataset.en);
       if (entry) {
         storeParent.removeAttribute('aria-current');
         showEditorialEntry(entry, listPath);
       } else storeParent.setAttribute('aria-current', 'page');
       if (showCart) renderCart();
-      document.title = heading.textContent + ' | BRAND PLANNING';
     } else {
-      document.title = siteTitle;
       if (wasStore) document.getElementById(hash.slice(1) || 'top')?.scrollIntoView();
       else if (!moveFocus && (!hash || hash === '#top')) window.scrollTo(0, 0);
     }
@@ -654,6 +820,7 @@ function renderRoute(moveFocus = false) {
     window.scrollTo(0, 0);
     if (moveFocus) heading.focus({ preventScroll: true });
   }
+  updatePageTitle();
   scheduleReview();
 }
 
@@ -747,7 +914,9 @@ function reviewContent(review) {
   const copy = document.createElement('div');
   const author = document.createElement('strong');
   author.textContent = review.author;
-  copy.append(author, description('“' + review.quote + '”'));
+  const quote = description('“' + review.quote + '”');
+  quote.lang = 'ko';
+  copy.append(author, quote);
   return copy;
 }
 
@@ -756,9 +925,9 @@ function reviewDetail(review) {
   const image = document.createElement('img');
   image.className = 'panel-review-image';
   image.src = asset(review.image);
-  image.alt = review.title;
+  setLocalized(image, review.title, REVIEW_TITLES_EN[review.title], 'alt');
   content.prepend(image);
-  openPanel(review.title, content);
+  openPanel(review.title, content, REVIEW_TITLES_EN[review.title]);
 }
 
 const reviewCards = REVIEWS.map((review) => {
@@ -777,6 +946,7 @@ const reviewCards = REVIEWS.map((review) => {
   title.textContent = review.author;
   const summary = document.createElement('span');
   summary.textContent = '“' + review.quote + '”';
+  summary.lang = 'ko';
   copy.append(title, summary);
   button.append(media, copy);
   button.addEventListener('click', () => {
@@ -806,7 +976,8 @@ function positionReviews() {
     card.setAttribute('aria-hidden', String(hidden));
     const title = REVIEWS[index].title;
     const action = slot === 0 ? '이전 리뷰' : slot === 3 ? '다음 리뷰' : '후기 보기';
-    card.setAttribute('aria-label', action + ' · ' + title);
+    const actionEn = slot === 0 ? 'Previous review' : slot === 3 ? 'Next review' : 'Read review';
+    setLocalized(card, action + ' · ' + title, actionEn + ' · ' + REVIEW_TITLES_EN[title], 'aria-label');
   });
 }
 
@@ -824,7 +995,8 @@ function moveReviews(step) {
 }
 
 function updateReviewControl() {
-  reviewToggle.setAttribute('aria-label', reviewPaused ? '리뷰 자동재생 시작' : '리뷰 자동재생 멈추기');
+  setLocalized(reviewToggle, reviewPaused ? '리뷰 자동재생 시작' : '리뷰 자동재생 멈추기',
+    reviewPaused ? 'Resume review carousel' : 'Pause review carousel', 'aria-label');
   reviewToggle.firstElementChild.textContent = reviewPaused ? '▶' : 'Ⅱ';
   scheduleReview();
 }
@@ -859,11 +1031,11 @@ document.getElementById('review-more').addEventListener('click', () => {
     const item = document.createElement('li');
     const image = document.createElement('img');
     image.src = asset(review.image);
-    image.alt = review.title;
+    setLocalized(image, review.title, REVIEW_TITLES_EN[review.title], 'alt');
     item.append(image, reviewContent(review));
     list.append(item);
   }
-  openPanel('스마트스토어 구매 리뷰', list);
+  openPanel('스마트스토어 구매 리뷰', list, 'Naver Smart Store reviews');
 });
 
 const magazineById = new Map(MAGAZINE_ARTICLES.map(entry => [entry.id, entry]));
@@ -884,9 +1056,9 @@ function magazineCard(entry) {
   const copy = document.createElement('span');
   copy.className = 'magazine-copy';
   const source = document.createElement('span');
-  source.textContent = '브랜드플래닝';
+  setLocalized(source, '브랜드플래닝', 'Brand Planning');
   const heading = document.createElement('strong');
-  heading.textContent = entry.title;
+  setLocalized(heading, entry.title, MAGAZINE_TITLES_EN[entry.id]);
   copy.append(source, heading);
   link.append(frame, copy);
   item.append(link);
@@ -902,18 +1074,23 @@ for (const entry of NOTICES) {
   const item = document.createElement('li');
   const link = document.createElement('a');
   link.href = '#notices/' + entry.id;
-  link.textContent = entry.title;
+  setLocalized(link, entry.title, NOTICES_EN[entry.id]?.title);
   item.append(link);
   noticeList.append(item);
 }
 
 function showEditorialEntry(entry, listPath) {
   const isMagazine = listPath === '#magazine/all';
-  document.getElementById('editorial-source').textContent = isMagazine ? '브랜드플래닝' : '브랜드플래닝 공지사항';
-  editorialTitle.textContent = entry.title;
+  const noticeEn = NOTICES_EN[entry.id];
+  setLocalized(document.getElementById('editorial-source'), isMagazine ? '브랜드플래닝' : '브랜드플래닝 공지사항',
+    isMagazine ? 'Brand Planning' : 'Brand Planning notices');
+  setLocalized(editorialTitle, entry.title, isMagazine ? MAGAZINE_TITLES_EN[entry.id] : noticeEn?.title);
   const body = document.getElementById('editorial-body');
   body.classList.toggle('magazine-body', isMagazine);
-  body.replaceChildren(...(isMagazine ? entry.body.map(magazineBlock) : entry.paragraphs.map(description)));
+  if (isMagazine) body.lang = 'ko';
+  else body.removeAttribute('lang');
+  body.replaceChildren(...(isMagazine ? entry.body.map(magazineBlock)
+    : entry.paragraphs.map((text, index) => description(text, noticeEn?.paragraphs[index]))));
   document.getElementById('editorial-back').href = listPath;
 }
 
@@ -959,7 +1136,8 @@ if (/^https?:$/.test(location.protocol)) {
     if (home.hidden || entry.intersectionRatio < 0.25) return;
     const player = document.createElement('iframe');
     player.className = 'campaign-video';
-    player.title = '브루넬로 쿠치넬리 2026 가을·겨울 공식 캠페인';
+    setLocalized(player, '브루넬로 쿠치넬리 2026 가을·겨울 공식 캠페인',
+      'Brunello Cucinelli Fall/Winter 2026 campaign', 'title');
     player.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
     player.allowFullscreen = true;
     player.referrerPolicy = 'strict-origin-when-cross-origin';

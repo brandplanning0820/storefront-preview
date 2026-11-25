@@ -2070,3 +2070,81 @@ const NOTICES = [
     ]
   }
 ];
+
+const PRODUCT_NAMES_EN = {
+  '13871969099': 'FW26 Small Check Cotswold Tote in Black',
+  '13838058679': 'FW26 Women’s Monili Wool Flannel Baggy Trousers in Anthracite',
+  '13837820556': 'FW26 Men’s Deerskin Boots in Brown',
+  '13837188140': 'FW26 Men’s Double-Fleece Trousers in Black',
+  '13837109522': 'FW26 Men’s Virgin Wool Flannel Drawstring Trousers in Dark Grey',
+  '13892325902': 'SS27 Men’s Knight Logo Sling Bag in Black',
+  '13892319386': 'SS27 Men’s Check Wool Scarf in Black',
+  '13892310828': 'SS27 Men’s Check-Collar Cotton Polo in Chalk White',
+  '13892307125': 'SS27 Men’s Check-Collar Cotton Polo in Black',
+  '13892302203': 'SS27 Men’s Long Kensington Heritage Trench Coat in Honey Beige',
+  '13862254499': 'FW26 Men’s Washed Denim Shirt Jacket in Blue',
+  '13862252891': 'FW26 Men’s Selleria FF Silk-Cotton Zip Polo in Natural Navy',
+  '13862251029': 'FW26 Men’s Washed Denim Trousers in Blue',
+  '13862247292': 'FW26 Women’s FF Wool-Silk Scarf in Light Grey',
+  '13862243522': 'FW26 Women’s FF Zucca Wool-Cashmere Poncho in Dark Tobacco',
+  '13886054581': 'Women’s Long Zip Cashmere-Blend Vest in Fog',
+  '13886151623': 'Women’s Floral-Print Cashmere Scarf in Grey',
+  '13886249922': 'Women’s Glass Bead and Silver Choker in Chocolate',
+  '13888380600': 'Women’s Elisa Faux-Fur Collar Puffer Coat in Black',
+  '13888384529': 'FW26 Women’s A-Line Amelia Down Jacket in Black',
+  '13888383841': 'FW26 Women’s Claudia Ultralight Belted Faux-Fur Down Jacket in Black',
+  '13812808803': 'Fall/Winter Men’s Cotton Shirt in Sky Blue',
+  '13763757759': 'Fall/Winter Men’s Nubuck Calfskin Sneakers in Beige',
+  '13871854526': 'FW26 Women’s Padded Wool-Blend Zip Cardigan in Black',
+  '13851874254': 'FW26 Men’s Bobbin Suede Chelsea Boots in Hazelnut',
+  '13856637332': 'FW26 Women’s Adagio Virgin Wool Blazer in Ultramarine',
+  '13892117876': 'SS27 Women’s Small Soft Knot Earrings in Silver',
+  '13850707048': 'FW26 Women’s Cherry Intrecciato Leather Ankle Boots in Black',
+  '13892114226': 'SS27 Women’s Small Soft Knot Earrings in Yellow Gold',
+  '13856634833': 'FW26 Women’s Canapa Wool-Cotton Double-Breasted Blazer in Navy',
+  '13856647708': 'FW26 Women’s Eccelso Silk Shirt in Dark Green',
+  '13851900920': 'FW26 Women’s Wool Jacquard Knee-High Socks in Yellow',
+  '13855954759': 'FW26 Men’s Madras Check Short-Sleeve Cotton Shirt in Blue and White',
+  '13871846270': 'FW26 Grenoble Women’s Belted Padded Ski Suit in Black',
+  '13871827399': 'FW26 Grenoble Women’s Tolima Belted Hooded Down Ski Jacket in Black',
+  '13856627314': 'FW26 Women’s Leccio Ruffled Silk Shirt in White',
+  '13856631606': 'FW26 Women’s Fiobra Long Razmir Skirt in Honey',
+  '13856629339': 'FW26 Women’s Flirt Silk Shirt in Light Blue',
+};
+
+const REVIEW_TITLES_EN = {
+  '폴리시드 나파 레더 재킷': 'Polished Nappa Leather Jacket',
+  '리넨 울 실크 아우터웨어 재킷': 'Linen, Wool and Silk Jacket',
+  '셔츠 스타일 아우터웨어 재킷': 'Shirt-Style Jacket',
+  '모닐리 코튼 트윌 카프리 팬츠': 'Monili Cotton Twill Capri Trousers',
+  '울 리넨 실크 하운즈투스 블레이저': 'Wool, Linen and Silk Houndstooth Blazer',
+  '가먼트다이드 데님 트러커 재킷': 'Garment-Dyed Denim Trucker Jacket',
+};
+
+const MAGAZINE_TITLES_EN = {
+  '2561488': 'Common Questions About Cashmere',
+  '2561483': 'How We See Gucci',
+  '2661546': 'A Day of Longing to Travel',
+  '3371362': 'Shoes: Which Style Would You Choose?',
+  '4453654': 'How Clothes Speak for Themselves',
+  '4263933': 'The Glamour Dior Remembers',
+  '4239858': 'Finding Your Size in Herno and Max Mara',
+  '2613950': 'Revisiting My Mister',
+};
+
+const NOTICES_EN = {
+  'weekly-deadline': {
+    title: 'Weekly order deadline',
+    paragraphs: [
+      'Orders for Weekly items close every Monday at 3 PM Korea time.',
+      'See the countdown on the homepage or a Weekly product page to check how much time is left.',
+    ],
+  },
+  'product-inquiry': {
+    title: 'Product inquiries',
+    paragraphs: [
+      'Please include the brand, official website URL, size and quantity so we can help.',
+      'Select Contact us on the right to enter the details. In this preview, you can open an email draft addressed to our team.',
+    ],
+  },
+};
