@@ -2915,7 +2915,7 @@ const PRODUCT_GALLERIES = {
   },
   "13837188140": {
     photos: ["13837188140-photo-02.webp", "13837188140-photo-03.webp", "13837188140-photo-04.webp", "13837188140-photo-05.webp", "13837188140-photo-06.webp"],
-    wearing: "13837188140-photo-03.webp",
+    wearing: "13837188140-photo-04.webp",
   },
   "13837109522": {
     photos: ["13837109522-photo-02.webp", "13837109522-photo-03.webp", "13837109522-photo-04.webp", "13837109522-photo-05.webp", "13837109522-photo-06.webp"],
@@ -2982,7 +2982,7 @@ const PRODUCT_GALLERIES = {
   },
   "13812808803": {
     photos: ["13812808803-photo-02.webp", "13812808803-photo-03.webp", "13812808803-photo-04.webp", "13812808803-photo-05.webp"],
-    wearing: "13812808803-photo-02.webp",
+    wearing: "13812808803-photo-05.webp",
   },
   "13763757759": {
     photos: ["13763757759-photo-02.webp", "13763757759-photo-03.webp", "13763757759-photo-04.webp", "13763757759-photo-05.webp"],

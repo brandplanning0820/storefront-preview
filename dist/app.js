@@ -104,8 +104,6 @@ function describeDelivery(badge, product) {
   setLocalized(badge, deliveryTitles[product.delivery] + '배송', deliveryTitlesEn[product.delivery] + ' shipping', 'aria-label');
 }
 
-let cardPhotoSelection;
-
 function productCard(product) {
   const item = document.getElementById('product-template').content.firstElementChild.cloneNode(true);
   item.dataset.product = product.id;
@@ -113,7 +111,7 @@ function productCard(product) {
   link.href = '#product/' + product.id;
   item.querySelector('img').src = asset(product.image);
   const gallery = PRODUCT_GALLERIES[product.id];
-  const hoverPhoto = gallery?.wearing || gallery?.photos[0];
+  const hoverPhoto = gallery?.wearing;
   if (hoverPhoto) {
     const preview = document.createElement('img');
     preview.className = 'product-hover-photo';
@@ -124,12 +122,6 @@ function productCard(product) {
     link.addEventListener('pointerenter', event => {
       if (!hoverPointer.matches || event.pointerType === 'touch' || preview.hasAttribute('src')) return;
       preview.src = asset(hoverPhoto);
-    });
-    link.addEventListener('click', event => {
-      if (event.defaultPrevented || event.detail === 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-      if (hoverPointer.matches && link.matches(':hover') && 'ready' in preview.dataset) {
-        cardPhotoSelection = { id: product.id, photo: hoverPhoto };
-      }
     });
   }
   item.querySelector('.product-brand').textContent = product.brand;
@@ -359,6 +351,8 @@ const collectionCategories = document.getElementById('collection-categories');
 const collectionBrandLines = document.getElementById('collection-brand-lines');
 const brandDirectory = document.getElementById('brand-directory');
 const brandDirectoryTitle = document.getElementById('brand-directory-title');
+const reviewPage = document.getElementById('review-page');
+const reviewPageTitle = document.getElementById('review-page-title');
 const magazinePage = document.getElementById('magazine-page');
 const magazinePageTitle = document.getElementById('magazine-page-title');
 const noticePage = document.getElementById('notice-page');
@@ -599,8 +593,6 @@ function showProductGallery(product) {
   const thumbnails = document.getElementById('detail-thumbnails');
   const rail = document.getElementById('detail-thumbnail-rail');
   const image = document.getElementById('detail-image');
-  const preferred = cardPhotoSelection?.id === product.id ? cardPhotoSelection.photo : product.image;
-  cardPhotoSelection = undefined;
 
   const photoLabel = (photo, index) => photo === gallery?.wearing
     ? ['착용 사진', 'On-model photo']
@@ -629,7 +621,7 @@ function showProductGallery(product) {
     button.addEventListener('click', () => selectPhoto(index));
     return button;
   })));
-  selectPhoto(Math.max(0, photos.indexOf(preferred)));
+  selectPhoto(0);
   thumbnails.scrollTop = 0;
   thumbnails.scrollLeft = 0;
 }
@@ -1027,6 +1019,7 @@ function renderRoute(moveFocus = false) {
   const scopedBrand = brandRoutes.get(hash) || (requestedGroup === 'max-mara' ? maxMaraGroup : undefined);
   const group = scopedBrand ? 'brand' : Object.hasOwn(collectionTitles, requestedGroup) ? requestedGroup : null;
   const showBrands = hash === '#brands/all';
+  const showReviews = hash === '#reviews/all';
   const showMagazine = hash === '#magazine/all';
   const showNotices = hash === '#notices/all';
   const showCart = hash === '#cart';
@@ -1036,7 +1029,7 @@ function renderRoute(moveFocus = false) {
   const wasStore = !storePage.hidden;
   const wasCart = !cartPage.hidden;
   const heading = product ? detailName : checkout ? checkoutTitle : group ? collectionTitle : showCart ? cartTitle : showBrands ? brandDirectoryTitle
-    : showMagazine ? magazinePageTitle : showNotices ? noticePageTitle : entry ? editorialTitle : null;
+    : showReviews ? reviewPageTitle : showMagazine ? magazinePageTitle : showNotices ? noticePageTitle : entry ? editorialTitle : null;
   storePage.hidden = !heading;
   home.hidden = !storePage.hidden;
   productPage.hidden = !product;
@@ -1046,6 +1039,7 @@ function renderRoute(moveFocus = false) {
   if (showCart) cartLink.setAttribute('aria-current', 'page');
   else cartLink.removeAttribute('aria-current');
   brandDirectory.hidden = !showBrands;
+  reviewPage.hidden = !showReviews;
   magazinePage.hidden = !showMagazine;
   noticePage.hidden = !showNotices;
   editorialArticle.hidden = !entry;
@@ -1066,9 +1060,10 @@ function renderRoute(moveFocus = false) {
     currentCollectionHash = undefined;
     detailReturnHash = undefined;
     if (heading) {
-      const listPath = showCart ? '#cart' : showBrands ? '#brands/all' : showNotices || notice ? '#notices/all' : '#magazine/all';
+      const listPath = showCart ? '#cart' : showBrands ? '#brands/all' : showReviews ? '#reviews/all'
+        : showNotices || notice ? '#notices/all' : '#magazine/all';
       storeParent.href = listPath;
-      const parent = showCart ? cartTitle : showBrands ? brandDirectoryTitle : showNotices || notice ? noticePageTitle : magazinePageTitle;
+      const parent = entry ? notice ? noticePageTitle : magazinePageTitle : heading;
       setLocalized(storeParent, parent.dataset.ko, parent.dataset.en);
       if (entry) {
         storeParent.removeAttribute('aria-current');
@@ -1137,29 +1132,155 @@ panel.addEventListener('click', event => {
 const heroTrack = document.getElementById('hero-track');
 const heroSlides = [...heroTrack.children];
 const heroDots = [...document.querySelectorAll('[data-hero-page]')];
-const activeSlide = () => Math.round(heroTrack.scrollLeft / Math.max(1, heroTrack.clientWidth));
+const heroToggle = document.getElementById('hero-toggle');
+const heroIntervalMs = 5000;
+const heroMoves = [];
+const heroFirst = 1;
+const heroLast = heroSlides.length;
+let heroPage = 0;
+let heroWidth = 0;
+let heroDestination;
+let heroTimeout;
+let heroVisible = false;
+let heroPaused = reducedMotion.matches;
 
-function goToSlide(index) {
-  const next = (index + heroSlides.length) % heroSlides.length;
-  heroTrack.scrollTo({ left: heroTrack.clientWidth * next, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
+function copyHeroSlide(slide) {
+  const copy = slide.cloneNode(true);
+  copy.inert = true;
+  copy.setAttribute('aria-hidden', 'true');
+  const photo = copy.querySelector('img');
+  photo.removeAttribute('fetchpriority');
+  photo.loading = 'lazy';
+  return copy;
 }
 
-heroDots.forEach((button) => button.addEventListener('click', () => goToSlide(Number(button.dataset.heroPage))));
-document.querySelectorAll('[data-hero-step]').forEach((button) => {
-  button.addEventListener('click', () => goToSlide(activeSlide() + Number(button.dataset.heroStep)));
-});
-heroTrack.addEventListener('scroll', () => {
-  const current = activeSlide();
+// The end copies let either direction wrap by scrolling just one banner width.
+heroTrack.prepend(copyHeroSlide(heroSlides.at(-1)));
+heroTrack.append(copyHeroSlide(heroSlides[0]));
+
+function syncHeroControls() {
+  heroSlides.forEach((slide, index) => { slide.inert = index !== heroPage; });
   heroDots.forEach((button, index) => {
-    if (index === current) button.setAttribute('aria-current', 'true');
+    if (index === heroPage) button.setAttribute('aria-current', 'true');
     else button.removeAttribute('aria-current');
   });
+}
+
+function scheduleHero() {
+  window.clearTimeout(heroTimeout);
+  const keyboardFocus = heroTrack.matches(':focus-visible') || heroTrack.querySelector(':focus-visible');
+  if (!heroVisible || heroPaused || home.hidden || document.hidden || keyboardFocus) return;
+  heroTimeout = window.setTimeout(() => {
+    if (document.querySelector('dialog[open]') || heroDestination !== undefined) scheduleHero();
+    else queueHeroMove({ step: 1 });
+  }, heroIntervalMs);
+}
+
+function runHeroMove() {
+  if (heroDestination !== undefined || !heroWidth || !heroMoves.length) return;
+  const { page, step } = heroMoves.shift();
+  const count = heroSlides.length;
+  const next = page ?? (heroPage + step + count) % count;
+  const current = heroPage + heroFirst;
+  let destination = next + heroFirst;
+  if (current === heroLast && destination === heroFirst) destination = heroLast + 1;
+  else if (current === heroFirst && destination === heroLast) destination = 0;
+
+  if (!reducedMotion.matches && Math.abs(destination - current) === 1) {
+    heroDestination = destination;
+    heroTrack.scrollTo({ left: heroWidth * destination, behavior: 'smooth' });
+  } else {
+    heroTrack.scrollTo({ left: heroWidth * (next + heroFirst), behavior: 'instant' });
+    settleHero();
+  }
+}
+
+function settleHero() {
+  if (!heroWidth) return;
+  const position = Math.round(heroTrack.scrollLeft / heroWidth);
+  if (heroDestination !== undefined && position !== heroDestination) return;
+  heroDestination = undefined;
+  heroPage = (position + heroSlides.length - heroFirst) % heroSlides.length;
+  if (position < heroFirst || position > heroLast) {
+    heroTrack.scrollTo({ left: heroWidth * (heroPage + heroFirst), behavior: 'instant' });
+  }
+  syncHeroControls();
+  // Let the instant seam correction settle before starting the next queued move.
+  requestAnimationFrame(runHeroMove);
+  scheduleHero();
+}
+
+function queueHeroMove(move) {
+  window.clearTimeout(heroTimeout);
+  heroMoves.push(move);
+  runHeroMove();
+}
+
+function cancelHeroMoves() {
+  heroMoves.length = 0;
+  heroDestination = undefined;
+  scheduleHero();
+}
+
+function sizeHero() {
+  const width = heroTrack.getBoundingClientRect().width;
+  if (width === heroWidth) return;
+  heroWidth = width;
+  heroDestination = undefined;
+  if (!width) {
+    heroMoves.length = 0;
+    return;
+  }
+  heroTrack.scrollTo({ left: width * (heroPage + heroFirst), behavior: 'instant' });
+  requestAnimationFrame(runHeroMove);
+}
+
+function updateHeroToggle() {
+  setLocalized(heroToggle, heroPaused ? '배너 자동재생 시작' : '배너 자동재생 멈추기',
+    heroPaused ? 'Play banner slideshow' : 'Pause banner slideshow', 'aria-label');
+  heroToggle.firstElementChild.textContent = heroPaused ? '▶' : 'Ⅱ';
+  scheduleHero();
+}
+
+heroDots.forEach((button) => button.addEventListener('click', () => queueHeroMove({ page: Number(button.dataset.heroPage) })));
+document.querySelectorAll('[data-hero-step]').forEach((button) => {
+  button.addEventListener('click', () => queueHeroMove({ step: Number(button.dataset.heroStep) }));
+});
+if ('onscrollend' in heroTrack) {
+  heroTrack.addEventListener('scrollend', settleHero);
+} else {
+  let heroScrollTimeout;
+  heroTrack.addEventListener('scroll', () => {
+    window.clearTimeout(heroScrollTimeout);
+    heroScrollTimeout = window.setTimeout(settleHero, 150);
+  }, { passive: true });
+}
+heroTrack.addEventListener('pointerdown', (event) => {
+  if (event.pointerType !== 'mouse') cancelHeroMoves();
+});
+heroTrack.addEventListener('wheel', (event) => {
+  if (event.deltaX || event.shiftKey) cancelHeroMoves();
 }, { passive: true });
 heroTrack.addEventListener('keydown', (event) => {
   if (event.target !== heroTrack || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
   event.preventDefault();
-  goToSlide(activeSlide() + (event.key === 'ArrowRight' ? 1 : -1));
+  queueHeroMove({ step: event.key === 'ArrowRight' ? 1 : -1 });
 });
+heroTrack.addEventListener('focusin', scheduleHero);
+heroTrack.addEventListener('focusout', () => queueMicrotask(scheduleHero));
+heroToggle.addEventListener('click', () => {
+  heroPaused = !heroPaused;
+  updateHeroToggle();
+});
+document.addEventListener('visibilitychange', scheduleHero);
+new ResizeObserver(sizeHero).observe(heroTrack);
+new IntersectionObserver(([entry]) => {
+  heroVisible = entry.intersectionRatio >= 0.35;
+  scheduleHero();
+}, { threshold: 0.35 }).observe(heroTrack);
+sizeHero();
+syncHeroControls();
+updateHeroToggle();
 
 const millisecondsPerSecond = 1000;
 const secondsPerMinute = 60;
@@ -1321,19 +1442,20 @@ document.addEventListener('visibilitychange', scheduleReview);
 positionReviews();
 updateReviewControl();
 
-document.getElementById('review-more').addEventListener('click', () => {
-  const list = document.createElement('ul');
-  list.className = 'review-list';
-  for (const review of REVIEWS) {
-    const item = document.createElement('li');
-    const image = document.createElement('img');
-    image.src = asset(review.image);
-    setLocalized(image, review.title, REVIEW_TITLES_EN[review.title], 'alt');
-    item.append(image, reviewContent(review));
-    list.append(item);
-  }
-  openPanel('스마트스토어 구매 리뷰', list, 'Naver Smart Store reviews');
-});
+const reviewList = document.getElementById('review-page-list');
+reviewList.append(...REVIEWS.map((review) => {
+  const item = document.createElement('li');
+  const image = document.createElement('img');
+  image.src = asset(review.image);
+  image.alt = '';
+  image.loading = 'lazy';
+  const title = document.createElement('h2');
+  setLocalized(title, review.title, REVIEW_TITLES_EN[review.title]);
+  const copy = reviewContent(review);
+  copy.prepend(title);
+  item.append(image, copy);
+  return item;
+}));
 
 const magazineById = new Map(MAGAZINE_ARTICLES.map(entry => [entry.id, entry]));
 const noticesById = new Map(NOTICES.map(entry => [entry.id, entry]));

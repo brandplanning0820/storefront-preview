@@ -20,9 +20,9 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=gallery-selection">
-  <script src="catalog.js?v=product-gallery" defer></script>
-  <script src="app.js?v=gallery-selection" defer></script>
+  <link rel="stylesheet" href="styles.css?v=review-page">
+  <script src="catalog.js?v=front-wearing-photos" defer></script>
+  <script src="app.js?v=looping-hero-and-reviews" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -86,6 +86,7 @@
           <button type="button" data-hero-page="5" aria-label="쿠치넬리 입고 소식 배너" data-en-aria-label="Cucinelli new arrivals banner"></button>
         </div>
         <button type="button" data-hero-step="1" aria-label="다음 배너" data-en-aria-label="Next banner"><i class="chevron" aria-hidden="true"></i></button>
+        <button type="button" id="hero-toggle" aria-label="배너 자동재생 멈추기" data-en-aria-label="Pause banner slideshow"><span aria-hidden="true">Ⅱ</span></button>
       </div>
     </section>
 
@@ -149,7 +150,7 @@
           <button type="button" class="nav-button" data-review-step="1" aria-label="다음 리뷰" data-en-aria-label="Next review"><i class="chevron" aria-hidden="true"></i></button>
         </div>
       </div>
-      <div class="more-row"><button type="button" class="button outline" id="review-more" data-en="More reviews">리뷰 더보기</button></div>
+      <div class="more-row"><a class="button outline" href="#reviews/all" data-en="More reviews">리뷰 더보기</a></div>
     </section>
 
     <section class="wrap magazine" id="magazine" aria-labelledby="magazine-heading">
@@ -308,6 +309,10 @@
     <section id="brand-directory" aria-labelledby="brand-directory-title" hidden>
       <div class="section-heading"><h1 id="brand-directory-title" tabindex="-1" data-en="Brands">브랜드</h1></div>
       <nav class="brand-alphabet" id="brand-alphabet" aria-label="알파벳 순 브랜드" data-en-aria-label="Brands in alphabetical order"></nav>
+    </section>
+    <section id="review-page" aria-labelledby="review-page-title" hidden>
+      <div class="section-heading"><h1 id="review-page-title" tabindex="-1" data-en="Reviews">리뷰</h1></div>
+      <ul class="review-list" id="review-page-list"></ul>
     </section>
     <section id="magazine-page" aria-labelledby="magazine-page-title" hidden>
       <div class="section-heading"><h1 id="magazine-page-title" tabindex="-1" data-en="Magazine">매거진</h1></div>
