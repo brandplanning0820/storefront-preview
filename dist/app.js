@@ -59,8 +59,9 @@ const brandNames = new Map([
   ['HERNO', '에르노'], ['BURBERRY', '버버리'], ['FENDI', '펜디'],
   ['LOEWE', '로에베'], ['MAX MARA', '막스마라'], ["'S MAX MARA", '에스 막스마라'],
   ['MAX MARA STUDIO', '막스마라 스튜디오'], ['WEEKEND MAX MARA', '위켄드 막스마라'],
-  ['BOTTEGA VENETA', '보테가 베네타'],
+  ['BOTTEGA VENETA', '보테가 베네타'], ['TOM FORD', '톰 포드'],
 ]);
+const classicBrands = new Set(['BRUNELLO CUCINELLI', 'TOM FORD']);
 const maxMaraBrands = ['MAX MARA', "'S MAX MARA", 'MAX MARA STUDIO', 'WEEKEND MAX MARA'];
 const maxMaraGroup = 'max-mara-group';
 const genderOrder = ['남성', '여성'];
@@ -458,6 +459,7 @@ function showCollection(group, initialBrand, scopedBrand) {
   if (scopedBrand === maxMaraGroup) collectionProducts = allProducts.filter(product => maxMaraBrands.includes(product.brand));
   else if (scopedBrand) collectionProducts = allProducts.filter(product => product.brand === scopedBrand);
   else if (group === 'all') collectionProducts = allProducts;
+  else if (group === 'classic') collectionProducts = allProducts.filter(product => classicBrands.has(product.brand));
   else if (group === 'men' || group === 'women') {
     const gender = group === 'men' ? '남성' : '여성';
     collectionProducts = allProducts.filter(product => product.gender === gender);
