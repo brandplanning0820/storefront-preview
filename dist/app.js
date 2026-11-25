@@ -866,34 +866,80 @@ document.getElementById('checkout-pay')?.addEventListener('click', () => {
   openPanel('결제 안내', description(note.dataset.ko, note.dataset.en), 'Payment information');
 });
 
+function showInquiryConfirmation(byEmail, sent = false) {
+  const confirmation = document.createElement('form');
+  confirmation.method = 'dialog';
+  const confirm = document.createElement('button');
+  confirm.type = 'submit';
+  confirm.className = 'button dark';
+  setLocalized(confirm, '확인', 'OK');
+  const message = sent
+    ? description('입력하신 이메일로 연락드리겠습니다.', 'We’ll get back to you at the email address you entered.')
+    : description('이 화면은 시안입니다. 실제 접수와 메일 발송은 운영몰 또는 전송 서비스 연결 후 이용할 수 있어요.',
+      'This is a preview. Live inquiries and email delivery become available once a submission service is connected.');
+  confirmation.append(message, confirm);
+  openPanel(byEmail ? '메일로 문의가 전송되었습니다' : '문의가 전송되었습니다',
+    confirmation, byEmail ? 'Inquiry sent by email' : 'Inquiry submitted');
+  confirm.focus();
+}
+
+async function sendInquiry(form, endpoint, data, note) {
+  const fields = form.querySelectorAll('input:enabled, textarea:enabled');
+  const buttons = form.querySelectorAll('button[type="submit"]');
+  buttons.forEach(button => { button.disabled = true; });
+  fields.forEach(field => { field.readOnly = true; });
+  setLocalized(note, '문의 내용을 보내고 있어요.', 'Sending your inquiry…');
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      body: data,
+      headers: { Accept: 'application/json' },
+      credentials: 'omit',
+      redirect: 'error',
+      signal: AbortSignal.timeout(15000),
+    });
+    if (!response.ok || (await response.json()).ok !== true) throw new Error('Inquiry was not accepted');
+    if (form.isConnected && panel.open) showInquiryConfirmation(true, true);
+  } catch {
+    setLocalized(note, '문의 접수를 확인하지 못했어요. 잠시 후 다시 시도해 주세요.',
+      'We couldn’t confirm your inquiry was received. Please try again in a moment.');
+  } finally {
+    fields.forEach(field => { field.readOnly = false; });
+    buttons.forEach(button => { button.disabled = false; });
+  }
+}
+
 function openInquiry() {
   const form = document.getElementById('inquiry-template').content.firstElementChild.cloneNode(true);
-  const mail = form.querySelector('.inquiry-mail');
+  const endpoint = form.dataset.inquiryEndpoint?.trim();
   const note = form.querySelector('.inquiry-note');
+  if (endpoint) {
+    form.elements.email.disabled = false;
+    form.elements.email.closest('label').hidden = false;
+  }
   if (!productPage.hidden && currentProduct) {
     form.elements.brand.value = currentProduct.brand;
     form.elements.size.value = detailForm.querySelector('[name="size"]:checked')?.value || '';
   }
   form.addEventListener('input', () => {
-    mail.hidden = true;
-    note.textContent = '';
+    setLocalized(note, '', '');
   });
   form.addEventListener('submit', event => {
     event.preventDefault();
+    if (form.querySelector('button[type="submit"]').disabled) return;
+    const byEmail = event.submitter?.value === 'email';
+    if (!byEmail || !endpoint) {
+      showInquiryConfirmation(byEmail);
+      return;
+    }
+    if (!form.elements.email.value) {
+      setLocalized(note, '회신받을 이메일을 입력해 주세요.', 'Enter an email address for our reply.');
+      form.elements.email.focus();
+      return;
+    }
     const data = new FormData(form);
-    const subject = '브랜드플래닝 상품 문의 · ' + data.get('brand').trim();
-    const body = [
-      '상품 브랜드  ' + data.get('brand').trim(),
-      '판매 페이지 URL  ' + data.get('url').trim(),
-      '원하는 사이즈  ' + data.get('size').trim(),
-      '', '기타 요청사항', data.get('message').trim() || '없음',
-    ].join('\r\n');
-    const recipient = document.querySelector('.site-footer a[href^="mailto:"]').getAttribute('href');
-    mail.href = recipient + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-    mail.hidden = false;
-    setLocalized(note, '메일 앱에서 보내면 회사 이메일로 문의가 전달돼요.',
-      'Send the draft from your email app to reach our team.');
-    mail.focus({ preventScroll: true });
+    data.set('subject', '브랜드플래닝 상품 문의 · ' + data.get('brand').trim());
+    sendInquiry(form, endpoint, data, note);
   });
   openPanel('상품 문의', form, 'Product inquiry');
 }
