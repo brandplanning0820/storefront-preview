@@ -374,16 +374,11 @@ html[lang="en"] .brand-letter a span[lang="ko"] { display: none; }
 .detail-actions .button { min-height: 48px; padding-inline: 8px; }
 .detail-specs { margin-top: clamp(32px, 5vw, 76px); border-top: 1px solid var(--line); padding-top: clamp(18px, 2vw, 30px); }
 .detail-specs h2 { margin-bottom: 17px; font-size: clamp(1.15rem, 1.6vw, 1.45rem); font-weight: 720; }
-.detail-spec-content { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(24px, 4vw, 66px); margin: 0 0 22px; padding: clamp(18px, 3vw, 35px); border: 1px solid var(--line); background: #fbf8f4; }
+.detail-spec-content { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(24px, 4vw, 66px); padding: clamp(18px, 3vw, 35px); border: 1px solid var(--line); background: #fbf8f4; }
 .detail-spec-content h3 { margin-bottom: 11px; font-size: 1rem; }
 .detail-spec-content ul { display: grid; gap: 5px; margin: 0; padding-inline-start: 1.2em; list-style: disc; }
-.detail-spec-content li, .detail-material-note p { color: #514942; font-size: .9375rem; line-height: 1.55; overflow-wrap: anywhere; }
-.detail-material-note { margin-top: 17px; padding-top: 14px; border-top: 1px solid var(--line); }
-.detail-material-note h4 { margin-bottom: 6px; font-size: .875rem; }
-.detail-specs dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(18px, 5vw, 82px); }
-.detail-specs dl > div { display: grid; grid-template-columns: minmax(90px, 35%) minmax(0, 1fr); align-items: baseline; gap: 10px; padding-block: 12px; border-bottom: 1px solid var(--line); font-size: .9375rem; }
-.detail-specs dt { color: var(--muted); }
-.detail-specs dd { overflow-wrap: anywhere; }
+.detail-spec-content li, .detail-material-description { color: #514942; font-size: .9375rem; line-height: 1.55; overflow-wrap: anywhere; }
+.detail-material-description { margin-top: 1.55em; }
 .detail-options, .brand-filter { border: 0; padding: 0; margin: 0; min-inline-size: 0; }
 .detail-options legend, .brand-filter legend { font-weight: 700; margin-bottom: 10px; padding: 0; }
 .size-list { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -557,7 +552,7 @@ html[lang="en"] .brand-letter a span[lang="ko"] { display: none; }
   .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .footer-brand, .footer-business { grid-column: 1 / -1; }
   .notice { min-height: 450px; }
-  .detail-specs dl, .detail-spec-content { grid-template-columns: minmax(0, 1fr); }
+  .detail-spec-content { grid-template-columns: minmax(0, 1fr); }
   .cart-item { grid-template-columns: 22px minmax(0, 1fr); gap: 10px; }
   .cart-item-actions { grid-column: 2; grid-template-columns: max-content minmax(0, 1fr) auto; }
   .checkout-item { grid-template-columns: minmax(0, 1fr); }

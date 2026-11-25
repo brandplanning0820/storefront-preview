@@ -444,7 +444,8 @@ function showCollection(group, initialBrand, scopedBrand) {
   collectionBrands.parentElement.hidden = Boolean(scopedBrand);
   if (!scopedBrand) renderBrandFilters(initialBrand);
   renderProductFacet(collectionGenders, 'gender', genderOrder, Boolean(scopedBrand));
-  renderProductFacet(collectionCategories, 'category', categoryOrder, Boolean(scopedBrand));
+  const showCategories = Boolean(scopedBrand) || ['men', 'women', 'weekly', 'classic', 'domestic'].includes(group);
+  renderProductFacet(collectionCategories, 'category', categoryOrder, showCategories);
 
   const isMaxMara = scopedBrand === maxMaraGroup || maxMaraBrands.includes(scopedBrand);
   collectionBrandLines.hidden = !isMaxMara;
@@ -546,12 +547,6 @@ function changeDetailQuantity(step) {
   updateDetailTotal();
 }
 
-const seasonNames = {
-  '26FW': ['2026 가을·겨울', 'Fall/Winter 2026'],
-  '27SS': ['2027 봄·여름', 'Spring/Summer 2027'],
-  'FW컬렉션': ['가을·겨울 컬렉션', 'Fall/Winter collection'],
-};
-
 function showDetailList(id, lines) {
   const items = lines.map(([korean, english]) => {
     const item = document.createElement('li');
@@ -563,30 +558,15 @@ function showDetailList(id, lines) {
 
 function showProductSpecs(product) {
   const details = PRODUCT_DETAILS[product.id];
-  const season = seasonNames[product.name.split(' ')[0]];
   const productDescription = document.getElementById('detail-description');
   productDescription.hidden = !details?.body;
   if (details?.body) setLocalized(productDescription, ...details.body);
-  document.getElementById('detail-spec-content').hidden = !details?.features?.length;
+  document.getElementById('detail-specs').hidden = !details?.features?.length && !details?.materials?.length;
   showDetailList('detail-features', details?.features || []);
   showDetailList('detail-materials', details?.materials || []);
-  document.getElementById('detail-material-note').hidden = !details?.materialDescription;
-  if (details?.materialDescription) {
-    setLocalized(document.getElementById('detail-material-description'), ...details.materialDescription);
-  }
-  document.getElementById('detail-spec-origin-row').hidden = !details?.origin;
-  if (details?.origin) setLocalized(document.getElementById('detail-spec-origin'), ...details.origin);
-  document.getElementById('detail-spec-brand').textContent = product.brand;
-  const color = document.getElementById('detail-spec-color');
-  color.parentElement.hidden = !details?.color;
-  if (details?.color) setLocalized(color, ...details.color);
-  setLocalized(document.getElementById('detail-spec-category'), product.category, facetTitlesEn[product.category]);
-  document.getElementById('detail-spec-season-row').hidden = !season;
-  if (season) setLocalized(document.getElementById('detail-spec-season'), ...season);
-  const sizes = product.sizes.join(' · ');
-  setLocalized(document.getElementById('detail-spec-sizes'), sizes || '품절', sizes || 'Sold out');
-  setLocalized(document.getElementById('detail-spec-delivery'), deliveryTitles[product.delivery] + '배송',
-    deliveryTitlesEn[product.delivery] + ' shipping');
+  const materialDescription = document.getElementById('detail-material-description');
+  materialDescription.hidden = !details?.materialDescription;
+  if (details?.materialDescription) setLocalized(materialDescription, ...details.materialDescription);
 }
 
 function showProduct(product, orderItem) {
