@@ -199,6 +199,8 @@ const magazinePage = document.getElementById('magazine-page');
 const magazinePageTitle = document.getElementById('magazine-page-title');
 const noticePage = document.getElementById('notice-page');
 const noticePageTitle = document.getElementById('notice-page-title');
+const cartPage = document.getElementById('cart-page');
+const cartTitle = document.getElementById('cart-title');
 const editorialArticle = document.getElementById('editorial-article');
 const editorialTitle = document.getElementById('editorial-title');
 const detailForm = document.getElementById('detail-form');
@@ -207,6 +209,7 @@ const quantityDecrease = document.getElementById('quantity-decrease');
 const quantityIncrease = document.getElementById('quantity-increase');
 const detailName = document.getElementById('detail-name');
 const detailStatus = document.getElementById('detail-status');
+const detailCartLink = document.getElementById('detail-cart-link');
 const skipLink = document.querySelector('.skip-link');
 const siteTitle = document.title;
 let currentProduct;
@@ -401,9 +404,11 @@ function showProduct(product) {
   currentProduct = product;
   detailForm.reset();
   detailStatus.textContent = '';
+  detailCartLink.hidden = true;
   const parentHash = detailReturnHash || '#catalog/' + group;
   storeParent.href = parentHash;
-  storeParent.textContent = brandTitle(brandRoutes.get(parentHash)) || collectionTitles[parentHash.split(/[/?]/)[1]] || '상품 목록';
+  storeParent.textContent = parentHash === '#cart' ? '장바구니'
+    : brandTitle(brandRoutes.get(parentHash)) || collectionTitles[parentHash.split(/[/?]/)[1]] || '상품 목록';
   storeParent.removeAttribute('aria-current');
   const image = document.getElementById('detail-image');
   image.src = asset(product.image);
@@ -434,60 +439,100 @@ function showProduct(product) {
   updateDetailTotal();
 }
 
-let cart = [];
 const cartKey = 'brandplanning-preview-cart';
-try {
-  const saved = JSON.parse(localStorage.getItem(cartKey));
-  if (Array.isArray(saved)) cart = saved.filter(row =>
-    byId.get(row?.id)?.sizes.includes(row.size) && Number.isInteger(row.quantity) && row.quantity > 0
-  );
-} catch { /* The preview still supports the current tab without storage. */ }
+const cartLink = document.getElementById('cart-link');
+const cartItems = document.getElementById('cart-items');
+const cartItemTemplate = document.getElementById('cart-item-template');
+const cartStatus = document.getElementById('cart-status');
+const cartEmpty = document.getElementById('cart-empty');
+const cartFilled = document.getElementById('cart-filled');
+const cartCount = document.getElementById('cart-count');
+const cartTotal = document.getElementById('cart-total');
 
-const cartButton = document.getElementById('cart-button');
+function readCart() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(cartKey));
+    if (!Array.isArray(saved)) return [];
+    return saved.filter(row =>
+      byId.get(row?.id)?.sizes.includes(row.size) && Number.isSafeInteger(row.quantity) && row.quantity > 0
+    );
+  } catch {
+    return [];
+  }
+}
 
-function refreshCartBadge() {
+let cart = readCart();
+
+function updateCartTotals() {
   const count = cart.reduce((total, row) => total + row.quantity, 0);
-  cartButton.textContent = count ? '장바구니 (' + count + ')' : '장바구니';
+  const subtotal = cart.reduce((total, row) => total + byId.get(row.id).price * row.quantity, 0);
+  cartLink.textContent = count ? '장바구니 (' + count + ')' : '장바구니';
+  cartEmpty.hidden = count > 0;
+  cartFilled.hidden = !count;
+  cartCount.textContent = '총 ' + money.format(count) + '개';
+  cartTotal.textContent = won(subtotal);
 }
 
 function saveCart() {
   try { localStorage.setItem(cartKey, JSON.stringify(cart)); } catch { /* Use in-memory cart. */ }
-  refreshCartBadge();
+  updateCartTotals();
 }
 
-function openCart() {
-  if (!cart.length) {
-    openPanel('장바구니', description('장바구니가 비어 있어요.'));
-    return;
+function cartItem(row) {
+  const product = byId.get(row.id);
+  const item = cartItemTemplate.content.firstElementChild.cloneNode(true);
+  const productLink = item.querySelector('.cart-product');
+  productLink.href = '#product/' + product.id;
+  productLink.querySelector('img').src = asset(product.image);
+  productLink.querySelector('.product-brand').textContent = product.brand;
+  productLink.querySelector('.cart-product-name').textContent = product.name;
+  productLink.querySelector('.cart-size').textContent = '사이즈 ' + row.size;
+  productLink.querySelector('.cart-unit').textContent = won(product.price);
+
+  const quantity = item.querySelector('.cart-quantity');
+  const decrease = item.querySelector('.cart-decrease');
+  const increase = item.querySelector('.cart-increase');
+  const subtotal = item.querySelector('.cart-subtotal');
+  const remove = item.querySelector('.cart-remove');
+  const option = product.name + ' · 사이즈 ' + row.size;
+  item.querySelector('.quantity-stepper').setAttribute('aria-label', option + ' 수량');
+  remove.setAttribute('aria-label', option + ' 삭제');
+
+  function updateQuantity() {
+    quantity.textContent = money.format(row.quantity);
+    subtotal.textContent = won(product.price * row.quantity);
+    decrease.disabled = row.quantity <= 1;
+    increase.disabled = row.quantity >= Number.MAX_SAFE_INTEGER;
   }
-  const body = document.createElement('div');
-  const list = document.createElement('ul');
-  list.className = 'cart-list';
-  let total = 0;
-  for (const row of cart) {
-    const product = byId.get(row.id);
-    const price = product.price * row.quantity;
-    total += price;
-    const item = document.createElement('li');
-    const link = document.createElement('a');
-    link.href = '#product/' + row.id;
-    link.textContent = product.name;
-    const meta = description(row.size + ' · ' + row.quantity + '개 · ' + won(price));
-    const remove = document.createElement('button');
-    remove.type = 'button';
-    remove.textContent = '삭제';
-    remove.setAttribute('aria-label', product.name + ' ' + row.size + ' 삭제');
-    remove.addEventListener('click', () => {
-      cart = cart.filter(entry => entry !== row);
-      saveCart();
-      openCart();
-      (panelBody.querySelector('button') || panel.querySelector('button')).focus();
-    });
-    item.append(link, meta, remove);
-    list.append(item);
+
+  function changeQuantity(amount, button) {
+    if (button.disabled) return;
+    const hadFocus = document.activeElement === button;
+    row.quantity += amount;
+    updateQuantity();
+    saveCart();
+    cartStatus.textContent = option + ' ' + row.quantity + '개로 변경했어요. 상품 합계 ' + cartTotal.textContent;
+    if (hadFocus && button.disabled) (amount < 0 ? increase : decrease).focus();
   }
-  body.append(list, description('상품 합계 ' + won(total)), description('시안 장바구니'));
-  openPanel('장바구니', body);
+
+  decrease.addEventListener('click', () => changeQuantity(-1, decrease));
+  increase.addEventListener('click', () => changeQuantity(1, increase));
+  remove.addEventListener('click', () => {
+    const next = (item.nextElementSibling || item.previousElementSibling)?.querySelector('.cart-remove');
+    cart = cart.filter(entry => entry !== row);
+    item.remove();
+    saveCart();
+    cartStatus.textContent = option + ' 상품을 삭제했어요.';
+    (next || cartEmpty.querySelector('a')).focus();
+  });
+  updateQuantity();
+  return item;
+}
+
+function renderCart() {
+  cartItems.replaceChildren(...cart.map(cartItem));
+  cartStatus.textContent = '';
+  updateCartTotals();
 }
 
 quantityDecrease.addEventListener('click', () => changeDetailQuantity(-1));
@@ -499,13 +544,19 @@ detailForm.addEventListener('submit', event => {
   const quantity = detailQuantity.valueAsNumber;
   if (!currentProduct?.sizes.includes(option) || !detailForm.reportValidity()) return;
   const row = cart.find(entry => entry.id === currentProduct.id && entry.size === option);
-  if (row) row.quantity += quantity;
+  if (row) row.quantity = Math.min(Number.MAX_SAFE_INTEGER, row.quantity + quantity);
   else cart.push({ id: currentProduct.id, size: option, quantity });
   saveCart();
   detailStatus.textContent = option + ' 사이즈 ' + quantity + '개를 장바구니에 담았어요.';
+  detailCartLink.hidden = false;
 });
-cartButton.addEventListener('click', openCart);
-refreshCartBadge();
+window.addEventListener('storage', event => {
+  if (event.key !== cartKey && event.key !== null) return;
+  cart = readCart();
+  if (cartPage.hidden) updateCartTotals();
+  else renderCart();
+});
+updateCartTotals();
 
 document.getElementById('inquiry-launch').addEventListener('click', () => {
   const form = document.getElementById('inquiry-template').content.firstElementChild.cloneNode(true);
@@ -549,16 +600,21 @@ function renderRoute(moveFocus = false) {
   const showBrands = hash === '#brands/all';
   const showMagazine = hash === '#magazine/all';
   const showNotices = hash === '#notices/all';
+  const showCart = hash === '#cart';
   const magazineEntry = magazineById.get(hash.match(/^#magazine\/(\d+)$/)?.[1]);
   const notice = noticesById.get(hash.match(/^#notices\/([a-z-]+)$/)?.[1]);
   const entry = magazineEntry || notice;
   const wasStore = !storePage.hidden;
-  const heading = product ? detailName : group ? collectionTitle : showBrands ? brandDirectoryTitle
+  const wasCart = !cartPage.hidden;
+  const heading = product ? detailName : group ? collectionTitle : showCart ? cartTitle : showBrands ? brandDirectoryTitle
     : showMagazine ? magazinePageTitle : showNotices ? noticePageTitle : entry ? editorialTitle : null;
   storePage.hidden = !heading;
   home.hidden = !storePage.hidden;
   productPage.hidden = !product;
   collectionPage.hidden = !group;
+  cartPage.hidden = !showCart;
+  if (showCart) cartLink.setAttribute('aria-current', 'page');
+  else cartLink.removeAttribute('aria-current');
   brandDirectory.hidden = !showBrands;
   magazinePage.hidden = !showMagazine;
   noticePage.hidden = !showNotices;
@@ -566,7 +622,7 @@ function renderRoute(moveFocus = false) {
   skipLink.href = heading ? '#' + heading.id : '#main';
 
   if (product) {
-    detailReturnHash = currentCollectionHash;
+    detailReturnHash = wasCart ? '#cart' : currentCollectionHash;
     showProduct(product);
     document.title = product.name + ' | BRAND PLANNING';
   } else if (group) {
@@ -579,13 +635,14 @@ function renderRoute(moveFocus = false) {
     currentCollectionHash = undefined;
     detailReturnHash = undefined;
     if (heading) {
-      const listPath = showBrands ? '#brands/all' : showNotices || notice ? '#notices/all' : '#magazine/all';
+      const listPath = showCart ? '#cart' : showBrands ? '#brands/all' : showNotices || notice ? '#notices/all' : '#magazine/all';
       storeParent.href = listPath;
-      storeParent.textContent = showBrands ? '브랜드' : showNotices || notice ? '공지사항' : '매거진';
+      storeParent.textContent = showCart ? cartTitle.textContent : showBrands ? '브랜드' : showNotices || notice ? '공지사항' : '매거진';
       if (entry) {
         storeParent.removeAttribute('aria-current');
         showEditorialEntry(entry, listPath);
       } else storeParent.setAttribute('aria-current', 'page');
+      if (showCart) renderCart();
       document.title = heading.textContent + ' | BRAND PLANNING';
     } else {
       document.title = siteTitle;

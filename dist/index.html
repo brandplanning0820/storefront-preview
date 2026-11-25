@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="브랜드플래닝의 해외배송, 위클리 럭셔리와 브루넬로 쿠치넬리 컬렉션">
   <title>BRAND PLANNING | 브랜드플래닝</title>
+  <script>
+    if (performance.getEntriesByType('navigation')[0]?.type === 'reload') {
+      const previousRestoration = history.scrollRestoration;
+      history.scrollRestoration = 'manual';
+      if (location.hash && location.hash !== '#cart' && !location.hash.includes('/')) {
+        history.replaceState(history.state, '', location.pathname + location.search);
+      }
+      window.addEventListener('pageshow', () => requestAnimationFrame(() => {
+        window.scrollTo(0, 0);
+        history.scrollRestoration = previousRestoration;
+      }), { once: true });
+    }
+  </script>
   <link rel="stylesheet" href="styles.css">
   <script src="catalog.js" defer></script>
   <script src="app.js" defer></script>
@@ -20,7 +33,7 @@
         <button data-account="로그인">로그인</button>
         <button data-account="회원가입">회원가입</button>
         <button data-account="마이페이지">마이페이지</button>
-        <button id="cart-button">장바구니</button>
+        <a id="cart-link" href="#cart">장바구니</a>
       </div>
       <div class="navigation-row">
         <nav class="site-nav" aria-label="주 메뉴">
@@ -178,7 +191,10 @@
             <div class="detail-total"><span>상품 합계</span><strong id="detail-total" aria-live="polite"></strong></div>
             <button class="button dark" type="submit">장바구니 담기</button>
             <p class="detail-demo">시안 장바구니 · 옵션과 가격은 2026.11.25 확인 기준</p>
-            <p role="status" id="detail-status"></p>
+            <div class="detail-cart-feedback">
+              <p role="status" id="detail-status"></p>
+              <a id="detail-cart-link" href="#cart" hidden>장바구니 보기</a>
+            </div>
           </form>
         </div>
       </div>
@@ -216,6 +232,22 @@
           <p class="collection-empty" id="collection-empty" hidden>선택한 조건에 해당하는 상품이 없어요.</p>
         </div>
       </div>
+    </section>
+    <section id="cart-page" aria-labelledby="cart-title" hidden>
+      <div class="section-heading"><h1 id="cart-title" tabindex="-1">장바구니</h1><a href="#top">쇼핑 계속하기</a></div>
+      <div class="cart-empty" id="cart-empty">
+        <p>장바구니가 비어 있어요.</p>
+        <a class="button dark" href="#catalog/all">상품 둘러보기</a>
+      </div>
+      <div class="cart-layout" id="cart-filled" hidden>
+        <ul class="cart-list" id="cart-items" aria-label="담은 상품"></ul>
+        <aside class="cart-summary" aria-labelledby="cart-summary-title">
+          <h2 id="cart-summary-title">상품 합계</h2>
+          <p id="cart-count"></p>
+          <strong id="cart-total"></strong>
+        </aside>
+      </div>
+      <p class="visually-hidden" id="cart-status" role="status"></p>
     </section>
     <section id="brand-directory" aria-labelledby="brand-directory-title" hidden>
       <div class="section-heading"><h1 id="brand-directory-title" tabindex="-1">브랜드</h1></div>
@@ -274,6 +306,29 @@
         <div class="product-photo"><img alt="" loading="lazy"><span class="delivery">해외</span></div>
         <div class="product-copy"><span class="product-brand"></span><span class="product-name"></span><strong class="product-price"></strong><span class="product-size"></span></div>
       </a>
+    </li>
+  </template>
+
+  <template id="cart-item-template">
+    <li class="cart-item">
+      <a class="cart-product">
+        <img alt="" loading="lazy">
+        <div>
+          <span class="product-brand"></span>
+          <span class="cart-product-name"></span>
+          <span class="cart-size"></span>
+          <span class="cart-unit"></span>
+        </div>
+      </a>
+      <div class="cart-item-actions">
+        <div class="quantity-stepper" role="group">
+          <button type="button" class="cart-decrease" aria-label="수량 줄이기">−</button>
+          <span class="cart-quantity"></span>
+          <button type="button" class="cart-increase" aria-label="수량 늘리기">+</button>
+        </div>
+        <strong class="cart-subtotal"></strong>
+        <button type="button" class="cart-remove">삭제</button>
+      </div>
     </li>
   </template>
 
