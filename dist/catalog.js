@@ -2148,3 +2148,196 @@ const NOTICES_EN = {
     ],
   },
 };
+
+const PRODUCT_DETAILS = {
+  '13871969099': {
+    color: ['블랙', 'Black'],
+    copy: ['반듯한 블랙 토트의 옆면에 시그니처 버버리 체크가 들어간 스몰 코츠월드입니다. 상단 손잡이와 앞면 골드 톤 장식이 단정한 형태를 살려 줍니다.',
+      'The small Cotswolds tote pairs a structured black silhouette with Burberry Check side panels. Top handles and a gold-tone front accent finish the design.'],
+  },
+  '13838058679': {
+    color: ['앤트러사이트', 'Anthracite'],
+    copy: ['차콜빛 앤트러사이트 울 플란넬에 허벅지 여유를 둔 팬츠입니다. 발목으로 갈수록 라인이 좁아져 여유 있는 실루엣이 정돈됩니다.',
+      'Anthracite wool flannel is cut with room through the thigh. The tapered leg gives the relaxed shape a clean finish.'],
+  },
+  '13837820556': {
+    color: ['브라운', 'Brown'],
+    copy: ['결이 드러나는 브라운 사슴가죽 레이스업 부츠입니다. 둥근 앞코와 도톰한 러그 밑창이 데님이나 울 팬츠에 묵직한 인상을 더합니다.',
+      'Brown deerskin lace-up boots with visible grain, a rounded toe and a substantial lug sole.'],
+  },
+  '13837188140': {
+    color: ['블랙', 'Black'],
+    copy: ['블랙 더블 플리스 소재의 팬츠입니다. 허리 스트링이 있고 밑단으로 갈수록 가볍게 좁아지는 형태라 니트나 스니커즈와 함께 입기 좋습니다.',
+      'Black double-fleece trousers with a drawstring waist and a gently tapered leg. Pair them with knitwear and sneakers.'],
+  },
+  '13837109522': {
+    color: ['다크 그레이', 'Dark grey'],
+    copy: ['차분한 다크 그레이 버진울 플란넬 팬츠입니다. 앞 허리의 드로스트링과 가지런한 테이퍼드 라인이 편안한 실루엣을 만듭니다.',
+      'Dark grey virgin wool flannel trousers with a front drawstring and a neatly tapered leg.'],
+  },
+  '13892325902': {
+    color: ['블랙', 'Black'],
+    copy: ['블랙 슬링 백 앞면에 대비되는 기마 기사 로고가 들어갔습니다. 둥근 형태와 지퍼 포켓이 눈에 띄는 가방입니다.',
+      'A rounded black sling bag with a contrasting Equestrian Knight logo and a front zip pocket.'],
+  },
+  '13892319386': {
+    color: ['블랙', 'Black'],
+    copy: ['블랙을 바탕으로 밝은 체크가 교차하는 울 스카프입니다. 단색 코트에 둘렀을 때 체크의 대비가 살아납니다.',
+      'A wool scarf with a high-contrast check on a black base. The pattern stands out against a solid coat.'],
+  },
+  '13892310828': {
+    color: ['초크 화이트', 'Chalk white'],
+    copy: ['초크 화이트 몸판에 버버리 체크 칼라를 더한 코튼 반소매 폴로입니다. 밝은 바탕 위로 칼라의 체크가 또렷하게 드러납니다.',
+      'A chalk-white short-sleeve cotton polo with a Burberry Check collar that stands out against the light body.'],
+  },
+  '13892307125': {
+    color: ['블랙', 'Black'],
+    copy: ['블랙 코튼 몸판과 베이지 톤 체크 칼라가 대비되는 반소매 폴로입니다. 몸판은 단색이라 재킷 안에 입어도 칼라의 체크가 드러납니다.',
+      'A short-sleeve black cotton polo with a contrasting beige check collar. The pattern remains visible under a jacket.'],
+  },
+  '13892302203': {
+    color: ['허니 베이지', 'Honey beige'],
+    copy: ['허니 베이지의 롱 켄징턴 헤리티지 트렌치코트입니다. 더블 브레스티드 여밈과 허리 벨트로 트렌치코트 특유의 실루엣을 살렸습니다.',
+      'The long Kensington Heritage trench in honey beige features a double-breasted front and a waist belt.'],
+  },
+  '13862254499': {
+    color: ['블루', 'Blue'],
+    copy: ['워싱으로 밝고 어두운 결이 드러나는 블루 데님 셔츠 재킷입니다. 앞면 가슴 포켓과 버튼 여밈이 있고, 티셔츠 위에 가볍게 걸치기 좋습니다.',
+      'A blue denim shirt jacket with a varied washed finish, front chest pockets and a button closure. Wear it open over a T-shirt.'],
+  },
+  '13862252891': {
+    color: ['내추럴 · 네이비', 'Natural / navy'],
+    copy: ['실크와 코튼을 사용한 셀러리아 FF 반소매 폴로입니다. 밝은 몸판에 칼라와 짧은 지퍼 주변의 네이비 라인이 들어갔습니다.',
+      'A short-sleeve Selleria FF silk-cotton polo with a light body and navy trim at the collar and short zip.'],
+  },
+  '13862251029': {
+    color: ['블루', 'Blue'],
+    copy: ['허벅지와 무릎 쪽 워싱이 두드러지는 블루 데님 팬츠입니다. 아래로 길게 떨어지는 라인이라 셔츠나 짧은 재킷과 매치하기 좋습니다.',
+      'Blue denim trousers with a pronounced wash at the thighs and knees and a long leg line.'],
+  },
+  '13862247292': {
+    color: ['라이트 그레이', 'Light grey'],
+    copy: ['라이트 그레이 바탕에 FF 패턴이 반복되는 울 실크 스카프입니다. 가장자리의 테두리 패턴이 전체 무늬를 정돈해 줍니다.',
+      'A light grey wool-silk scarf with a repeating FF pattern framed by a patterned border.'],
+  },
+  '13862243522': {
+    color: ['다크 타바코', 'Dark tobacco'],
+    copy: ['어두운 다크 타바코 톤의 울 캐시미어 판초입니다. 여유 있게 어깨를 덮는 형태로, 앞면 안쪽의 FF 주카 패턴과 프린지 끝단이 보입니다.',
+      'A dark tobacco wool-cashmere poncho with a generous drape, visible FF Zucca patterning and fringed edges.'],
+  },
+  '13886054581': {
+    color: ['포그', 'Fog'],
+    copy: ['안개처럼 밝은 포그 컬러의 캐시미어 혼방 롱 베스트입니다. 높은 칼라와 길게 이어지는 지퍼가 있는 민소매 형태라 얇은 니트 위에 겹쳐 입기 좋습니다.',
+      'A long cashmere-blend vest in a soft fog shade, with a high collar and full-length zip. The sleeveless cut makes it easy to layer over knitwear.'],
+  },
+  '13886151623': {
+    color: ['그레이', 'Grey'],
+    copy: ['그레이 컬러의 캐시미어 스카프 전체에 섬세한 플로럴 프린트가 들어갔습니다. 무늬와 가는 프린지가 단색 아우터에 자연스럽게 어울립니다.',
+      'A grey cashmere scarf with a detailed floral print and fine fringe. The tonal pattern pairs well with solid outerwear.'],
+  },
+  '13886249922': {
+    color: ['초콜릿', 'Chocolate'],
+    copy: ['초콜릿 컬러의 글라스 비즈를 촘촘하게 엮은 초커입니다. 짙은 비즈 사이로 반짝임이 보이고, 뒷면은 실버 톤 여밈으로 마감했습니다.',
+      'A choker densely strung with chocolate glass beads, finished with a silver-tone closure.'],
+  },
+  '13888380600': {
+    color: ['블랙', 'Black'],
+    copy: ['가로 퀼팅의 블랙 푸퍼 코트로, 칼라에 페이크 퍼를 댔습니다. 긴 지퍼와 허리 쪽으로 살짝 들어가는 라인이 특징입니다.',
+      'A black horizontally quilted puffer coat with a faux-fur collar, a long zip and a gently shaped waist.'],
+  },
+  '13888384529': {
+    color: ['블랙', 'Black'],
+    copy: ['밑단으로 갈수록 넓어지는 A라인의 블랙 아멜리아 패딩입니다. 높게 올라오는 칼라와 가로 퀼팅이 깔끔한 형태를 살려 줍니다.',
+      'The black Amelia puffer has an A-line shape, a high collar and clean horizontal quilting.'],
+  },
+  '13888383841': {
+    color: ['블랙', 'Black'],
+    copy: ['은은한 광택이 도는 블랙 클라우디아 다운 재킷입니다. 페이크 퍼를 더한 칼라와 허리 벨트로 패딩의 실루엣을 잡을 수 있습니다.',
+      'A lustrous black Claudia down jacket with a faux-fur collar and a belt that defines the waist.'],
+  },
+  '13812808803': {
+    color: ['스카이 블루', 'Sky blue'],
+    copy: ['맑은 스카이 블루 컬러의 코튼 긴소매 셔츠입니다. 앞면 버튼 여밈과 단정한 칼라가 있어 재킷 안에 입거나 단독으로 연출하기 좋습니다.',
+      'A long-sleeve cotton shirt in clear sky blue, with a button front and a neat collar for layering or wearing on its own.'],
+  },
+  '13763757759': {
+    color: ['베이지', 'Beige'],
+    copy: ['부드러운 결이 보이는 베이지 누벅 카프스킨 스니커즈입니다. 낮은 갑피와 밝은 색 밑창의 대비가 가벼운 인상을 줍니다.',
+      'Low-top beige nubuck calfskin sneakers with a soft-looking finish and a contrasting light sole.'],
+  },
+  '13871854526': {
+    color: ['블랙', 'Black'],
+    copy: ['앞면 가로 퀼팅과 울 혼방 소매가 대비되는 블랙 집업 카디건입니다. 목을 감싸는 칼라와 앞 지퍼가 깔끔하게 이어집니다.',
+      'A black wool-blend zip cardigan that contrasts a quilted front with knit sleeves and a stand collar.'],
+  },
+  '13851874254': {
+    color: ['헤이즐넛', 'Hazelnut'],
+    copy: ['헤이즐넛 스웨이드 위로 어두운 옆 밴드가 대비되는 로에베 보빈 첼시 부츠입니다. 둥근 앞코와 뒤쪽 당김 고리가 보입니다.',
+      'Loewe Bobbin Chelsea boots in hazelnut suede with dark elastic side panels, rounded toes and rear pull tabs.'],
+  },
+  '13856637332': {
+    color: ['울트라마린', 'Ultramarine'],
+    copy: ['짙은 울트라마린 톤의 버진울 아다지오 블레이저입니다. 넓은 라펠과 앞면 포켓이 정돈된 테일러링을 보여 줍니다.',
+      'The Adagio virgin wool blazer in deep ultramarine features broad lapels and front pockets.'],
+  },
+  '13892117876': {
+    color: ['실버', 'Silver'],
+    copy: ['금속 표면을 부드럽게 접은 듯한 매듭 형태가 특징인 소프트 노트 스몰 귀걸이입니다. 광택이 있는 실버 톤으로 마감했습니다.',
+      'Small Soft Knot earrings with a rounded, folded-knot shape and a polished silver-tone finish.'],
+  },
+  '13850707048': {
+    color: ['블랙', 'Black'],
+    copy: ['블랙 가죽을 엮은 인트레치아토 패턴의 체리 앵클 부츠입니다. 발목까지 오는 높이와 낮은 블록 힐이 특징입니다.',
+      'Cherry ankle boots in woven black Intrecciato leather, with an ankle-height shaft and a low block heel.'],
+  },
+  '13892114226': {
+    color: ['옐로 골드', 'Yellow gold'],
+    copy: ['부드럽게 겹쳐진 매듭 형태에 옐로 골드 톤을 더한 소프트 노트 스몰 귀걸이입니다. 곡면의 광택이 매듭의 입체감을 살립니다.',
+      'Small Soft Knot earrings with a yellow-gold tone. The curved, polished finish brings out the sculpted knot.'],
+  },
+  '13856634833': {
+    color: ['네이비', 'Navy'],
+    copy: ['울 코튼 혼방 소재의 네이비 카나파 블레이저입니다. 앞면 더블 버튼과 짧게 떨어지는 길이가 단정한 비율을 만듭니다.',
+      'A navy wool-cotton Canapa blazer with a double-breasted front and a proportionally short cut.'],
+  },
+  '13856647708': {
+    color: ['다크 그린', 'Dark green'],
+    copy: ['짙은 그린 실크 몸판에 대비 컬러 칼라를 넣은 에첼소 셔츠입니다. 매끈한 표면과 앞 버튼 여밈이 단정한 인상을 줍니다.',
+      'The Eccelso shirt pairs a dark green silk body with a contrast collar and a clean button front.'],
+  },
+  '13851900920': {
+    color: ['옐로우', 'Yellow'],
+    copy: ['선명한 옐로우 컬러의 울 자카드 니삭스입니다. 무릎 아래까지 오는 길이와 발 부분의 로고가 눈에 띕니다.',
+      'Bright yellow wool jacquard knee-high socks with a logo detail near the foot.'],
+  },
+  '13855954759': {
+    color: ['블루 · 화이트', 'Blue / white'],
+    copy: ['블루와 화이트가 교차하는 마드라스 체크 코튼 셔츠입니다. 반소매와 앞면 버튼 여밈을 갖춘 가벼운 인상의 셔츠입니다.',
+      'A short-sleeve cotton shirt in a blue and white Madras check, finished with a button front.'],
+  },
+  '13871846270': {
+    color: ['블랙', 'Black'],
+    copy: ['몬클레르 그레노블의 벨티드 패딩 스키 수트입니다. 밝은 상체와 블랙 하의가 대비되고, 허리 벨트가 올인원 실루엣을 정리해 줍니다.',
+      'A Moncler Grenoble belted padded ski suit with a contrasting light upper and black legs. The waist belt defines the one-piece silhouette.'],
+  },
+  '13871827399': {
+    color: ['블랙', 'Black'],
+    copy: ['블랙 퀼팅에 후드와 허리 벨트를 더한 그레노블 톨리마 다운 재킷입니다. 허리를 잡아 주는 벨트가 볼륨 있는 패딩과 대비됩니다.',
+      'The Grenoble Tolima is a black quilted ski down jacket with a hood and a waist belt that shapes the padded silhouette.'],
+  },
+  '13856627314': {
+    color: ['화이트', 'White'],
+    copy: ['화이트 실크 앞면에 러플이 흐르는 레치오 셔츠입니다. 단색이면서도 러플의 입체감이 드러나 재킷 안에 입기 좋습니다.',
+      'The Leccio white silk shirt has cascading front ruffles that add texture to a single-color blouse.'],
+  },
+  '13856631606': {
+    color: ['허니', 'Honey'],
+    copy: ['따뜻한 허니 톤의 라즈미르 롱 스커트입니다. 허리에서 밑단으로 넓어지는 피오브라 실루엣과 세로 결이 특징입니다.',
+      'A honey-toned long razmir skirt with the flared Fiobra silhouette and gentle vertical folds.'],
+  },
+  '13856629339': {
+    color: ['라이트 블루', 'Light blue'],
+    copy: ['라이트 블루와 화이트의 잔 스트라이프를 넣은 플러트 실크 셔츠입니다. 앞 버튼과 커프스가 있어 슬랙스나 데님에 두루 어울립니다.',
+      'The Flirt silk shirt features fine light blue and white stripes, a button front and defined cuffs.'],
+  },
+};

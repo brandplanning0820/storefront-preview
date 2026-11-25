@@ -184,6 +184,7 @@
           <div class="detail-meta"><span id="detail-delivery" class="delivery"></span><span class="product-brand" id="detail-brand"></span></div>
           <h1 id="detail-name" tabindex="-1"></h1>
           <strong class="detail-price" id="detail-price"></strong>
+          <p class="detail-description" id="detail-description"></p>
           <div class="weekly-deadline detail-deadline" id="detail-deadline" hidden>
             <h2 id="detail-deadline-heading" data-en="Weekly order deadline">위클리 주문 마감</h2>
             <time data-weekly-countdown role="timer" aria-labelledby="detail-deadline-heading" datetime="PT0S">0D 00H 00M 00S</time>
@@ -200,7 +201,10 @@
               </div>
             </div>
             <div class="detail-total"><span data-en="Subtotal">상품 합계</span><strong id="detail-total" aria-live="polite"></strong></div>
-            <button class="button dark" type="submit" data-en="Add to cart">장바구니 담기</button>
+            <div class="detail-actions">
+              <button class="button outline" type="submit" data-en="Add to cart">장바구니 담기</button>
+              <button class="button dark" id="detail-buy-now" type="submit" data-en="Buy now">구매하기</button>
+            </div>
             <p class="detail-demo" data-en="Preview cart · Sizes and prices as of Nov 25, 2026">시안 장바구니 · 옵션과 가격은 2026.11.25 확인 기준</p>
             <div class="detail-cart-feedback">
               <p role="status" id="detail-status"></p>
@@ -209,6 +213,17 @@
           </form>
         </div>
       </div>
+      <section class="detail-specs" aria-labelledby="detail-specs-title">
+        <h2 id="detail-specs-title" data-en="Product details">상품 상세 정보</h2>
+        <dl>
+          <div><dt data-en="Brand">브랜드</dt><dd id="detail-spec-brand"></dd></div>
+          <div><dt data-en="Color">색상</dt><dd id="detail-spec-color"></dd></div>
+          <div><dt data-en="Product type">상품군</dt><dd id="detail-spec-category"></dd></div>
+          <div id="detail-spec-season-row"><dt data-en="Season">시즌</dt><dd id="detail-spec-season"></dd></div>
+          <div><dt data-en="Available sizes">주문 가능 사이즈</dt><dd id="detail-spec-sizes"></dd></div>
+          <div><dt data-en="Shipping">배송 구분</dt><dd id="detail-spec-delivery"></dd></div>
+        </dl>
+      </section>
     </section>
     <section id="collection-page" aria-labelledby="collection-title" hidden>
       <div class="section-heading"><h1 id="collection-title" tabindex="-1"></h1></div>
@@ -251,14 +266,37 @@
         <a class="button dark" href="#catalog/all" data-en="Browse products">상품 둘러보기</a>
       </div>
       <div class="cart-layout" id="cart-filled" hidden>
-        <ul class="cart-list" id="cart-items" aria-label="담은 상품" data-en-aria-label="Cart items"></ul>
+        <div>
+          <label class="cart-select-all"><input type="checkbox" id="cart-check-all"><span data-en="Select all">전체 선택</span></label>
+          <ul class="cart-list" id="cart-items" aria-label="담은 상품" data-en-aria-label="Cart items"></ul>
+        </div>
         <aside class="cart-summary" aria-labelledby="cart-summary-title">
-          <h2 id="cart-summary-title" data-en="Subtotal">상품 합계</h2>
+          <h2 id="cart-summary-title" data-en="Selected items subtotal">선택 상품 합계</h2>
           <p id="cart-count"></p>
           <strong id="cart-total"></strong>
+          <div class="cart-buy-actions">
+            <button type="button" class="button dark" id="cart-buy-selected" data-en="Buy selected items">선택 상품 구매</button>
+            <button type="button" class="button outline" id="cart-buy-all" data-en="Buy all items">전체 상품 구매</button>
+          </div>
         </aside>
       </div>
       <p class="visually-hidden" id="cart-status" role="status"></p>
+    </section>
+    <section id="checkout-page" aria-labelledby="checkout-title" hidden>
+      <div class="section-heading"><h1 id="checkout-title" tabindex="-1" data-en="Order preview">주문서 미리보기</h1><a id="checkout-return"></a></div>
+      <div class="cart-empty" id="checkout-empty" hidden><p data-en="Go back and select the products you want to order.">주문할 상품을 다시 선택해 주세요.</p></div>
+      <div class="cart-layout" id="checkout-filled">
+        <div>
+          <h2 class="checkout-items-title" data-en="Order items">주문 상품</h2>
+          <ul class="cart-list" id="checkout-items"></ul>
+        </div>
+        <aside class="cart-summary" aria-labelledby="checkout-summary-title">
+          <h2 id="checkout-summary-title" data-en="Items subtotal">상품 합계</h2>
+          <p id="checkout-count"></p>
+          <strong id="checkout-total"></strong>
+          <p class="checkout-note" data-en="Payment will be available after the Cafe24 store is connected.">실제 결제는 카페24 운영몰 연결 후 이용할 수 있어요.</p>
+        </aside>
+      </div>
     </section>
     <section id="brand-directory" aria-labelledby="brand-directory-title" hidden>
       <div class="section-heading"><h1 id="brand-directory-title" tabindex="-1" data-en="Brands">브랜드</h1></div>
@@ -322,6 +360,7 @@
 
   <template id="cart-item-template">
     <li class="cart-item">
+      <input type="checkbox" class="cart-item-select">
       <a class="cart-product">
         <img alt="" loading="lazy">
         <div>
