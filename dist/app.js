@@ -1,5 +1,6 @@
 const money = new Intl.NumberFormat('ko-KR');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const hoverPointer = matchMedia('(hover: hover) and (pointer: fine)');
 const images = typeof PACKAGED_IMAGES === 'undefined' ? {} : PACKAGED_IMAGES;
 const languageKey = 'brandplanning-language';
 const localeFields = ['', 'aria-label', 'alt', 'placeholder', 'aria-roledescription', 'title'];
@@ -103,11 +104,34 @@ function describeDelivery(badge, product) {
   setLocalized(badge, deliveryTitles[product.delivery] + '배송', deliveryTitlesEn[product.delivery] + ' shipping', 'aria-label');
 }
 
+let cardPhotoSelection;
+
 function productCard(product) {
   const item = document.getElementById('product-template').content.firstElementChild.cloneNode(true);
   item.dataset.product = product.id;
-  item.querySelector('a').href = '#product/' + product.id;
+  const link = item.querySelector('a');
+  link.href = '#product/' + product.id;
   item.querySelector('img').src = asset(product.image);
+  const gallery = PRODUCT_GALLERIES[product.id];
+  const hoverPhoto = gallery?.wearing || gallery?.photos[0];
+  if (hoverPhoto) {
+    const preview = document.createElement('img');
+    preview.className = 'product-hover-photo';
+    preview.alt = '';
+    preview.decoding = 'async';
+    preview.addEventListener('load', () => { preview.dataset.ready = ''; }, { once: true });
+    item.querySelector('.product-photo').insertBefore(preview, item.querySelector('.delivery'));
+    link.addEventListener('pointerenter', event => {
+      if (!hoverPointer.matches || event.pointerType === 'touch' || preview.hasAttribute('src')) return;
+      preview.src = asset(hoverPhoto);
+    });
+    link.addEventListener('click', event => {
+      if (event.defaultPrevented || event.detail === 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      if (hoverPointer.matches && link.matches(':hover') && 'ready' in preview.dataset) {
+        cardPhotoSelection = { id: product.id, photo: hoverPhoto };
+      }
+    });
+  }
   item.querySelector('.product-brand').textContent = product.brand;
   setLocalized(item.querySelector('.product-name'), product.name, PRODUCT_NAMES_EN[product.id]);
   setPrice(item.querySelector('.product-price'), product.price);
@@ -569,6 +593,47 @@ function showProductSpecs(product) {
   if (details?.materialDescription) setLocalized(materialDescription, ...details.materialDescription);
 }
 
+function showProductGallery(product) {
+  const gallery = PRODUCT_GALLERIES[product.id];
+  const photos = [product.image, ...(gallery?.photos || [])];
+  const thumbnails = document.getElementById('detail-thumbnails');
+  const rail = document.getElementById('detail-thumbnail-rail');
+  const image = document.getElementById('detail-image');
+  const preferred = cardPhotoSelection?.id === product.id ? cardPhotoSelection.photo : product.image;
+  cardPhotoSelection = undefined;
+
+  const photoLabel = (photo, index) => photo === gallery?.wearing
+    ? ['착용 사진', 'On-model photo']
+    : ['상품 사진 ' + (index + 1), 'Product photo ' + (index + 1)];
+
+  function selectPhoto(index) {
+    const photo = photos[index];
+    const [koreanTitle, englishTitle] = photoLabel(photo, index);
+    image.src = asset(photo);
+    setLocalized(image, product.name + ' · ' + koreanTitle,
+      (PRODUCT_NAMES_EN[product.id] || product.name) + ' · ' + englishTitle, 'alt');
+    [...thumbnails.children].forEach((button, position) => button.setAttribute('aria-pressed', String(position === index)));
+  }
+
+  rail.hidden = photos.length < 2;
+  thumbnails.replaceChildren(...(rail.hidden ? [] : photos.map((photo, index) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    setLocalized(button, ...photoLabel(photo, index), 'aria-label');
+    const thumb = document.createElement('img');
+    thumb.alt = '';
+    thumb.loading = 'lazy';
+    thumb.decoding = 'async';
+    thumb.src = asset(photo);
+    button.append(thumb);
+    button.addEventListener('click', () => selectPhoto(index));
+    return button;
+  })));
+  selectPhoto(Math.max(0, photos.indexOf(preferred)));
+  thumbnails.scrollTop = 0;
+  thumbnails.scrollLeft = 0;
+}
+
 function showProduct(product, orderItem) {
   const group = groupFor(product);
   currentProduct = product;
@@ -583,9 +648,7 @@ function showProduct(product, orderItem) {
   else setLocalized(storeParent, brandTitle(parentBrand) || collectionTitles[parentGroup] || '상품 목록',
     brandTitleEn(parentBrand) || collectionTitlesEn[parentGroup] || 'Products');
   storeParent.removeAttribute('aria-current');
-  const image = document.getElementById('detail-image');
-  image.src = asset(product.image);
-  setLocalized(image, product.name, PRODUCT_NAMES_EN[product.id], 'alt');
+  showProductGallery(product);
   describeDelivery(document.getElementById('detail-delivery'), product);
   document.getElementById('detail-brand').textContent = product.brand;
   setLocalized(detailName, product.name, PRODUCT_NAMES_EN[product.id]);

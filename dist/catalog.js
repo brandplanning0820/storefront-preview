@@ -2899,3 +2899,152 @@ const PRODUCT_DETAILS = {
     origin: ["루마니아","Romania"],
   },
 };
+
+const PRODUCT_GALLERIES = {
+  "13871969099": {
+    photos: ["13871969099-photo-02.webp", "13871969099-photo-03.webp", "13871969099-photo-04.webp", "13871969099-photo-05.webp", "13871969099-photo-06.webp", "13871969099-photo-07.webp"],
+    wearing: "13871969099-photo-06.webp",
+  },
+  "13838058679": {
+    photos: ["13838058679-photo-02.webp", "13838058679-photo-03.webp", "13838058679-photo-04.webp", "13838058679-photo-05.webp", "13838058679-photo-06.webp"],
+    wearing: "13838058679-photo-03.webp",
+  },
+  "13837820556": {
+    photos: ["13837820556-photo-02.webp", "13837820556-photo-03.webp", "13837820556-photo-04.webp", "13837820556-photo-05.webp"],
+    wearing: "13837820556-photo-04.webp",
+  },
+  "13837188140": {
+    photos: ["13837188140-photo-02.webp", "13837188140-photo-03.webp", "13837188140-photo-04.webp", "13837188140-photo-05.webp", "13837188140-photo-06.webp"],
+    wearing: "13837188140-photo-03.webp",
+  },
+  "13837109522": {
+    photos: ["13837109522-photo-02.webp", "13837109522-photo-03.webp", "13837109522-photo-04.webp", "13837109522-photo-05.webp", "13837109522-photo-06.webp"],
+    wearing: "13837109522-photo-03.webp",
+  },
+  "13892325902": {
+    photos: ["13892325902-photo-02.webp", "13892325902-photo-03.webp", "13892325902-photo-04.webp", "13892325902-photo-05.webp"],
+    wearing: "13892325902-photo-05.webp",
+  },
+  "13892319386": {
+    photos: ["13892319386-photo-02.webp", "13892319386-photo-03.webp", "13892319386-photo-04.webp", "13892319386-photo-05.webp", "13892319386-photo-06.webp", "13892319386-photo-07.webp"],
+    wearing: "13892319386-photo-03.webp",
+  },
+  "13892310828": {
+    photos: ["13892310828-photo-02.webp", "13892310828-photo-03.webp", "13892310828-photo-04.webp"],
+    wearing: "13892310828-photo-03.webp",
+  },
+  "13892307125": {
+    photos: ["13892307125-photo-02.webp", "13892307125-photo-03.webp"],
+    wearing: "13892307125-photo-02.webp",
+  },
+  "13892302203": {
+    photos: ["13892302203-photo-02.webp", "13892302203-photo-03.webp", "13892302203-photo-04.webp", "13892302203-photo-05.webp"],
+    wearing: "13892302203-photo-03.webp",
+  },
+  "13862254499": {
+    photos: ["13862254499-photo-02.webp", "13862254499-photo-03.webp", "13862254499-photo-04.webp"],
+    wearing: "13862254499-photo-04.webp",
+  },
+  "13862252891": {
+    photos: ["13862252891-photo-02.webp", "13862252891-photo-03.webp"],
+  },
+  "13862251029": {
+    photos: ["13862251029-photo-02.webp", "13862251029-photo-03.webp", "13862251029-photo-04.webp"],
+    wearing: "13862251029-photo-04.webp",
+  },
+  "13862247292": {
+    photos: ["13862247292-photo-02.webp", "13862247292-photo-03.webp"],
+  },
+  "13862243522": {
+    photos: ["13862243522-photo-02.webp", "13862243522-photo-03.webp"],
+  },
+  "13886054581": {
+    photos: ["13886054581-photo-02.webp", "13886054581-photo-03.webp", "13886054581-photo-04.webp"],
+    wearing: "13886054581-photo-02.webp",
+  },
+  "13886151623": {
+    photos: ["13886151623-photo-02.webp", "13886151623-photo-03.webp", "13886151623-photo-04.webp"],
+    wearing: "13886151623-photo-04.webp",
+  },
+  "13886249922": {
+    photos: ["13886249922-photo-02.webp", "13886249922-photo-03.webp"],
+    wearing: "13886249922-photo-03.webp",
+  },
+  "13888380600": {
+    photos: ["13888380600-photo-02.webp", "13888380600-photo-03.webp"],
+  },
+  "13888384529": {
+    photos: ["13888384529-photo-02.webp", "13888384529-photo-03.webp", "13888384529-photo-04.webp", "13888384529-photo-05.webp"],
+    wearing: "13888384529-photo-04.webp",
+  },
+  "13888383841": {
+    photos: ["13888383841-photo-02.webp", "13888383841-photo-03.webp", "13888383841-photo-04.webp"],
+  },
+  "13812808803": {
+    photos: ["13812808803-photo-02.webp", "13812808803-photo-03.webp", "13812808803-photo-04.webp", "13812808803-photo-05.webp"],
+    wearing: "13812808803-photo-02.webp",
+  },
+  "13763757759": {
+    photos: ["13763757759-photo-02.webp", "13763757759-photo-03.webp", "13763757759-photo-04.webp", "13763757759-photo-05.webp"],
+    wearing: "13763757759-photo-02.webp",
+  },
+  "13871854526": {
+    photos: ["13871854526-photo-02.webp", "13871854526-photo-03.webp", "13871854526-photo-04.webp", "13871854526-photo-05.webp", "13871854526-photo-06.webp"],
+    wearing: "13871854526-photo-02.webp",
+  },
+  "13851874254": {
+    photos: ["13851874254-photo-02.webp", "13851874254-photo-03.webp", "13851874254-photo-04.webp", "13851874254-photo-05.webp"],
+    wearing: "13851874254-photo-05.webp",
+  },
+  "13856637332": {
+    photos: ["13856637332-photo-02.webp", "13856637332-photo-03.webp", "13856637332-photo-04.webp", "13856637332-photo-05.webp", "13856637332-photo-06.webp"],
+    wearing: "13856637332-photo-02.webp",
+  },
+  "13892117876": {
+    photos: ["13892117876-photo-02.webp", "13892117876-photo-03.webp"],
+  },
+  "13850707048": {
+    photos: ["13850707048-photo-02.webp", "13850707048-photo-03.webp", "13850707048-photo-04.webp"],
+    wearing: "13850707048-photo-04.webp",
+  },
+  "13892114226": {
+    photos: ["13892114226-photo-02.webp", "13892114226-photo-03.webp", "13892114226-photo-04.webp"],
+    wearing: "13892114226-photo-04.webp",
+  },
+  "13856634833": {
+    photos: ["13856634833-photo-02.webp", "13856634833-photo-03.webp", "13856634833-photo-04.webp", "13856634833-photo-05.webp", "13856634833-photo-06.webp"],
+    wearing: "13856634833-photo-02.webp",
+  },
+  "13856647708": {
+    photos: ["13856647708-photo-02.webp", "13856647708-photo-03.webp", "13856647708-photo-04.webp", "13856647708-photo-05.webp", "13856647708-photo-06.webp"],
+    wearing: "13856647708-photo-02.webp",
+  },
+  "13851900920": {
+    photos: ["13851900920-photo-02.webp", "13851900920-photo-03.webp", "13851900920-photo-04.webp"],
+    wearing: "13851900920-photo-04.webp",
+  },
+  "13855954759": {
+    photos: ["13855954759-photo-02.webp", "13855954759-photo-03.webp", "13855954759-photo-04.webp", "13855954759-photo-05.webp"],
+    wearing: "13855954759-photo-02.webp",
+  },
+  "13871846270": {
+    photos: ["13871846270-photo-02.webp", "13871846270-photo-03.webp", "13871846270-photo-04.webp", "13871846270-photo-05.webp", "13871846270-photo-06.webp", "13871846270-photo-07.webp", "13871846270-photo-08.webp", "13871846270-photo-09.webp", "13871846270-photo-10.webp"],
+    wearing: "13871846270-photo-02.webp",
+  },
+  "13871827399": {
+    photos: ["13871827399-photo-02.webp", "13871827399-photo-03.webp", "13871827399-photo-04.webp", "13871827399-photo-05.webp", "13871827399-photo-06.webp", "13871827399-photo-07.webp"],
+    wearing: "13871827399-photo-02.webp",
+  },
+  "13856627314": {
+    photos: ["13856627314-photo-02.webp", "13856627314-photo-03.webp", "13856627314-photo-04.webp", "13856627314-photo-05.webp"],
+    wearing: "13856627314-photo-02.webp",
+  },
+  "13856631606": {
+    photos: ["13856631606-photo-02.webp", "13856631606-photo-03.webp", "13856631606-photo-04.webp"],
+    wearing: "13856631606-photo-02.webp",
+  },
+  "13856629339": {
+    photos: ["13856629339-photo-02.webp", "13856629339-photo-03.webp", "13856629339-photo-04.webp"],
+    wearing: "13856629339-photo-02.webp",
+  },
+};

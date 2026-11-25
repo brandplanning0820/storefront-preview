@@ -20,9 +20,9 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=notice-inquiry">
-  <script src="catalog.js?v=inquiry-email" defer></script>
-  <script src="app.js?v=inquiry-email" defer></script>
+  <link rel="stylesheet" href="styles.css?v=product-gallery">
+  <script src="catalog.js?v=product-gallery" defer></script>
+  <script src="app.js?v=product-gallery" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -177,7 +177,12 @@
     <nav class="store-path" aria-label="현재 위치" data-en-aria-label="Breadcrumb"><a href="#top" data-en="Home">홈</a><span aria-hidden="true">/</span><a id="store-parent"></a></nav>
     <section id="product-page" aria-labelledby="detail-name" hidden>
       <div class="detail-layout">
-        <div class="detail-photo"><img id="detail-image" alt=""></div>
+        <div class="detail-gallery">
+          <div class="detail-thumbnail-rail" id="detail-thumbnail-rail" hidden>
+            <div class="detail-thumbnails" id="detail-thumbnails" role="group" aria-label="상품 사진 선택" data-en-aria-label="Choose a product photo"></div>
+          </div>
+          <div class="detail-photo"><img id="detail-image" alt=""></div>
+        </div>
         <div class="detail-info">
           <div class="detail-meta"><span id="detail-delivery" class="delivery"></span><span class="product-brand" id="detail-brand"></span></div>
           <h1 id="detail-name" tabindex="-1"></h1>
