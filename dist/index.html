@@ -20,9 +20,9 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css">
-  <script src="catalog.js" defer></script>
-  <script src="app.js?v=checkout-payment" defer></script>
+  <link rel="stylesheet" href="styles.css?v=product-details">
+  <script src="catalog.js?v=product-details" defer></script>
+  <script src="app.js?v=product-details" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -215,11 +215,26 @@
       </div>
       <section class="detail-specs" aria-labelledby="detail-specs-title">
         <h2 id="detail-specs-title" data-en="Product details">상품 상세 정보</h2>
+        <div class="detail-spec-content" id="detail-spec-content" hidden>
+          <section aria-labelledby="detail-features-title">
+            <h3 id="detail-features-title" data-en="Features">특징</h3>
+            <ul id="detail-features"></ul>
+          </section>
+          <section aria-labelledby="detail-materials-title">
+            <h3 id="detail-materials-title" data-en="Materials">소재</h3>
+            <ul id="detail-materials"></ul>
+            <div class="detail-material-note" id="detail-material-note" hidden>
+              <h4 data-en="About the materials">소재 설명</h4>
+              <p id="detail-material-description"></p>
+            </div>
+          </section>
+        </div>
         <dl>
           <div><dt data-en="Brand">브랜드</dt><dd id="detail-spec-brand"></dd></div>
           <div><dt data-en="Color">색상</dt><dd id="detail-spec-color"></dd></div>
           <div><dt data-en="Product type">상품군</dt><dd id="detail-spec-category"></dd></div>
           <div id="detail-spec-season-row"><dt data-en="Season">시즌</dt><dd id="detail-spec-season"></dd></div>
+          <div id="detail-spec-origin-row" hidden><dt data-en="Made in">제조국</dt><dd id="detail-spec-origin"></dd></div>
           <div><dt data-en="Available sizes">주문 가능 사이즈</dt><dd id="detail-spec-sizes"></dd></div>
           <div><dt data-en="Shipping">배송 구분</dt><dd id="detail-spec-delivery"></dd></div>
         </dl>

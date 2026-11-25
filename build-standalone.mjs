@@ -26,7 +26,7 @@ const runtimeImages = Object.fromEntries(Object.entries(dataUrls).filter(([name]
   catalog.includes('"' + name + '"') || script.includes("'" + name + "'")
 )));
 const combinedScript = 'const PACKAGED_IMAGES = ' + JSON.stringify(runtimeImages) + ';\n' + catalog + '\n' + script;
-html = html.replace('  <link rel="stylesheet" href="styles.css">', () => '  <style>\n' + css + '\n  </style>');
+html = html.replace(/  <link rel="stylesheet" href="styles\.css(?:\?[^"\n]*)?">/, () => '  <style>\n' + css + '\n  </style>');
 html = html.replace(/^  <script src="(?:catalog|app)\.js(?:\?[^"\n]*)?" defer><\/script>\n/gm, '');
 html = html.replace('</body>', () => '<script>\n' + combinedScript.replaceAll('</script', '<\\/script') + '\n</script>\n</body>');
 

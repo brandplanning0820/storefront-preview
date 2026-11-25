@@ -2150,194 +2150,752 @@ const NOTICES_EN = {
 };
 
 const PRODUCT_DETAILS = {
-  '13871969099': {
-    color: ['블랙', 'Black'],
-    copy: ['반듯한 블랙 토트의 옆면에 시그니처 버버리 체크가 들어간 스몰 코츠월드입니다. 상단 손잡이와 앞면 골드 톤 장식이 단정한 형태를 살려 줍니다.',
-      'The small Cotswolds tote pairs a structured black silhouette with Burberry Check side panels. Top handles and a gold-tone front accent finish the design.'],
+  "13871969099": {
+    color: ["블랙","Black"],
+    body: [
+      "그레이니 송아지 가죽 소재로 이탈리아에서 제작된 클래식한 토트. 컴팩트하면서도 여유로운 사이즈. 버버리 체크 패턴의 측면 패널 및 매칭되는 시그니처 샌드 베이지 색상의 안감이 특징. 체크가 새겨진 여밈 및 버버리 아이코닉 트렌치코트의 벨트에서 영감을 받은 D링 하드웨어가 특별함을 더하는 아이템. 손으로 들거나 스트랩을 사용해 숄더 백으로 착용 가능.",
+      "A classic tote made in Italy from grained calf leather. Compact yet spacious, it features Burberry Check side panels and matching signature sand beige lining. A check-engraved closure and D-ring hardware inspired by the belt of the iconic Burberry trench coat complete the design. Carry it by hand or wear it over the shoulder using the strap.",
+    ],
+    features: [
+      ["조절 가능한 탈착식 스트랩","Adjustable, detachable strap"],
+      ["상단 손잡이","Top handle"],
+      ["트위스트 락 여밈","Twist-lock closure"],
+      ["측면 조절장치","Side adjusters"],
+      ["내부의 지퍼 포켓","Interior zip pocket"],
+      ["수작업으로 마감칠된 테두리","Hand-painted edges"],
+      ["브러시드 메탈 하드웨어","Brushed metal hardware"],
+      ["앞면의 엠보싱 버버리 레터링","Embossed Burberry lettering on the front"],
+      ["버버리 체크 패턴의 안감 및 측면 패널","Burberry Check lining and side panels"],
+      ["더스트 백이 함께 제공됩니다.","Dust bag included"],
+      ["사이즈: 30.5 x 13 x 22.5cm","Dimensions: 30.5 × 13 × 22.5 cm"],
+      ["손잡이 높이: 12cm","Handle drop: 12 cm"],
+      ["최단 스트랩 길이: 45cm","Minimum strap length: 45 cm"],
+      ["최장 스트랩 길이: 52cm","Maximum strap length: 52 cm"],
+      ["컬러: 블랙","Color: Black"],
+    ],
+    materials: [
+      ["겉감: 송아지 가죽 100%","Outer: 100% calf leather"],
+      ["트리밍: 면 51%, 폴리에스테르 49%","Trim: 51% cotton, 49% polyester"],
+      ["안감: 면 51%, 폴리에스테르 49%","Lining: 51% cotton, 49% polyester"],
+    ],
+    origin: ["이탈리아","Italy"],
   },
-  '13838058679': {
-    color: ['앤트러사이트', 'Anthracite'],
-    copy: ['차콜빛 앤트러사이트 울 플란넬에 허벅지 여유를 둔 팬츠입니다. 발목으로 갈수록 라인이 좁아져 여유 있는 실루엣이 정돈됩니다.',
-      'Anthracite wool flannel is cut with room through the thigh. The tapered leg gives the relaxed shape a clean finish.'],
+  "13838058679": {
+    color: ["앤트러사이트","Anthracite"],
+    body: [
+      "세련된 디테일과 여유로운 볼륨이 조화를 이룬 울 플란넬 배기 팬츠입니다. 부드러운 원단과 아래로 살짝 좁아지는 라인이 편안한 실루엣을 완성합니다. 핀턱과 반짝이는 모닐레 자수가 우아한 분위기를 더합니다.",
+      "Wool flannel baggy trousers balance refined details with generous volume. The soft fabric and gently tapered leg create an easy silhouette, while pintucks and shimmering monili embroidery add an elegant finish.",
+    ],
+    features: [
+      ["버튼 지퍼 클로저","Button and zip closure"],
+      ["허리 스트레치 밴드","Stretch waistband"],
+      ["작은 포켓이 있는 앞면 포켓","Front pockets with a small pocket"],
+      ["핀턱","Pintucks"],
+      ["뒷면 패치 포켓","Rear patch pockets"],
+      ["롤업 밑단","Turn-up hems"],
+      ["니켈프리 모닐레 장식","Nickel-free monili trim"],
+      ["컬러: 앤트러사이트","Color: Anthracite"],
+    ],
+    materials: [
+      ["울 100%","100% wool"],
+    ],
+    origin: ["이탈리아","Italy"],
   },
-  '13837820556': {
-    color: ['브라운', 'Brown'],
-    copy: ['결이 드러나는 브라운 사슴가죽 레이스업 부츠입니다. 둥근 앞코와 도톰한 러그 밑창이 데님이나 울 팬츠에 묵직한 인상을 더합니다.',
-      'Brown deerskin lace-up boots with visible grain, a rounded toe and a substantial lug sole.'],
+  "13837820556": {
+    color: ["브라운","Brown"],
+    body: [
+      "레트로 스타일에서 영감을 받은 워시드 사슴가죽 부츠입니다. 가죽의 자연스러운 결과 불규칙한 컬러가 실루엣을 돋보이며 메리노 시어링 안감이 따뜻하고 포근한 느낌을 더합니다. 경량 고무 밑창으로 완성합니다.",
+      "These washed deerskin boots draw on retro styling. The leather's natural grain and varied color accent the silhouette, and a merino shearling lining adds warmth and comfort. A lightweight rubber sole completes the design.",
+    ],
+    features: [
+      ["워시드 사슴가죽","Washed deerskin"],
+      ["왁스 처리된 원형 슈레이스","Waxed round laces"],
+      ["왁스 처리된 여분의 끈","Spare waxed laces"],
+      ["가죽 안감","Leather lining"],
+      ["장식용 웰트","Decorative welt"],
+      ["TPU 고무 밑창","TPU rubber sole"],
+      ["컬러 : 브라운","Color: Brown"],
+    ],
+    materials: [
+      ["천연 가죽 100%","100% genuine leather"],
+    ],
+    origin: ["이탈리아","Italy"],
   },
-  '13837188140': {
-    color: ['블랙', 'Black'],
-    copy: ['블랙 더블 플리스 소재의 팬츠입니다. 허리 스트링이 있고 밑단으로 갈수록 가볍게 좁아지는 형태라 니트나 스니커즈와 함께 입기 좋습니다.',
-      'Black double-fleece trousers with a drawstring waist and a gently tapered leg. Pair them with knitwear and sneakers.'],
+  "13837188140": {
+    color: ["블랙","Black"],
+    body: [
+      "코튼 캐시미어 실크 혼방 소재의 부드럽고 따뜻한 더블 플리스 팬츠입니다. 드로스트링 허리로 편안함을 더했으며 다리 라인을 따라 자연스럽게 떨어지는 레귤러 실루엣이 특징입니다. 휴식과 여가에 어울리는 트래블웨어입니다.",
+      "These soft, warm double-fleece trousers are made from a cotton, cashmere and silk blend. A drawstring waist adds comfort and the regular fit falls naturally along the leg. Part of the travelwear collection, they are suited to relaxing and leisure.",
+    ],
+    features: [
+      ["드로스트링 허리 립 밴드","Ribbed drawstring waistband"],
+      ["앞면 세로 포켓","Vertical front pockets"],
+      ["뒷면 패치 포켓","Rear patch pockets"],
+      ["부드럽고 따뜻한 더블 니트 소재","Soft, warm double-knit fabric"],
+      ["컬러: 블랙","Color: Black"],
+    ],
+    materials: [
+      ["코튼 65%","65% cotton"],
+      ["나일론 24%","24% nylon"],
+      ["캐시미어 7%","7% cashmere"],
+      ["실크 4%","4% silk"],
+    ],
   },
-  '13837109522': {
-    color: ['다크 그레이', 'Dark grey'],
-    copy: ['차분한 다크 그레이 버진울 플란넬 팬츠입니다. 앞 허리의 드로스트링과 가지런한 테이퍼드 라인이 편안한 실루엣을 만듭니다.',
-      'Dark grey virgin wool flannel trousers with a front drawstring and a neatly tapered leg.'],
+  "13837109522": {
+    color: ["다크 그레이","Dark grey"],
+    body: [
+      "가볍고 부드러운 버진 울 플란넬에 드로스트링과 더블 핀턱을 더해 편안하고 세련된 스타일을 선사합니다. 여유로운 실루엣이 특징이며 현대적인 레저 핏으로 다리 라인을 따라 자연스럽게 떨어집니다.",
+      "Lightweight, soft virgin wool flannel is finished with a drawstring and double pleats for a relaxed, refined look. The modern leisure fit is roomy and falls naturally along the leg.",
+    ],
+    features: [
+      ["메탈 후크와 버튼 지퍼 여밈","Metal hook, button and zip closure"],
+      ["드로스트링 허리와 앞면 더블 핀턱","Drawstring waist and double front pleats"],
+      ["앞면 사선 포켓","Angled front pockets"],
+      ["뒷면 웰트 포켓","Rear welt pockets"],
+      ["컬러: 다크 그레이","Color: Dark gray"],
+    ],
+    materials: [
+      ["버진 울 100%","100% virgin wool"],
+    ],
+    origin: ["이탈리아","Italy"],
   },
-  '13892325902': {
-    color: ['블랙', 'Black'],
-    copy: ['블랙 슬링 백 앞면에 대비되는 기마 기사 로고가 들어갔습니다. 둥근 형태와 지퍼 포켓이 눈에 띄는 가방입니다.',
-      'A rounded black sling bag with a contrasting Equestrian Knight logo and a front zip pocket.'],
+  "13892325902": {
+    color: ["블랙","Black"],
+    body: [
+      "나일론 소재의 나이트 로고 슬링 백입니다. 기사 모티프와 버버리 레터링 자수, 앞면 지퍼 포켓이 특징이며, 로고 자카드 웨빙 스트랩으로 핏을 조절할 수 있습니다.",
+      "This nylon Knight Logo sling bag features a knight motif, embroidered Burberry lettering and a front zip pocket. The logo-jacquard webbing strap adjusts for fit.",
+    ],
+    features: [
+      ["조절 가능한 웨빙 스트랩","Adjustable webbing strap"],
+      ["지퍼 여밈과 외부 지퍼 포켓","Zip closure and external zip pocket"],
+      ["광택 있는 금속 하드웨어","Polished metal hardware"],
+      ["나일론 안감","Nylon lining"],
+      ["치수: 18 × 5 × 29cm","Dimensions: 18 × 5 × 29 cm"],
+      ["스트랩 길이: 23–44cm","Strap length: 23–44 cm"],
+      ["더스트 백 제공","Dust bag included"],
+      ["컬러: 블랙","Color: Black"],
+    ],
+    materials: [
+      ["겉감: 폴리아미드 100%","Outer: 100% polyamide"],
+      ["뒷면 패널: 폴리에스테르 100%","Back panel: 100% polyester"],
+      ["안감: 폴리아미드 100%","Lining: 100% polyamide"],
+    ],
   },
-  '13892319386': {
-    color: ['블랙', 'Black'],
-    copy: ['블랙을 바탕으로 밝은 체크가 교차하는 울 스카프입니다. 단색 코트에 둘렀을 때 체크의 대비가 살아납니다.',
-      'A wool scarf with a high-contrast check on a black base. The pattern stands out against a solid coat.'],
+  "13892319386": {
+    color: ["블랙","Black"],
+    body: [
+      "노르웨이에서 직조된 울 스카프입니다. 시즈널 체크와 블랭킷 스티치 디테일이 돋보이며, 브러싱 처리로 부드러운 촉감을 완성했습니다.",
+      "Woven in Norway, this wool scarf pairs a seasonal check with blanket-stitch detailing. A brushed finish gives it a soft feel.",
+    ],
+    features: [
+      ["직사각형 디자인","Rectangular shape"],
+      ["가장자리 블랭킷 스티치","Blanket-stitched edges"],
+      ["기마상 디자인(EKD) 라벨","Equestrian Knight Design (EKD) label"],
+      ["치수: 182 × 30cm","Dimensions: 182 × 30 cm"],
+      ["전문 드라이클리닝","Specialist dry clean"],
+      ["컬러: 블랙","Color: Black"],
+    ],
+    materials: [
+      ["울 100%","100% wool"],
+    ],
   },
-  '13892310828': {
-    color: ['초크 화이트', 'Chalk white'],
-    copy: ['초크 화이트 몸판에 버버리 체크 칼라를 더한 코튼 반소매 폴로입니다. 밝은 바탕 위로 칼라의 체크가 또렷하게 드러납니다.',
-      'A chalk-white short-sleeve cotton polo with a Burberry Check collar that stands out against the light body.'],
+  "13892310828": {
+    color: ["초크 화이트","Chalk white"],
+    body: [
+      "경량 면 피케 소재의 클래식핏 폴로셔츠입니다. 칼라에 연출된 샌드 베이지 버버리 체크가 디자인의 포인트를 완성합니다.",
+      "A classic-fit polo shirt in lightweight cotton piqué. Sand beige Burberry Check at the collar accents the design.",
+    ],
+    features: [
+      ["플래킷 단추 디테일","Button placket"],
+      ["길이: 71.5cm (영국 사이즈 L)","Length: 71.5 cm (UK size L)"],
+      ["물세탁 가능","Washable"],
+      ["컬러: 초크 화이트","Color: Chalk white"],
+    ],
+    materials: [
+      ["면 100%","100% cotton"],
+      ["칼라: 면 100%","Collar: 100% cotton"],
+      ["단추: 자개","Buttons: Mother-of-pearl"],
+    ],
   },
-  '13892307125': {
-    color: ['블랙', 'Black'],
-    copy: ['블랙 코튼 몸판과 베이지 톤 체크 칼라가 대비되는 반소매 폴로입니다. 몸판은 단색이라 재킷 안에 입어도 칼라의 체크가 드러납니다.',
-      'A short-sleeve black cotton polo with a contrasting beige check collar. The pattern remains visible under a jacket.'],
+  "13892307125": {
+    color: ["블랙","Black"],
+    body: [
+      "경량 면 피케 소재의 클래식핏 폴로셔츠입니다. 칼라에 연출된 샌드 베이지 버버리 체크가 디자인의 포인트를 완성합니다.",
+      "A classic-fit polo shirt in lightweight cotton piqué. Sand beige Burberry Check at the collar accents the design.",
+    ],
+    features: [
+      ["플래킷 단추 디테일","Button placket"],
+      ["길이: 70cm (영국 사이즈 M)","Length: 70 cm (UK size M)"],
+      ["물세탁 가능","Washable"],
+      ["컬러: 블랙","Color: Black"],
+    ],
+    materials: [
+      ["면 100%","100% cotton"],
+      ["칼라: 면 100%","Collar: 100% cotton"],
+      ["단추: 자개","Buttons: Mother-of-pearl"],
+    ],
   },
-  '13892302203': {
-    color: ['허니 베이지', 'Honey beige'],
-    copy: ['허니 베이지의 롱 켄징턴 헤리티지 트렌치코트입니다. 더블 브레스티드 여밈과 허리 벨트로 트렌치코트 특유의 실루엣을 살렸습니다.',
-      'The long Kensington Heritage trench in honey beige features a double-breasted front and a waist belt.'],
+  "13892302203": {
+    color: ["허니 베이지","Honey beige"],
+    body: [
+      "구조적인 어깨선이 돋보이는 클래식핏 켄징턴 트렌치코트입니다. 영국 요크셔에서 직조된 생활 방수 면 개버딘과 아이코닉한 체크 안감으로 완성했습니다.",
+      "The classic-fit Kensington trench coat has a structured shoulder. It pairs water-resistant cotton gabardine woven in Yorkshire, England, with the signature check lining.",
+    ],
+    features: [
+      ["더블브레스트 단추 여밈","Double-breasted button closure"],
+      ["후크 앤 아이 칼라 여밈과 스롯 래치","Hook-and-eye collar closure and throat latch"],
+      ["견장과 어깨 건 플랩","Epaulettes and shoulder gun flap"],
+      ["뒷면 스톰 쉴드","Rear storm shield"],
+      ["벨트·커프스 가죽 버클","Leather buckles at the belt and cuffs"],
+      ["측면 단추 디테일 웰트 포켓","Buttoned side welt pockets"],
+      ["단추 디테일 뒤트임","Buttoned back vent"],
+      ["안감과 밑깃 버버리 체크","Burberry Check lining and undercollar"],
+      ["길이: 116cm (이탈리아 사이즈 50)","Length: 116 cm (Italian size 50)"],
+      ["전문 드라이클리닝","Specialist dry clean"],
+      ["가먼트 백 제공","Garment bag included"],
+      ["컬러: 허니 베이지","Color: Honey beige"],
+    ],
+    materials: [
+      ["겉감: 면 100%","Outer: 100% cotton"],
+      ["안감: 면 100%","Lining: 100% cotton"],
+      ["소매 안감: 비스코스 100%","Sleeve lining: 100% viscose"],
+      ["버클: 송아지 가죽 100%","Buckles: 100% calf leather"],
+    ],
   },
-  '13862254499': {
-    color: ['블루', 'Blue'],
-    copy: ['워싱으로 밝고 어두운 결이 드러나는 블루 데님 셔츠 재킷입니다. 앞면 가슴 포켓과 버튼 여밈이 있고, 티셔츠 위에 가볍게 걸치기 좋습니다.',
-      'A blue denim shirt jacket with a varied washed finish, front chest pockets and a button closure. Wear it open over a T-shirt.'],
+  "13862254499": {
+    color: ["블루","Blue"],
+    body: [
+      "블루 바나나텍스 워시드 데님으로 만든 셔츠형 재킷입니다.",
+      "A shirt jacket made from blue washed Bananatex denim.",
+    ],
+    features: [
+      ["클래식 칼라와 앞뒤 요크","Classic collar and front and back yokes"],
+      ["가슴의 플랩 포켓","Chest flap pockets"],
+      ["마더 오브 펄 스터드 버튼 여밈","Mother-of-pearl stud fastening"],
+    ],
+    materials: [
+      ["겉감: 코튼 55%, 아바카 45%","Outer: 55% cotton, 45% abaca"],
+      ["안감: 폴리에스터 65%, 코튼 35%","Lining: 65% polyester, 35% cotton"],
+    ],
+    origin: ["이탈리아","Italy"],
   },
-  '13862252891': {
-    color: ['내추럴 · 네이비', 'Natural / navy'],
-    copy: ['실크와 코튼을 사용한 셀러리아 FF 반소매 폴로입니다. 밝은 몸판에 칼라와 짧은 지퍼 주변의 네이비 라인이 들어갔습니다.',
-      'A short-sleeve Selleria FF silk-cotton polo with a light body and navy trim at the collar and short zip.'],
+  "13862252891": {
+    color: ["내추럴 · 네이비","Natural / navy"],
+    body: [
+      "실크와 코튼을 조합해 짠 내추럴 컬러 반소매 폴로 셔츠입니다.",
+      "A natural-colored short-sleeved polo shirt knitted from a silk and cotton blend.",
+    ],
+    features: [
+      ["메탈 하프집 여밈","Metal half-zip closure"],
+      ["대비되는 칼라 트리밍","Contrasting collar trim"],
+      ["리브 마감과 셀러리아 FF 자수","Ribbed finish and Selleria FF embroidery"],
+    ],
+    materials: [
+      ["실크 55%, 코튼 45%","55% silk, 45% cotton"],
+    ],
+    origin: ["이탈리아","Italy"],
   },
-  '13862251029': {
-    color: ['블루', 'Blue'],
-    copy: ['허벅지와 무릎 쪽 워싱이 두드러지는 블루 데님 팬츠입니다. 아래로 길게 떨어지는 라인이라 셔츠나 짧은 재킷과 매치하기 좋습니다.',
-      'Blue denim trousers with a pronounced wash at the thighs and knees and a long leg line.'],
+  "13862251029": {
+    color: ["블루","Blue"],
+    body: [
+      "워싱으로 빈티지한 질감을 살린 레귤러 핏 바나나텍스 데님 팬츠입니다.",
+      "Regular-fit Bananatex denim trousers with a washed, vintage texture.",
+    ],
+    features: [
+      ["5포켓과 벨트 루프","Five pockets and belt loops"],
+      ["뒷면 펜디 로고 패치","Rear Fendi logo patch"],
+      ["옐로우 스티치","Yellow stitching"],
+    ],
+    materials: [
+      ["겉감: 코튼 55%, 아바카 45%","Outer: 55% cotton, 45% abaca"],
+      ["포켓 안감: 폴리에스터 65%, 코튼 35%","Pocket lining: 65% polyester, 35% cotton"],
+    ],
+    origin: ["이탈리아","Italy"],
   },
-  '13862247292': {
-    color: ['라이트 그레이', 'Light grey'],
-    copy: ['라이트 그레이 바탕에 FF 패턴이 반복되는 울 실크 스카프입니다. 가장자리의 테두리 패턴이 전체 무늬를 정돈해 줍니다.',
-      'A light grey wool-silk scarf with a repeating FF pattern framed by a patterned border.'],
+  "13862247292": {
+    color: ["라이트 그레이","Light grey"],
+    body: [
+      "울과 실크를 조합한 라이트 그레이 컬러의 정사각형 스카프입니다.",
+      "A square light gray scarf in a wool and silk blend.",
+    ],
+    features: [
+      ["FF 사선 모티프","Diagonal FF motif"],
+      ["롤 마감","Rolled edges"],
+      ["70 × 70cm","70 × 70 cm"],
+      ["하드케이스 미포함","Hard case not included"],
+    ],
+    materials: [
+      ["버진 울 51%, 실크 49%","51% virgin wool, 49% silk"],
+    ],
+    origin: ["이탈리아","Italy"],
   },
-  '13862243522': {
-    color: ['다크 타바코', 'Dark tobacco'],
-    copy: ['어두운 다크 타바코 톤의 울 캐시미어 판초입니다. 여유 있게 어깨를 덮는 형태로, 앞면 안쪽의 FF 주카 패턴과 프린지 끝단이 보입니다.',
-      'A dark tobacco wool-cashmere poncho with a generous drape, visible FF Zucca patterning and fringed edges.'],
+  "13862243522": {
+    color: ["다크 타바코","Dark tobacco"],
+    body: [
+      "울과 캐시미어를 조합한 FF 주카 양면 판초입니다.",
+      "A reversible FF Zucca poncho in a wool and cashmere blend.",
+    ],
+    features: [
+      ["안쪽의 FF 주카 자카드","FF Zucca jacquard on the reverse"],
+      ["밑단 프린지","Fringed hem"],
+      ["높이 140cm, 너비 145cm","Height: 140 cm, width: 145 cm"],
+    ],
+    materials: [
+      ["캐시미어 50%, 울 50%","50% cashmere, 50% wool"],
+    ],
+    origin: ["이탈리아","Italy"],
   },
-  '13886054581': {
-    color: ['포그', 'Fog'],
-    copy: ['안개처럼 밝은 포그 컬러의 캐시미어 혼방 롱 베스트입니다. 높은 칼라와 길게 이어지는 지퍼가 있는 민소매 형태라 얇은 니트 위에 겹쳐 입기 좋습니다.',
-      'A long cashmere-blend vest in a soft fog shade, with a high collar and full-length zip. The sleeveless cut makes it easy to layer over knitwear.'],
+  "13886054581": {
+    color: ["포그","Fog"],
+    body: [
+      "부드럽게 둥근 어깨에서 밑단까지 여유 있는 실루엣이 이어집니다. 앞 지퍼의 곧은 선과 포그 컬러가 캐시미어 혼방의 결을 살립니다.",
+      "The softly rounded shoulders flow into an easy silhouette through the hem. A straight front zip and the fog color highlight the texture of the cashmere blend.",
+    ],
+    features: [
+      ["긴 기장의 슬리브리스 디자인","Long, sleeveless design"],
+      ["접어 내린 칼라","Fold-down collar"],
+      ["앞 지퍼 여밈","Front zip closure"],
+    ],
+    materials: [
+      ["캐시미어 96%","96% cashmere"],
+      ["폴리아미드 3%","3% polyamide"],
+      ["엘라스테인 1%","1% elastane"],
+    ],
+    materialDescription: [
+      "캐시미어의 가늘고 부드러운 결에 폴리아미드와 소량의 엘라스테인이 유연함을 더합니다.",
+      "Polyamide and a small amount of elastane add flexibility to the fine, soft cashmere.",
+    ],
   },
-  '13886151623': {
-    color: ['그레이', 'Grey'],
-    copy: ['그레이 컬러의 캐시미어 스카프 전체에 섬세한 플로럴 프린트가 들어갔습니다. 무늬와 가는 프린지가 단색 아우터에 자연스럽게 어울립니다.',
-      'A grey cashmere scarf with a detailed floral print and fine fringe. The tonal pattern pairs well with solid outerwear.'],
+  "13886151623": {
+    color: ["그레이","Grey"],
+    body: [
+      "플로럴 프린트와 시즌의 자연스러운 컬러가 어우러진 캐시미어 스카프입니다. 다양한 룩에 개성 있는 포인트를 더합니다.",
+      "This cashmere scarf pairs a floral print with the season's natural colors, adding a distinctive accent to a range of looks.",
+    ],
+    features: [
+      ["약 145cm x 240cm","Approximately 145 × 240 cm"],
+    ],
+    materials: [
+      ["캐시미어 100%","100% cashmere"],
+    ],
+    materialDescription: [
+      "고급 캐시미어 섬유의 부드러운 감촉이 돋보이는 스카프입니다.",
+      "Fine cashmere fibers give this scarf its soft feel.",
+    ],
   },
-  '13886249922': {
-    color: ['초콜릿', 'Chocolate'],
-    copy: ['초콜릿 컬러의 글라스 비즈를 촘촘하게 엮은 초커입니다. 짙은 비즈 사이로 반짝임이 보이고, 뒷면은 실버 톤 여밈으로 마감했습니다.',
-      'A choker densely strung with chocolate glass beads, finished with a silver-tone closure.'],
+  "13886249922": {
+    color: ["초콜릿","Chocolate"],
+    body: [
+      "베트로와 스털링 실버 소재에 정교한 장인 공예와 프리미엄 소재가 만나 탄생한 새로운 초커. 미세하게 패싯 커팅 가공한 가느다란 유리 마이크로 비드 스레드가 조화롭게 엮이면서 독특한 튜브 구조를 형성하여 겹쳐진 빛의 반짝임으로 화려함을 더합니다. 이 액세서리는 다양한 길이로 조절할 수 있는 훅 잠금으로 마무리됩니다.",
+      "This glass and sterling silver choker brings together fine craftsmanship and premium materials. Fine strands of faceted glass microbeads are woven into a distinctive tubular shape that catches overlapping reflections. An adjustable hook clasp lets you vary the length.",
+    ],
+    features: [
+      ["네크리스 최대 길이(펼친 상태): 약 40cm","Maximum necklace length when laid flat: approximately 40 cm"],
+      ["다양한 길이로 조절할 수 있는 훅 잠금","Adjustable hook clasp"],
+      ["전적으로 니켈프리 메탈 부품 사용","All metal components are nickel-free"],
+    ],
+    materials: [
+      ["글라스 100%","100% glass"],
+    ],
+    materialDescription: [
+      "작은 베트로 비드의 정교한 패싯 커팅은 액세서리의 메탈릭 반사 효과를 더하며, 여기에 광택이 나는 원형 스털링 실버 비드가 결합됩니다.",
+      "Facet-cut glass beads add metallic reflections, complemented by polished round sterling silver beads.",
+    ],
   },
-  '13888380600': {
-    color: ['블랙', 'Black'],
-    copy: ['가로 퀼팅의 블랙 푸퍼 코트로, 칼라에 페이크 퍼를 댔습니다. 긴 지퍼와 허리 쪽으로 살짝 들어가는 라인이 특징입니다.',
-      'A black horizontally quilted puffer coat with a faux-fur collar, a long zip and a gently shaped waist.'],
+  "13888380600": {
+    color: ["블랙","Black"],
+    body: [
+      "캐주얼하면서도 섬세한 감각이 돋보이는 슬림 핏 엘리사 자켓입니다. 20데니어 울트라라이트 나일론 원단에 다운을 인젝션 공법으로 충전하여 가벼운 착용감과 보온성을 더했습니다.",
+      "The slim-fit Elisa jacket has a casual, refined look. Its 20-denier ultralight nylon is injection-filled with down for lightweight warmth.",
+    ],
+    features: [
+      ["페이크 퍼 칼라 · 하이넥 · 지퍼 포켓","Faux-fur collar · High neck · Zip pockets"],
+      ["양방향 지퍼 여밈 · 발수 처리","Two-way zip closure · Water-repellent finish"],
+    ],
+    materials: [
+      ["겉감·안감: 폴리아미드(나일론) 100%","Outer and lining: 100% polyamide (nylon)"],
+      ["칼라: 폴리에스테르 100%","Collar: 100% polyester"],
+      ["충전재: 솜털 90%, 깃털 10%","Fill: 90% down, 10% feathers"],
+    ],
+    origin: ["루마니아","Romania"],
   },
-  '13888384529': {
-    color: ['블랙', 'Black'],
-    copy: ['밑단으로 갈수록 넓어지는 A라인의 블랙 아멜리아 패딩입니다. 높게 올라오는 칼라와 가로 퀼팅이 깔끔한 형태를 살려 줍니다.',
-      'The black Amelia puffer has an A-line shape, a high collar and clean horizontal quilting.'],
+  "13888384529": {
+    color: ["블랙","Black"],
+    body: [
+      "다양한 체형에 어울리는 편안한 핏의 아멜리아(AMELIA)입니다. 시그니처 울트라라이트 나일론으로 제작한 A 셰이프 재킷으로, 가벼운 20데니어 원단과 90/10 다운 충전재를 사용했습니다. 발수 기능과 실크처럼 부드러운 촉감이 특징입니다.",
+      "The Amelia has a comfortable fit suited to a range of body shapes. This A-line jacket is made in signature ultralight nylon, with a lightweight 20-denier fabric and 90/10 down fill. It has a water-repellent finish and a silky-soft feel.",
+    ],
+    features: [
+      ["레귤러 핏 · 퍼넬넥 · 히든 스냅버튼 여밈","Regular fit · Funnel neck · Concealed snap closure"],
+      ["웰트 포켓 · 다운 패딩 가공","Welt pockets · Down padding"],
+    ],
+    materials: [
+      ["겉감/안감: 폴리아미드(나일론) 100%","Outer and lining: 100% polyamide (nylon)"],
+      ["트리밍: 코튼 55%, 폴리에스테르 45%","Trim: 55% cotton, 45% polyester"],
+      ["충전재: 솜털 90%, 깃털 10%","Fill: 90% down, 10% feathers"],
+    ],
   },
-  '13888383841': {
-    color: ['블랙', 'Black'],
-    copy: ['은은한 광택이 도는 블랙 클라우디아 다운 재킷입니다. 페이크 퍼를 더한 칼라와 허리 벨트로 패딩의 실루엣을 잡을 수 있습니다.',
-      'A lustrous black Claudia down jacket with a faux-fur collar and a belt that defines the waist.'],
+  "13888383841": {
+    color: ["블랙","Black"],
+    body: [
+      "에르노의 울트라라이트 나일론 소재에 은은한 광택과 부드러운 촉감을 더한 슬림 핏 다운 자켓입니다.",
+      "This slim-fit down jacket is made from Herno's ultralight nylon with a subtle sheen and soft feel.",
+    ],
+    features: [
+      ["페이크 퍼 트리밍 하이 칼라 · 양방향 지퍼","Faux-fur-trimmed high collar · Two-way zip"],
+      ["메탈 버클이 있는 신축성 허리 벨트 · 발수 기능","Stretch waist belt with metal buckle · Water repellency"],
+    ],
+    materials: [
+      ["겉감·안감: 폴리아미드 100%","Outer and lining: 100% polyamide"],
+      ["칼라: 폴리에스테르 100%","Collar: 100% polyester"],
+      ["충전재: 거위 솜털 90%, 거위 깃털 10%","Fill: 90% goose down, 10% goose feathers"],
+    ],
+    origin: ["루마니아","Romania"],
   },
-  '13812808803': {
-    color: ['스카이 블루', 'Sky blue'],
-    copy: ['맑은 스카이 블루 컬러의 코튼 긴소매 셔츠입니다. 앞면 버튼 여밈과 단정한 칼라가 있어 재킷 안에 입거나 단독으로 연출하기 좋습니다.',
-      'A long-sleeve cotton shirt in clear sky blue, with a button front and a neat collar for layering or wearing on its own.'],
+  "13812808803": {
+    color: ["스카이 블루","Sky blue"],
+    body: [
+      "코튼 원단으로 완성한 간결한 셔츠입니다. 균일한 조직과 차분한 색조가 단정한 실루엣을 표현합니다. 칼라와 버튼 여밈, 긴소매로 셔츠의 기본적인 구성을 살렸습니다.",
+      "A simple shirt made from cotton. Its even weave and understated shade give it a neat silhouette. A collar, button closure and long sleeves complete the classic construction.",
+    ],
+    features: [
+      ["셔츠 칼라","Shirt collar"],
+      ["앞면 버튼 여밈","Front button closure"],
+      ["긴소매와 버튼 커프스","Long sleeves with buttoned cuffs"],
+    ],
+    materials: [
+      ["100% 코튼","100% cotton"],
+    ],
+    materialDescription: [
+      "코튼으로 짠 원단입니다. 세밀한 조직이 단정한 표면을 표현합니다.",
+      "The fabric is woven from cotton. Its fine weave gives the surface a neat finish.",
+    ],
   },
-  '13763757759': {
-    color: ['베이지', 'Beige'],
-    copy: ['부드러운 결이 보이는 베이지 누벅 카프스킨 스니커즈입니다. 낮은 갑피와 밝은 색 밑창의 대비가 가벼운 인상을 줍니다.',
-      'Low-top beige nubuck calfskin sneakers with a soft-looking finish and a contrasting light sole.'],
+  "13763757759": {
+    color: ["베이지","Beige"],
+    body: [
+      "고급 소재가 이 스니커즈의 캐주얼한 스타일을 더욱 돋보이게 합니다. 송아지 가죽 누벅 특유의 질감은 시즌 컬러를 고르게 표현하며, 뒤꿈치 부분의 디테일을 강조하여 은은한 소재 대비를 만들어냅니다. 뒷부분에 홈이 파인 초경량 밑창은 브루넬로 쿠치넬리만의 독창적인 아웃솔 디자인을 자랑합니다.",
+      "Fine materials elevate the casual design of these sneakers. The texture of calfskin nubuck shows the seasonal color evenly and highlights the heel detail, creating a subtle contrast in texture. Grooves at the back of the ultralight sole give it Brunello Cucinelli's distinctive outsole design.",
+    ],
+    features: [
+      ["원단 평끈 클로저","Flat fabric laces"],
+      ["가죽 안감","Leather lining"],
+      ["경량 러버 솔","Lightweight rubber sole"],
+    ],
+    materials: [
+      ["REAL LEATHER","Genuine leather"],
+    ],
+    materialDescription: [
+      "누벅 카프스킨은 얇고 매우 부드러운 고급 가죽으로, 벨벳 같은 촉감과 섬세한 천연 결이 특징입니다. 경량 고무 밑창과 가죽 안감으로 신발을 완성했습니다.",
+      "Nubuck calfskin is a fine, thin and very soft leather with a velvety feel and delicate natural grain. A lightweight rubber sole and leather lining complete the shoe.",
+    ],
   },
-  '13871854526': {
-    color: ['블랙', 'Black'],
-    copy: ['앞면 가로 퀼팅과 울 혼방 소매가 대비되는 블랙 집업 카디건입니다. 목을 감싸는 칼라와 앞 지퍼가 깔끔하게 이어집니다.',
-      'A black wool-blend zip cardigan that contrasts a quilted front with knit sleeves and a stand collar.'],
+  "13871854526": {
+    color: ["블랙","Black"],
+    body: [
+      "신축성 있는 울 혼방 소재에 다운을 채운 나일론 앞면을 더한 가디건입니다. 적당한 두께의 슬림 핏 디자인으로 스키 후 휴식 시간에 편안하게 착용하기 좋습니다.",
+      "This cardigan pairs a stretchy wool blend with a down-filled nylon front. The midweight, slim-fit design is suited to relaxing after skiing.",
+    ],
+    features: [
+      ["슬림 핏","Slim fit"],
+      ["다운 충전 나일론 앞면","Down-filled nylon front"],
+      ["발수 가공 느낌의 지퍼 여밈","Zip closure with a water-repellent-style finish"],
+      ["미드웨이트 니트","Midweight knit"],
+      ["아프레 스키 스타일","Après-ski styling"],
+      ["컬러: 블랙","Color: Black"],
+    ],
+    materials: [
+      ["앞면 겉감: 폴리아미드 100%","Front outer: 100% polyamide"],
+      ["주 소재: 버진 울 95%, 폴리에스터 5%","Main fabric: 95% virgin wool, 5% polyester"],
+      ["배색: 나일론 100%","Contrast fabric: 100% nylon"],
+      ["앞면 안감: 폴리에스터 100%","Front lining: 100% polyester"],
+      ["충전재: 다운 90%, 페더 10%","Fill: 90% down, 10% feathers"],
+      ["부분 충전재: 폴리에스터 100%","Secondary fill: 100% polyester"],
+    ],
+    origin: ["몰도바","Moldova"],
   },
-  '13851874254': {
-    color: ['헤이즐넛', 'Hazelnut'],
-    copy: ['헤이즐넛 스웨이드 위로 어두운 옆 밴드가 대비되는 로에베 보빈 첼시 부츠입니다. 둥근 앞코와 뒤쪽 당김 고리가 보입니다.',
-      'Loewe Bobbin Chelsea boots in hazelnut suede with dark elastic side panels, rounded toes and rear pull tabs.'],
+  "13851874254": {
+    color: ["헤이즐넛","Hazelnut"],
+    body: [
+      "스웨이드 카프스킨으로 제작한 첼시 부츠입니다. 클래식한 첼시 부츠 구조와 뒷면 풀 탭의 엠보싱 아나그램이 돋보입니다.",
+      "Chelsea boots in suede calfskin, with a classic shape and an embossed Anagram on the rear pull tab.",
+    ],
+    features: [
+      ["클래식 첼시 부츠 구조","Classic Chelsea boot construction"],
+      ["뒷면 아나그램 엠보싱 풀 탭","Rear pull tab with embossed Anagram"],
+      ["인솔 로에베 프린트","Loewe print on the insole"],
+      ["패딩 가죽 인솔","Padded leather insole"],
+      ["가죽 안감","Leather lining"],
+      ["러버 아일랜드가 있는 가죽 아웃솔","Leather outsole with rubber inserts"],
+      ["컬러 헤이즐넛","Color: Hazelnut"],
+      ["무게 1.3kg","Weight: 1.3 kg"],
+    ],
+    materials: [
+      ["스웨이드 카프스킨","Suede calfskin"],
+    ],
   },
-  '13856637332': {
-    color: ['울트라마린', 'Ultramarine'],
-    copy: ['짙은 울트라마린 톤의 버진울 아다지오 블레이저입니다. 넓은 라펠과 앞면 포켓이 정돈된 테일러링을 보여 줍니다.',
-      'The Adagio virgin wool blazer in deep ultramarine features broad lapels and front pockets.'],
+  "13856637332": {
+    color: ["울트라마린","Ultramarine"],
+    body: [
+      "로버트 라벤슈타이너와 협업한 캡슐 컬렉션의 블레이저입니다. 버진울 캐벌리 트윌에 부드러운 코튼 벨벳을 더했습니다.",
+      "A blazer from the capsule collection created with Robert Rabensteiner. Virgin wool cavalry twill is paired with soft cotton velvet.",
+    ],
+    features: [
+      ["레귤러 핏","Regular fit"],
+      ["허리 다트","Waist darts"],
+      ["뒷면 슬릿","Rear vent"],
+      ["벨벳 라펠","Velvet lapels"],
+      ["커버드 버튼 여밈","Covered-button closure"],
+      ["가슴 포켓","Chest pocket"],
+      ["벨벳 웰트 포켓","Velvet welt pockets"],
+      ["컬러: 울트라마린","Color: Ultramarine"],
+    ],
+    materials: [
+      ["겉감: 버진울 100%","Outer: 100% virgin wool"],
+      ["배색: 코튼 100%","Contrast fabric: 100% cotton"],
+      ["안감: 비스코스 53%, 코튼 47%","Lining: 53% viscose, 47% cotton"],
+      ["소매 안감: 아세테이트 50%, 비스코스 50%","Sleeve lining: 50% acetate, 50% viscose"],
+    ],
+    origin: ["루마니아","Romania"],
   },
-  '13892117876': {
-    color: ['실버', 'Silver'],
-    copy: ['금속 표면을 부드럽게 접은 듯한 매듭 형태가 특징인 소프트 노트 스몰 귀걸이입니다. 광택이 있는 실버 톤으로 마감했습니다.',
-      'Small Soft Knot earrings with a rounded, folded-knot shape and a polished silver-tone finish.'],
+  "13892117876": {
+    color: ["실버","Silver"],
+    body: [
+      "스털링 실버로 완성한 소프트 노트 스몰 귀걸이입니다.",
+      "Small Soft Knot earrings crafted from sterling silver.",
+    ],
+    features: [
+      ["핀과 버터플라이 여밈","Post and butterfly fastening"],
+      ["외부 치수: 약 12mm × 7.5mm","External dimensions: approximately 12 × 7.5 mm"],
+      ["컬러: 실버","Color: Silver"],
+    ],
+    materials: [
+      ["스털링 실버","Sterling silver"],
+    ],
+    origin: ["이탈리아","Italy"],
   },
-  '13850707048': {
-    color: ['블랙', 'Black'],
-    copy: ['블랙 가죽을 엮은 인트레치아토 패턴의 체리 앵클 부츠입니다. 발목까지 오는 높이와 낮은 블록 힐이 특징입니다.',
-      'Cherry ankle boots in woven black Intrecciato leather, with an ankle-height shaft and a low block heel.'],
+  "13850707048": {
+    color: ["블랙","Black"],
+    body: [
+      "뒷면 지퍼 잠금장치를 갖춘 유연한 인트레치아토 나파 가죽 소재의 키튼 힐 앵클 부츠.",
+      "Kitten-heel ankle boots in supple Intrecciato nappa leather with a rear zip closure.",
+    ],
+    features: [
+      ["인트레치아토 가죽 소재의 키튼 힐 앵클 부츠","Kitten-heel ankle boots in Intrecciato leather"],
+      ["뒷면 지퍼 잠금장치","Rear zip closure"],
+      ["안감: 양가죽","Lining: Lambskin"],
+      ["컬러: 블랙","Color: Black"],
+      ["러버 가죽 아웃솔","Rubber and leather outsole"],
+      ["힐: 4cm","Heel height: 4 cm"],
+    ],
+    materials: [
+      ["주 소재: 양가죽","Main material: Lambskin"],
+      ["안감: 양가죽","Lining: Lambskin"],
+    ],
+    origin: ["이탈리아","Italy"],
   },
-  '13892114226': {
-    color: ['옐로 골드', 'Yellow gold'],
-    copy: ['부드럽게 겹쳐진 매듭 형태에 옐로 골드 톤을 더한 소프트 노트 스몰 귀걸이입니다. 곡면의 광택이 매듭의 입체감을 살립니다.',
-      'Small Soft Knot earrings with a yellow-gold tone. The curved, polished finish brings out the sculpted knot.'],
+  "13892114226": {
+    color: ["옐로 골드","Yellow gold"],
+    body: [
+      "스털링 실버로 완성한 소프트 노트 스몰 귀걸이입니다.",
+      "Small Soft Knot earrings crafted from sterling silver.",
+    ],
+    features: [
+      ["18K 골드 마감","18K gold finish"],
+      ["핀과 버터플라이 여밈","Post and butterfly fastening"],
+      ["외부 치수: 약 12mm × 7.5mm","External dimensions: approximately 12 × 7.5 mm"],
+      ["컬러: 옐로골드","Color: Yellow gold"],
+    ],
+    materials: [
+      ["스털링 실버","Sterling silver"],
+    ],
+    origin: ["이탈리아","Italy"],
   },
-  '13856634833': {
-    color: ['네이비', 'Navy'],
-    copy: ['울 코튼 혼방 소재의 네이비 카나파 블레이저입니다. 앞면 더블 버튼과 짧게 떨어지는 길이가 단정한 비율을 만듭니다.',
-      'A navy wool-cotton Canapa blazer with a double-breasted front and a proportionally short cut.'],
+  "13856634833": {
+    color: ["네이비","Navy"],
+    body: [
+      "핀스트라이프 패턴이 돋보이는 울·코튼 개버딘 블레이저입니다. 곧게 떨어지는 크롭 실루엣의 더블 브레스티드 디자인입니다.",
+      "A pinstriped wool and cotton gabardine blazer with a straight, cropped silhouette and a double-breasted front.",
+    ],
+    features: [
+      ["피크드 라펠","Peak lapels"],
+      ["앞면 단추 여밈","Front button closure"],
+      ["소매 단추","Sleeve buttons"],
+      ["뒷면 더블 벤트","Double back vents"],
+      ["앞면 플랩 웰트 포켓","Front flap welt pockets"],
+      ["컬러: 네이비","Color: Navy"],
+    ],
+    materials: [
+      ["겉감: 버진울 63%, 코튼 35%, 나일론 1%, 엘라스테인 1%","Outer: 63% virgin wool, 35% cotton, 1% nylon, 1% elastane"],
+      ["안감: 아세테이트 50%, 비스코스 50%","Lining: 50% acetate, 50% viscose"],
+      ["소매 안감: 아세테이트 51%, 비스코스 49%","Sleeve lining: 51% acetate, 49% viscose"],
+    ],
   },
-  '13856647708': {
-    color: ['다크 그린', 'Dark green'],
-    copy: ['짙은 그린 실크 몸판에 대비 컬러 칼라를 넣은 에첼소 셔츠입니다. 매끈한 표면과 앞 버튼 여밈이 단정한 인상을 줍니다.',
-      'The Eccelso shirt pairs a dark green silk body with a contrast collar and a clean button front.'],
+  "13856647708": {
+    color: ["다크 그린","Dark green"],
+    body: [
+      "퓨어 실크 크레이프 드 신 소재의 에첼소 셔츠입니다. 매니쉬한 실루엣에 클래식한 카라와 롱 커프스 디테일을 더했습니다.",
+      "The Eccelso shirt is made from pure silk crêpe de Chine. A classic collar and long cuffs complement its menswear-inspired silhouette.",
+    ],
+    features: [
+      ["레귤러 핏","Regular fit"],
+      ["클래식 카라","Classic collar"],
+      ["셋인 긴소매","Long set-in sleeves"],
+      ["단추 여밈 롱 커프스","Long buttoned cuffs"],
+      ["마더 오브 펄 단추 여밈","Mother-of-pearl button closure"],
+      ["총장: 72cm (IT 42 기준)","Length: 72 cm (IT size 42)"],
+      ["컬러: 다크 그린","Color: Dark green"],
+    ],
+    materials: [
+      ["소재: 실크 100%","Material: 100% silk"],
+    ],
   },
-  '13851900920': {
-    color: ['옐로우', 'Yellow'],
-    copy: ['선명한 옐로우 컬러의 울 자카드 니삭스입니다. 무릎 아래까지 오는 길이와 발 부분의 로고가 눈에 띕니다.',
-      'Bright yellow wool jacquard knee-high socks with a logo detail near the foot.'],
+  "13851900920": {
+    color: ["옐로우","Yellow"],
+    body: [
+      "가벼운 울 자카드로 제작한 니삭스입니다. 대비되는 로에베 자카드 로고와 무릎까지 올라오는 길이가 특징입니다.",
+      "Lightweight wool-jacquard knee socks with a contrasting Loewe logo woven into the fabric.",
+    ],
+    features: [
+      ["레귤러 핏","Regular fit"],
+      ["니하이 길이","Knee-high length"],
+      ["대비되는 로에베 자카드 로고","Contrasting Loewe jacquard logo"],
+      ["컬러 옐로우","Color: Yellow"],
+    ],
+    materials: [
+      ["울","Wool"],
+    ],
   },
-  '13855954759': {
-    color: ['블루 · 화이트', 'Blue / white'],
-    copy: ['블루와 화이트가 교차하는 마드라스 체크 코튼 셔츠입니다. 반소매와 앞면 버튼 여밈을 갖춘 가벼운 인상의 셔츠입니다.',
-      'A short-sleeve cotton shirt in a blue and white Madras check, finished with a button front.'],
+  "13855954759": {
+    color: ["블루 · 화이트","Blue / white"],
+    body: [
+      "블루와 화이트 마드라스 체크가 돋보이는 로에베의 코튼 반소매 셔츠입니다.",
+      "This Loewe short-sleeved cotton shirt features a blue and white Madras check.",
+    ],
+    features: [
+      ["클래식 칼라와 반소매","Classic collar and short sleeves"],
+      ["앞 단추 여밈","Front button closure"],
+      ["가슴 패치 포켓","Chest patch pocket"],
+      ["모노그램 자수","Embroidered monogram"],
+      ["컬러: 블루 화이트","Color: Blue and white"],
+    ],
+    materials: [
+      ["코튼 100%","100% cotton"],
+    ],
+    origin: ["이탈리아","Italy"],
   },
-  '13871846270': {
-    color: ['블랙', 'Black'],
-    copy: ['몬클레르 그레노블의 벨티드 패딩 스키 수트입니다. 밝은 상체와 블랙 하의가 대비되고, 허리 벨트가 올인원 실루엣을 정리해 줍니다.',
-      'A Moncler Grenoble belted padded ski suit with a contrasting light upper and black legs. The waist belt defines the one-piece silhouette.'],
+  "13871846270": {
+    color: ["블랙","Black"],
+    body: [
+      "사방으로 늘어나는 발수 포플린 소재의 기능성 패딩 스키 수트입니다. 다운 충전 앞면과 발수 지퍼를 갖추고 탈부착 벨트로 여성스러운 실루엣을 완성했습니다.",
+      "A technical padded ski suit made from water-repellent four-way stretch poplin. It has a down-filled front, water-repellent zips and a removable belt for a shaped silhouette.",
+    ],
+    features: [
+      ["스키·스노보드용 3L 사방 스트레치 포플린","Three-layer, four-way stretch poplin for skiing and snowboarding"],
+      ["앞면 다운 충전 레인웨어","Down-filled front rainwear panel"],
+      ["스트레치 테크니컬 폴리에스터 혼방 안감","Stretch technical polyester-blend lining"],
+      ["조절·탈부착 벨트와 장갑용 카라비너","Adjustable, removable belt and glove carabiner"],
+      ["YKK AquaGuard NATULON 발수 지퍼","YKK AquaGuard NATULON water-repellent zips"],
+      ["벨트·발수 지퍼 포켓","Belt and water-repellent zip pockets"],
+      ["방풍·통기성","Wind protection and breathability"],
+      ["파우더 스커트·밑단 스키 컷 보호","Powder skirt and hem protection against ski-edge cuts"],
+      ["발수 지퍼 커프스","Cuffs with water-repellent zips"],
+      ["컬러: 블랙","Color: Black"],
+    ],
+    materials: [
+      ["겉감: 폴리에스터 68%, 나일론 24%, 엘라스테인 8%","Outer: 68% polyester, 24% nylon, 8% elastane"],
+      ["밑단 안감: 나일론 100%","Hem lining: 100% nylon"],
+      ["앞면 안감: 폴리에스터 89%, 엘라스테인 11%","Front lining: 89% polyester, 11% elastane"],
+      ["충전재: 다운 90%, 페더 10%","Fill: 90% down, 10% feathers"],
+      ["부분 충전재: 폴리에스터 100%","Secondary fill: 100% polyester"],
+      ["앞면: 나일론 100%","Front: 100% nylon"],
+      ["배색1: 나일론 84%, 엘라스테인 16%","Contrast fabric 1: 84% nylon, 16% elastane"],
+      ["배색2: 나일론 100%","Contrast fabric 2: 100% nylon"],
+    ],
+    origin: ["루마니아","Romania"],
   },
-  '13871827399': {
-    color: ['블랙', 'Black'],
-    copy: ['블랙 퀼팅에 후드와 허리 벨트를 더한 그레노블 톨리마 다운 재킷입니다. 허리를 잡아 주는 벨트가 볼륨 있는 패딩과 대비됩니다.',
-      'The Grenoble Tolima is a black quilted ski down jacket with a hood and a waist belt that shapes the padded silhouette.'],
+  "13871827399": {
+    color: ["블랙","Black"],
+    body: [
+      "사방으로 늘어나는 테크니컬 나일론 혼방 소재의 톨리마 스키 다운 재킷입니다. 탈부착 벨트와 신축성 있는 밑단으로 완성하고 발수 지퍼와 파우더 스커트를 더했습니다.",
+      "The Tolima ski down jacket is made from a technical four-way stretch nylon blend. It features a removable belt, an elasticated hem, water-repellent zips and a powder skirt.",
+    ],
+    features: [
+      ["레귤러 핏·벨티드 디자인","Regular fit · Belted design"],
+      ["조절 가능한 후드·커프스","Adjustable hood and cuffs"],
+      ["YKK AquaGuard NATULON 발수 지퍼","YKK AquaGuard NATULON water-repellent zips"],
+      ["스키 패스·미디어 포켓","Ski pass and media pockets"],
+      ["저지 손목 게이터","Jersey wrist gaiters"],
+      ["총장: 64cm (공홈 모델 착용 1사이즈)","Length: 64 cm (size 1, as worn by the model on the brand website)"],
+      ["컬러: 블랙","Color: Black"],
+    ],
+    materials: [
+      ["겉감: 나일론 87%, 엘라스테인 13%","Outer: 87% nylon, 13% elastane"],
+      ["밑단 안감: 폴리에스터 100%","Hem lining: 100% polyester"],
+      ["안감: 폴리에스터 89%, 엘라스테인 11%","Lining: 89% polyester, 11% elastane"],
+      ["충전재: 다운 90%, 페더 10%","Fill: 90% down, 10% feathers"],
+      ["부분 충전재: 폴리에스터 100%","Secondary fill: 100% polyester"],
+      ["배색: 폴리아미드 83%, 엘라스테인 17%","Contrast fabric: 83% polyamide, 17% elastane"],
+    ],
+    origin: ["루마니아","Romania"],
   },
-  '13856627314': {
-    color: ['화이트', 'White'],
-    copy: ['화이트 실크 앞면에 러플이 흐르는 레치오 셔츠입니다. 단색이면서도 러플의 입체감이 드러나 재킷 안에 입기 좋습니다.',
-      'The Leccio white silk shirt has cascading front ruffles that add texture to a single-color blouse.'],
+  "13856627314": {
+    color: ["화이트","White"],
+    body: [
+      "넥라인의 러플이 앞면으로 흐르는 실크 샤르무즈 셔츠입니다. 두께감 있는 실크 소재와 부드러운 드레이프가 돋보입니다.",
+      "A silk charmeuse shirt with a ruffle that flows from the neckline down the front. The substantial silk has a soft drape.",
+    ],
+    features: [
+      ["차이나 칼라","Mandarin collar"],
+      ["퍼프 긴소매","Long puff sleeves"],
+      ["앞면 싸개 단추 여밈","Covered-button front closure"],
+      ["단추 커프스","Buttoned cuffs"],
+      ["뒷면 요크 플리츠","Back yoke pleats"],
+      ["일자 밑단","Straight hem"],
+      ["컬러: 화이트","Color: White"],
+    ],
+    materials: [
+      ["소재: 실크 100%","Material: 100% silk"],
+    ],
+    origin: ["포르투갈","Portugal"],
   },
-  '13856631606': {
-    color: ['허니', 'Honey'],
-    copy: ['따뜻한 허니 톤의 라즈미르 롱 스커트입니다. 허리에서 밑단으로 넓어지는 피오브라 실루엣과 세로 결이 특징입니다.',
-      'A honey-toned long razmir skirt with the flared Fiobra silhouette and gentle vertical folds.'],
+  "13856631606": {
+    color: ["허니","Honey"],
+    body: [
+      "우아하게 퍼지는 플레어 실루엣의 라즈미르 롱 스커트입니다. 원사 염색으로 완성한 소재가 차분한 볼륨감을 더합니다.",
+      "A long razmir skirt with an elegant flared silhouette. The yarn-dyed fabric gives it understated volume.",
+    ],
+    features: [
+      ["레귤러 핏","Regular fit"],
+      ["사이드 윙 포켓","Side wing pockets"],
+      ["허리 벨트 고리","Waist belt loops"],
+      ["뒷면 숨김 지퍼","Concealed rear zip"],
+      ["안감 없음","Unlined"],
+      ["컬러: 허니","Color: Honey"],
+    ],
+    materials: [
+      ["소재: 폴리에스터 100%","Material: 100% polyester"],
+    ],
+    origin: ["루마니아","Romania"],
   },
-  '13856629339': {
-    color: ['라이트 블루', 'Light blue'],
-    copy: ['라이트 블루와 화이트의 잔 스트라이프를 넣은 플러트 실크 셔츠입니다. 앞 버튼과 커프스가 있어 슬랙스나 데님에 두루 어울립니다.',
-      'The Flirt silk shirt features fine light blue and white stripes, a button front and defined cuffs.'],
+  "13856629339": {
+    color: ["라이트 블루","Light blue"],
+    body: [
+      "컬렉션 프린트가 돋보이는 실크 크레이프 드 신 셔츠입니다. 여유롭게 떨어지는 핏에 뒷면 요크의 주름을 더했습니다.",
+      "A silk crêpe de Chine shirt featuring a collection print. It has a relaxed fit with pleats at the back yoke.",
+    ],
+    features: [
+      ["셔츠 칼라","Shirt collar"],
+      ["주얼 버튼 커프스","Jewel-button cuffs"],
+      ["긴소매","Long sleeves"],
+      ["앞면 숨김 여밈","Concealed front fastening"],
+      ["둥근 사이드 슬릿","Rounded side slits"],
+      ["뒤가 긴 밑단","Longer back hem"],
+      ["컬러: 라이트 블루","Color: Light blue"],
+    ],
+    materials: [
+      ["소재: 실크 100%","Material: 100% silk"],
+    ],
+    origin: ["루마니아","Romania"],
   },
 };

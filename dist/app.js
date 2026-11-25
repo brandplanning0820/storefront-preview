@@ -552,10 +552,30 @@ const seasonNames = {
   'FW컬렉션': ['가을·겨울 컬렉션', 'Fall/Winter collection'],
 };
 
+function showDetailList(id, lines) {
+  const items = lines.map(([korean, english]) => {
+    const item = document.createElement('li');
+    setLocalized(item, korean, english);
+    return item;
+  });
+  document.getElementById(id).replaceChildren(...items);
+}
+
 function showProductSpecs(product) {
   const details = PRODUCT_DETAILS[product.id];
   const season = seasonNames[product.name.split(' ')[0]];
-  setLocalized(document.getElementById('detail-description'), ...(details?.copy || [product.name, PRODUCT_NAMES_EN[product.id]]));
+  const productDescription = document.getElementById('detail-description');
+  productDescription.hidden = !details?.body;
+  if (details?.body) setLocalized(productDescription, ...details.body);
+  document.getElementById('detail-spec-content').hidden = !details?.features?.length;
+  showDetailList('detail-features', details?.features || []);
+  showDetailList('detail-materials', details?.materials || []);
+  document.getElementById('detail-material-note').hidden = !details?.materialDescription;
+  if (details?.materialDescription) {
+    setLocalized(document.getElementById('detail-material-description'), ...details.materialDescription);
+  }
+  document.getElementById('detail-spec-origin-row').hidden = !details?.origin;
+  if (details?.origin) setLocalized(document.getElementById('detail-spec-origin'), ...details.origin);
   document.getElementById('detail-spec-brand').textContent = product.brand;
   const color = document.getElementById('detail-spec-color');
   color.parentElement.hidden = !details?.color;
