@@ -111,7 +111,7 @@ function productCard(product) {
   link.href = '#product/' + product.id;
   item.querySelector('img').src = asset(product.image);
   const gallery = PRODUCT_GALLERIES[product.id];
-  const hoverPhoto = gallery?.wearing;
+  const hoverPhoto = gallery?.wearing || gallery?.alternate || gallery?.photos[0];
   if (hoverPhoto) {
     const preview = document.createElement('img');
     preview.className = 'product-hover-photo';
@@ -1134,7 +1134,6 @@ const heroSlides = [...heroTrack.children];
 const heroDots = [...document.querySelectorAll('[data-hero-page]')];
 const heroToggle = document.getElementById('hero-toggle');
 const heroIntervalMs = 5000;
-const heroMoves = [];
 const heroFirst = 1;
 const heroLast = heroSlides.length;
 let heroPage = 0;
@@ -1172,13 +1171,14 @@ function scheduleHero() {
   if (!heroVisible || heroPaused || home.hidden || document.hidden || keyboardFocus) return;
   heroTimeout = window.setTimeout(() => {
     if (document.querySelector('dialog[open]') || heroDestination !== undefined) scheduleHero();
-    else queueHeroMove({ step: 1 });
+    else moveHero({ step: 1 });
   }, heroIntervalMs);
 }
 
-function runHeroMove() {
-  if (heroDestination !== undefined || !heroWidth || !heroMoves.length) return;
-  const { page, step } = heroMoves.shift();
+function moveHero({ page, step }) {
+  // Accept fresh input after the banner has settled.
+  if (heroDestination !== undefined || !heroWidth) return;
+  window.clearTimeout(heroTimeout);
   const count = heroSlides.length;
   const next = page ?? (heroPage + step + count) % count;
   const current = heroPage + heroFirst;
@@ -1205,19 +1205,10 @@ function settleHero() {
     heroTrack.scrollTo({ left: heroWidth * (heroPage + heroFirst), behavior: 'instant' });
   }
   syncHeroControls();
-  // Let the instant seam correction settle before starting the next queued move.
-  requestAnimationFrame(runHeroMove);
   scheduleHero();
 }
 
-function queueHeroMove(move) {
-  window.clearTimeout(heroTimeout);
-  heroMoves.push(move);
-  runHeroMove();
-}
-
-function cancelHeroMoves() {
-  heroMoves.length = 0;
+function interruptHeroMove() {
   heroDestination = undefined;
   scheduleHero();
 }
@@ -1227,12 +1218,7 @@ function sizeHero() {
   if (width === heroWidth) return;
   heroWidth = width;
   heroDestination = undefined;
-  if (!width) {
-    heroMoves.length = 0;
-    return;
-  }
-  heroTrack.scrollTo({ left: width * (heroPage + heroFirst), behavior: 'instant' });
-  requestAnimationFrame(runHeroMove);
+  if (width) heroTrack.scrollTo({ left: width * (heroPage + heroFirst), behavior: 'instant' });
 }
 
 function updateHeroToggle() {
@@ -1242,9 +1228,9 @@ function updateHeroToggle() {
   scheduleHero();
 }
 
-heroDots.forEach((button) => button.addEventListener('click', () => queueHeroMove({ page: Number(button.dataset.heroPage) })));
+heroDots.forEach((button) => button.addEventListener('click', () => moveHero({ page: Number(button.dataset.heroPage) })));
 document.querySelectorAll('[data-hero-step]').forEach((button) => {
-  button.addEventListener('click', () => queueHeroMove({ step: Number(button.dataset.heroStep) }));
+  button.addEventListener('click', () => moveHero({ step: Number(button.dataset.heroStep) }));
 });
 if ('onscrollend' in heroTrack) {
   heroTrack.addEventListener('scrollend', settleHero);
@@ -1256,15 +1242,15 @@ if ('onscrollend' in heroTrack) {
   }, { passive: true });
 }
 heroTrack.addEventListener('pointerdown', (event) => {
-  if (event.pointerType !== 'mouse') cancelHeroMoves();
+  if (event.pointerType !== 'mouse') interruptHeroMove();
 });
 heroTrack.addEventListener('wheel', (event) => {
-  if (event.deltaX || event.shiftKey) cancelHeroMoves();
+  if (event.deltaX || event.shiftKey) interruptHeroMove();
 }, { passive: true });
 heroTrack.addEventListener('keydown', (event) => {
   if (event.target !== heroTrack || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
   event.preventDefault();
-  queueHeroMove({ step: event.key === 'ArrowRight' ? 1 : -1 });
+  moveHero({ step: event.key === 'ArrowRight' ? 1 : -1 });
 });
 heroTrack.addEventListener('focusin', scheduleHero);
 heroTrack.addEventListener('focusout', () => queueMicrotask(scheduleHero));
@@ -1338,6 +1324,17 @@ function reviewContent(review) {
   return copy;
 }
 
+function reviewProductLink(review) {
+  const link = document.createElement('a');
+  link.className = 'button outline review-product-link';
+  link.href = byId.has(review.productId) ? '#product/' + review.productId
+    : 'https://smartstore.naver.com/brandplanning/products/' + review.productId;
+  setLocalized(link, '해당 상품 보러가기', 'View product');
+  setLocalized(link, '해당 상품 보러가기 · ' + review.title,
+    'View product: ' + (REVIEW_TITLES_EN[review.title] || review.title), 'aria-label');
+  return link;
+}
+
 function reviewDetail(review) {
   const content = reviewContent(review);
   const image = document.createElement('img');
@@ -1345,6 +1342,7 @@ function reviewDetail(review) {
   image.src = asset(review.image);
   setLocalized(image, review.title, REVIEW_TITLES_EN[review.title], 'alt');
   content.prepend(image);
+  content.append(reviewProductLink(review));
   openPanel(review.title, content, REVIEW_TITLES_EN[review.title]);
 }
 
@@ -1453,6 +1451,7 @@ reviewList.append(...REVIEWS.map((review) => {
   setLocalized(title, review.title, REVIEW_TITLES_EN[review.title]);
   const copy = reviewContent(review);
   copy.prepend(title);
+  copy.append(reviewProductLink(review));
   item.append(image, copy);
   return item;
 }));

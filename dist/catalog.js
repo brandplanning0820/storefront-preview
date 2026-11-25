@@ -567,36 +567,42 @@ const CATALOG = {
 };
 const REVIEWS = [
   {
+    "productId": "13160727541",
     "title": "폴리시드 나파 레더 재킷",
     "image": "review-13160727541.jpg",
     "author": "st****",
     "quote": "좋은옷 예쁜가격에 잘사서 좋아요"
   },
   {
+    "productId": "13161375150",
     "title": "리넨 울 실크 아우터웨어 재킷",
     "image": "review-13161375150.jpg",
     "author": "gogi***",
     "quote": "좋은 기회에 아주 잘 구매 했어요."
   },
   {
+    "productId": "13161224255",
     "title": "셔츠 스타일 아우터웨어 재킷",
     "image": "review-13161224255.jpg",
     "author": "gogi***",
     "quote": "아주 만족하고 좋습니다."
   },
   {
+    "productId": "13544695732",
     "title": "모닐리 코튼 트윌 카프리 팬츠",
     "image": "review-13544695732.jpg",
     "author": "tigg********",
     "quote": "편안하게 잘 맞아요"
   },
   {
+    "productId": "13288586205",
     "title": "울 리넨 실크 하운즈투스 블레이저",
     "image": "review-13288586205.jpg",
     "author": "worl***",
     "quote": "상품 컨디션은 최상입니다."
   },
   {
+    "productId": "13308032164",
     "title": "가먼트다이드 데님 트러커 재킷",
     "image": "review-13308032164.jpg",
     "author": "io****",
@@ -2947,6 +2953,7 @@ const PRODUCT_GALLERIES = {
   },
   "13862252891": {
     photos: ["13862252891-photo-02.webp", "13862252891-photo-03.webp"],
+    alternate: "13862252891-photo-03.webp",
   },
   "13862251029": {
     photos: ["13862251029-photo-02.webp", "13862251029-photo-03.webp", "13862251029-photo-04.webp"],
@@ -2954,6 +2961,7 @@ const PRODUCT_GALLERIES = {
   },
   "13862247292": {
     photos: ["13862247292-photo-02.webp", "13862247292-photo-03.webp"],
+    alternate: "13862247292-photo-03.webp",
   },
   "13862243522": {
     photos: ["13862243522-photo-02.webp", "13862243522-photo-03.webp"],
@@ -2979,6 +2987,7 @@ const PRODUCT_GALLERIES = {
   },
   "13888383841": {
     photos: ["13888383841-photo-02.webp", "13888383841-photo-03.webp", "13888383841-photo-04.webp"],
+    alternate: "13888383841-photo-04.webp",
   },
   "13812808803": {
     photos: ["13812808803-photo-02.webp", "13812808803-photo-03.webp", "13812808803-photo-04.webp", "13812808803-photo-05.webp"],

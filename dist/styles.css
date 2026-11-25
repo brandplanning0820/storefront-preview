@@ -328,6 +328,7 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
 .review-list li > div { padding: clamp(11px, 2vw, 22px); overflow-wrap: anywhere; }
 .review-list h2 { margin-bottom: 9px; color: var(--muted); font-size: .875rem; font-weight: 550; }
 .review-list p { margin-top: 4px; font-size: .9375rem; }
+.review-product-link { margin-top: 14px; padding-inline: 14px; font-size: .875rem; }
 
 .store-page { margin-block: clamp(20px, 3vw, 54px) clamp(70px, 9vw, 166px); max-width: 1440px; }
 .store-path { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; color: var(--muted); font-size: .875rem; margin-bottom: 24px; }
