@@ -178,9 +178,9 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
   padding: clamp(10px, 1.2vw, 24px) clamp(11px, 1.5vw, 30px);
 }
 .classic-products .product-brand { grid-area: brand; }
-.classic-products .product-name { grid-area: name; min-height: auto; font-size: 1rem; word-break: keep-all; overflow-wrap: anywhere; }
+.classic-products .product-name { grid-area: name; min-height: auto; margin-top: 4px; font-size: 1rem; font-weight: 500; word-break: keep-all; overflow-wrap: anywhere; }
 .classic-products .product-size { grid-area: size; align-self: end; }
-.classic-products .product-price { grid-area: price; align-self: end; font-size: clamp(1.0625rem, 1.25vw, 1.125rem); white-space: nowrap; }
+.classic-products .product-price { grid-area: price; align-self: end; justify-self: end; font-size: 1.25rem; white-space: nowrap; }
 
 .signup-banner { margin-top: clamp(56px, 8.7vw, 167px); min-height: clamp(125px, 8.7vw, 167px); padding: 24px clamp(22px, 5vw, 96px); border-radius: 15px; display: flex; align-items: center; justify-content: space-between; gap: 16px; color: white; background: radial-gradient(ellipse at 80% 0, #78654d, transparent 62%), #24201c; }
 .signup-offer { display: flex; align-items: center; min-width: 0; gap: clamp(12px, 2.25vw, 42px); }
@@ -599,6 +599,15 @@ html[lang="en"] .brand-letter a span[lang="ko"] { display: none; }
   .cart-item-actions { grid-column: 2; grid-template-columns: max-content minmax(0, 1fr) auto; }
   .checkout-item { grid-template-columns: minmax(0, 1fr); }
   .checkout-item .cart-item-actions { grid-column: 1; grid-template-columns: minmax(0, 1fr) auto; }
+}
+@media (max-width: 360px) {
+  .classic-products .product-copy {
+    grid-template:
+      "brand" auto
+      "name" 1fr
+      "size" auto
+      "price" auto / minmax(0, 1fr);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; }
