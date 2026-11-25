@@ -20,9 +20,9 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=product-detail-layout">
-  <script src="catalog.js?v=product-details" defer></script>
-  <script src="app.js?v=product-detail-layout" defer></script>
+  <link rel="stylesheet" href="styles.css?v=notice-inquiry">
+  <script src="catalog.js?v=notice-inquiry" defer></script>
+  <script src="app.js?v=notice-inquiry" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -164,13 +164,11 @@
         <h2 id="notice-heading">NOTICE</h2>
         <p class="notice-title"><span data-en="We curate luxury brands">브랜드를 큐레이션하고</span><br><span data-en="and select pieces worth keeping.">가치를 기획합니다.</span></p>
         <p data-en="Brand Planning curates luxury goods, offers seasonal pre-orders and ships within Korea.">브랜드플래닝은 상품을 선별하고, 시즌별 프리오더와 국내 배송을 운영하는 명품 유통 기업입니다.</p>
+        <p class="notice-inquiry"><span data-en="Looking for a specific item? ">찾으시는 상품이 있다면 </span><button type="button" data-inquiry-launch aria-haspopup="dialog" data-en="Contact us">문의하기</button><span data-en=" and we’ll get back to you once we’ve checked on it.">로 알려주세요. 상품을 확인하는 대로 연락드리겠습니다.</span></p>
         <div class="notice-actions">
           <a class="button light" href="https://brandplanning.co.kr/" target="_blank" rel="noopener" data-en="About us">회사소개</a>
           <a class="button on-dark" href="#notices/all" data-en="Notices">공지사항</a>
         </div>
-        <ul class="notice-strengths">
-          <li data-en="Seasonal pre-orders">시즌 프리오더</li>
-        </ul>
       </div>
     </section>
   </main>
@@ -351,7 +349,7 @@
     </div>
   </footer>
 
-  <button type="button" class="inquiry-launch" id="inquiry-launch" aria-haspopup="dialog"><span aria-hidden="true" class="inquiry-icon"></span><span data-en="Contact us">문의하기</span></button>
+  <button type="button" class="inquiry-launch" id="inquiry-launch" data-inquiry-launch aria-haspopup="dialog"><span aria-hidden="true" class="inquiry-icon"></span><span data-en="Contact us">문의하기</span></button>
 
   <template id="product-template">
     <li class="product">
@@ -389,11 +387,8 @@
   <template id="inquiry-template">
     <form class="inquiry-form">
       <label><span data-en="Brand">상품 브랜드</span><input name="brand" required pattern=".*\S.*" maxlength="80" autofocus></label>
-      <label><span data-en="Official website URL">공식 홈페이지 URL</span><input type="url" name="url" placeholder="https://" pattern="https?://.+" required maxlength="400"></label>
-      <div class="inquiry-options">
-        <label><span data-en="Preferred size">원하는 사이즈</span><input name="size" required pattern=".*\S.*" maxlength="40"></label>
-        <label><span data-en="Quantity">수량</span><input type="number" name="quantity" min="1" step="1" value="1" required></label>
-      </div>
+      <label><span data-en="Product listing URL">판매 페이지 URL</span><input type="url" name="url" placeholder="https://" pattern="https?://.+" required maxlength="400"></label>
+      <label><span data-en="Preferred size">원하는 사이즈</span><input name="size" required pattern=".*\S.*" maxlength="40"></label>
       <label><span data-en="Additional details">기타 요청사항</span><textarea name="message" rows="4" maxlength="500"></textarea></label>
       <div class="inquiry-actions">
         <button type="submit" class="button dark" data-en="Contact us">문의하기</button>

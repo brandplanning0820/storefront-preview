@@ -2065,7 +2065,7 @@ const NOTICES = [
     "id": "product-inquiry",
     "title": "상품 문의 안내",
     "paragraphs": [
-      "상품 브랜드, 공식 홈페이지 URL, 원하시는 사이즈와 수량을 알려주시면 문의 내용을 확인하기 쉽습니다.",
+      "상품 브랜드와 원하시는 사이즈, 상품을 보신 판매 페이지 URL을 알려주시면 확인하기 쉽습니다.",
       "오른쪽 문의하기 버튼을 눌러 작성할 수 있습니다. 시안에서는 작성한 내용을 회사 메일로 보내기 위한 초안을 열 수 있습니다."
     ]
   }
@@ -2143,7 +2143,7 @@ const NOTICES_EN = {
   'product-inquiry': {
     title: 'Product inquiries',
     paragraphs: [
-      'Please include the brand, official website URL, size and quantity so we can help.',
+      'Please include the brand, your preferred size and the URL of the listing where you found the item.',
       'Select Contact us on the right to enter the details. In this preview, you can open an email draft addressed to our team.',
     ],
   },

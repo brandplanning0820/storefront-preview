@@ -866,14 +866,13 @@ document.getElementById('checkout-pay')?.addEventListener('click', () => {
   openPanel('결제 안내', description(note.dataset.ko, note.dataset.en), 'Payment information');
 });
 
-document.getElementById('inquiry-launch').addEventListener('click', () => {
+function openInquiry() {
   const form = document.getElementById('inquiry-template').content.firstElementChild.cloneNode(true);
   const mail = form.querySelector('.inquiry-mail');
   const note = form.querySelector('.inquiry-note');
   if (!productPage.hidden && currentProduct) {
     form.elements.brand.value = currentProduct.brand;
     form.elements.size.value = detailForm.querySelector('[name="size"]:checked')?.value || '';
-    if (detailQuantity.validity.valid) form.elements.quantity.value = detailQuantity.value;
   }
   form.addEventListener('input', () => {
     mail.hidden = true;
@@ -885,9 +884,8 @@ document.getElementById('inquiry-launch').addEventListener('click', () => {
     const subject = '브랜드플래닝 상품 문의 · ' + data.get('brand').trim();
     const body = [
       '상품 브랜드  ' + data.get('brand').trim(),
-      '공식 홈페이지 URL  ' + data.get('url').trim(),
+      '판매 페이지 URL  ' + data.get('url').trim(),
       '원하는 사이즈  ' + data.get('size').trim(),
-      '수량  ' + data.get('quantity'),
       '', '기타 요청사항', data.get('message').trim() || '없음',
     ].join('\r\n');
     const recipient = document.querySelector('.site-footer a[href^="mailto:"]').getAttribute('href');
@@ -898,6 +896,10 @@ document.getElementById('inquiry-launch').addEventListener('click', () => {
     mail.focus({ preventScroll: true });
   });
   openPanel('상품 문의', form, 'Product inquiry');
+}
+
+document.querySelectorAll('[data-inquiry-launch]').forEach(button => {
+  button.addEventListener('click', openInquiry);
 });
 
 function updatePageTitle() {

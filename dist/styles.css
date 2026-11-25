@@ -244,10 +244,11 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
 .notice-content { width: min(100%, 740px); }
 .notice-content h2 { font-size: 1rem; font-weight: 720; letter-spacing: .14em; margin-bottom: 14px; }
 .notice-title { font-size: clamp(2rem, 4.25vw, 5rem); font-weight: 625; line-height: 1.07; letter-spacing: -.066em; margin-bottom: 18px; }
-.notice-title + p { width: min(100%, 590px); margin-inline: auto; font-size: 1rem; line-height: 1.55; word-break: keep-all; }
+.notice-title + p, .notice-inquiry { width: min(100%, 590px); margin-inline: auto; font-size: 1rem; line-height: 1.55; word-break: keep-all; }
+.notice-inquiry { margin-top: 12px; }
+.notice-inquiry button { font-weight: 690; text-decoration: underline; text-underline-offset: 3px; }
+.notice-inquiry button:focus-visible { outline-color: #fff; }
 .notice-actions { margin-top: 22px; display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
-.notice-strengths { margin: 23px auto 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-.notice-strengths li { padding: 6px 10px; border: 1px solid rgb(255 255 255 / .38); font-size: .875rem; }
 
 .site-footer { margin-top: clamp(66px, 8.7vw, 167px); background: #f2eee8; padding: clamp(35px, 4vw, 76px) 0 23px; color: #332d27; }
 .footer-grid { display: grid; grid-template-columns: minmax(115px, .92fr) minmax(110px, .8fr) minmax(170px, 1.1fr) minmax(270px, 1.6fr); gap: clamp(16px, 3vw, 57px); align-items: start; }
@@ -274,7 +275,6 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
 .inquiry-form label { display: grid; gap: 6px; min-width: 0; font-size: .875rem; font-weight: 650; }
 .inquiry-form :is(input, textarea) { width: 100%; min-height: 42px; padding: 9px 11px; border: 1px solid #bfb5a9; border-radius: 4px; background: #fff; color: var(--ink); font: inherit; font-size: .9375rem; font-weight: 400; }
 .inquiry-form textarea { resize: vertical; }
-.inquiry-options { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .5fr); gap: 12px; }
 .inquiry-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .inquiry-form .inquiry-note { margin: 0; color: var(--muted); font-size: .875rem; }
 .inquiry-note:empty { display: none; }
