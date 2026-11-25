@@ -373,6 +373,7 @@ html[lang="en"] .brand-letter a span[lang="ko"] { display: none; }
 .detail-thumbnails button[aria-pressed="true"] { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
 .detail-thumbnails button:focus-visible { outline-offset: -3px; }
 .detail-thumbnails img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.detail-thumbnails button[aria-pressed="false"] img { opacity: .65; filter: blur(.45px); }
 .detail-photo { flex: 1; min-width: 0; aspect-ratio: 4 / 5; max-height: 780px; border: 1px solid var(--line); background: #f5f3ef; }
 .detail-photo > img { width: 100%; height: 100%; object-fit: contain; }
 .detail-info { min-width: 0; align-self: start; padding-top: clamp(0px, 2vw, 32px); }

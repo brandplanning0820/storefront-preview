@@ -595,7 +595,7 @@ function showProductSpecs(product) {
 
 function showProductGallery(product) {
   const gallery = PRODUCT_GALLERIES[product.id];
-  const photos = [product.image, ...(gallery?.photos || [])];
+  const photos = [...new Set([product.image, ...(gallery?.photos || [])])];
   const thumbnails = document.getElementById('detail-thumbnails');
   const rail = document.getElementById('detail-thumbnail-rail');
   const image = document.getElementById('detail-image');
