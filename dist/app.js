@@ -954,6 +954,7 @@ function magazineBlock(block) {
 
 const campaign = document.getElementById('classic-campaign');
 if (/^https?:$/.test(location.protocol)) {
+  const campaignVideoId = 'MVKHFd_gxZw';
   const campaignObserver = new IntersectionObserver(([entry], observer) => {
     if (home.hidden || entry.intersectionRatio < 0.25) return;
     const player = document.createElement('iframe');
@@ -962,7 +963,7 @@ if (/^https?:$/.test(location.protocol)) {
     player.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
     player.allowFullscreen = true;
     player.referrerPolicy = 'strict-origin-when-cross-origin';
-    player.src = 'https://www.youtube-nocookie.com/embed/MVKHFd_gxZw?autoplay=1&mute=1&playsinline=1&rel=0';
+    player.src = `https://www.youtube-nocookie.com/embed/${campaignVideoId}?autoplay=1&mute=1&playsinline=1&rel=0&loop=1&playlist=${campaignVideoId}`;
     campaign.append(player);
     observer.disconnect();
   }, { threshold: 0.25 });
