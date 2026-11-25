@@ -58,7 +58,7 @@ img { display: block; max-width: 100%; }
 .globe-icon { position: relative; width: 17px; height: 17px; border: 1.25px solid currentColor; border-radius: 50%; }
 .globe-icon::before { content: ""; position: absolute; inset: -1px 3px; border: 1px solid currentColor; border-radius: 50%; }
 .globe-icon::after { content: ""; position: absolute; inset: calc(50% - .5px) 0 auto; border-top: 1px solid currentColor; }
-.mobile-menu-toggle, .mobile-account, .shop-bag-icon, #cart-icon-count { display: none; }
+.mobile-menu-toggle, .account-launch, .shop-bag-icon, #cart-icon-count { display: none; }
 .navigation-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(180px, 25.65%); gap: clamp(18px, 4vw, 76px); align-items: center; }
 .site-nav { display: flex; justify-content: space-between; gap: 13px; max-width: 888px; white-space: nowrap; font-weight: 620; }
 html[lang="en"] .site-nav { min-width: 0; overflow-x: auto; scrollbar-width: none; }
@@ -73,7 +73,7 @@ html[lang="en"] .site-nav { min-width: 0; overflow-x: auto; scrollbar-width: non
 .site-header.is-compact > .brand-mark { position: static; grid-area: logo; inline-size: 56px; border-radius: 7px; }
 .site-header.is-compact .navigation-row { grid-area: navigation; grid-template-columns: minmax(0, 1fr) minmax(130px, 25%); gap: clamp(11px, 2.6vw, 30px); }
 .site-header.is-compact .account-links { grid-area: account; white-space: nowrap; padding: 0; }
-.site-header.is-compact .account-links [data-account] { display: none; }
+.site-header.is-compact .account-links [data-account]:not(.account-launch) { display: none; }
 
 .hero { position: relative; --controls-height: 44px; }
 .hero-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
@@ -278,9 +278,12 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
 .inquiry-launch:hover { background: #504032; }
 .inquiry-icon { position: relative; width: 15px; height: 12px; border: 1.4px solid currentColor; border-radius: 4px; }
 .inquiry-icon::after { content: ""; position: absolute; left: 2px; bottom: -3px; width: 4px; height: 4px; border-inline-start: 1.4px solid currentColor; transform: skewY(-34deg); }
-.inquiry-form { display: grid; gap: 15px; }
-.inquiry-form label { display: grid; gap: 6px; min-width: 0; font-size: .875rem; font-weight: 650; }
-.inquiry-form :is(input, textarea) { width: 100%; min-height: 42px; padding: 9px 11px; border: 1px solid #bfb5a9; border-radius: 4px; background: #fff; color: var(--ink); font: inherit; font-size: .9375rem; font-weight: 400; }
+:is(.inquiry-form, .login-form) { display: grid; gap: 15px; }
+:is(.inquiry-form, .login-form) label { display: grid; gap: 6px; min-width: 0; font-size: .875rem; font-weight: 650; }
+:is(.inquiry-form, .login-form) :is(input, textarea) { width: 100%; min-height: 42px; padding: 9px 11px; border: 1px solid #bfb5a9; border-radius: 4px; background: #fff; color: var(--ink); font: inherit; font-size: .9375rem; font-weight: 400; }
+.panel:has(.login-form) { width: min(92vw, 440px); }
+.login-form .login-message { margin: 0; color: var(--muted); font-size: .875rem; }
+.login-signup { justify-self: center; min-height: 36px; padding-inline: 10px; font-size: .875rem; text-decoration: underline; text-underline-offset: 3px; }
 .inquiry-form textarea { resize: vertical; }
 .inquiry-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .inquiry-form .inquiry-note { margin: 0; color: var(--muted); font-size: .875rem; }
@@ -343,7 +346,6 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
 .brand-letter a:hover { background: var(--sand); }
 .brand-letter a span { color: var(--muted); font-size: .875rem; }
 html[lang="en"] .brand-letter a span[lang="ko"] { display: none; }
-.mobile-account-actions { display: grid; gap: 8px; }
 .brand-lines { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
 .brand-lines a { display: inline-flex; align-items: center; min-height: 38px; padding-inline: 13px; border: 1px solid var(--line); border-radius: 999px; font-size: .875rem; }
 .brand-lines a:hover { background: var(--sand); }
@@ -496,6 +498,16 @@ html[lang="en"] .brand-letter a span[lang="ko"] { display: none; }
   .site-header { padding: 16px 16px 12px; gap: 11px; }
   .site-header > .brand-mark { top: 10px; left: 16px; }
   .account-links { min-height: 38px; padding-left: 78px; gap: 5px 9px; }
+  .account-links [data-account]:not(.account-launch), #cart-link-label { display: none; }
+  .account-links :is(.utility-icon, #cart-link) { display: grid; place-items: center; width: 40px; min-height: 40px; border-radius: 5px; }
+  .account-icon { position: relative; width: 17px; height: 17px; }
+  .account-icon::before { content: ""; position: absolute; inset: 0 auto auto 5px; width: 7px; height: 7px; border: 1.3px solid currentColor; border-radius: 50%; }
+  .account-icon::after { content: ""; position: absolute; inset: 9px 0 0; border: 1.3px solid currentColor; border-radius: 7px 7px 2px 2px; }
+  #cart-link { position: relative; }
+  #cart-link:hover { background: var(--sand); }
+  .shop-bag-icon { position: relative; display: block; width: 15px; height: 13px; margin-top: 3px; border: 1.3px solid currentColor; border-radius: 2px; }
+  .shop-bag-icon::before { content: ""; position: absolute; inset: -5px 3px auto; height: 6px; border: 1.3px solid currentColor; border-bottom: 0; border-radius: 5px 5px 0 0; }
+  #cart-icon-count { position: absolute; display: grid; place-items: center; inset: 4px 2px auto auto; min-width: 14px; height: 14px; padding: 0 2px; border-radius: 10px; background: #302822; color: #fff; font-size: .6rem; line-height: 1; }
   .navigation-row { grid-template-columns: 1fr; gap: 8px; }
   .site-nav { padding-block: 12px 7px; overflow-x: auto; scrollbar-width: thin; }
   .site-nav > * { flex: none; padding-inline: 3px; }
@@ -532,11 +544,10 @@ html[lang="en"] .brand-letter a span[lang="ko"] { display: none; }
   .site-header > .brand-mark, .site-header.is-compact > .brand-mark { position: static; grid-area: logo; justify-self: start; inline-size: 62px; }
   .site-header .navigation-row { display: contents; }
   .site-header .account-links { grid-area: account; flex-wrap: nowrap; gap: 0; padding: 0; }
-  .site-header .account-links [data-account], #cart-link-label { display: none; }
-  .site-header .utility-icon, .site-header .search-launch, #cart-link { display: grid; place-items: center; width: 44px; min-height: 44px; }
+  .site-header :is(.utility-icon, .search-launch, #cart-link) { display: grid; place-items: center; width: 44px; min-height: 44px; }
   .mobile-menu-toggle { grid-area: menu; }
   .site-header .search-launch { grid-area: search; border: 0; background: transparent; padding: 0; }
-  .site-header .search-launch:hover, #cart-link:hover { border-radius: 5px; background: var(--sand); }
+  .site-header .search-launch:hover { border-radius: 5px; background: var(--sand); }
   .site-header .search-label { display: none; }
   .site-header .site-nav { display: none; }
   .site-header.is-menu-open .site-nav {
@@ -555,13 +566,6 @@ html[lang="en"] .brand-letter a span[lang="ko"] { display: none; }
   .site-header.is-menu-open .site-nav a { display: flex; align-items: center; min-height: 44px; padding-inline: 6px; border-bottom: 1px solid var(--line); }
   .language-options { inset-inline: auto 0; }
   .menu-icon { width: 16px; height: 1.4px; background: currentColor; box-shadow: 0 -5px currentColor, 0 5px currentColor; }
-  .account-icon { position: relative; width: 17px; height: 17px; }
-  .account-icon::before { content: ""; position: absolute; inset: 0 auto auto 5px; width: 7px; height: 7px; border: 1.3px solid currentColor; border-radius: 50%; }
-  .account-icon::after { content: ""; position: absolute; inset: 9px 0 0; border: 1.3px solid currentColor; border-radius: 7px 7px 2px 2px; }
-  #cart-link { position: relative; }
-  .shop-bag-icon { position: relative; display: block; width: 15px; height: 13px; margin-top: 3px; border: 1.3px solid currentColor; border-radius: 2px; }
-  .shop-bag-icon::before { content: ""; position: absolute; inset: -5px 3px auto; height: 6px; border: 1.3px solid currentColor; border-bottom: 0; border-radius: 5px 5px 0 0; }
-  #cart-icon-count { position: absolute; display: grid; place-items: center; inset: 4px 2px auto auto; min-width: 14px; height: 14px; padding: 0 2px; border-radius: 10px; background: #302822; color: #fff; font-size: .6rem; line-height: 1; }
   html[lang="en"] .hero-english { width: 64%; padding-inline: 15px 9%; }
 }
 @media (max-width: 460px) {

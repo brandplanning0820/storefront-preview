@@ -311,29 +311,27 @@ document.addEventListener('keydown', event => {
 });
 
 function showAccount(title) {
-  openPanel(title, description('실제 회원과 주문 기능은 자사몰 연결 후 이용할 수 있어요.',
-    'Account and order services will be available when the store is connected.'), accountTitles[title]);
+  setMobileNav(false);
+  if (title === '로그인') {
+    const form = document.getElementById('login-template').content.firstElementChild.cloneNode(true);
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      form.reset();
+      form.querySelector('.login-message').hidden = false;
+    });
+    openPanel(title, form, accountTitles[title]);
+    return;
+  }
+  const wasOpen = panel.open;
+  const note = description('실제 회원과 주문 기능은 자사몰 연결 후 이용할 수 있어요.',
+    'Account and order services will be available when the store is connected.');
+  openPanel(title, note, accountTitles[title]);
+  if (wasOpen) panel.querySelector('.panel-header button').focus({ preventScroll: true });
 }
 
-document.querySelectorAll('[data-account]').forEach(button => {
-  button.addEventListener('click', () => showAccount(button.dataset.account));
-});
-document.getElementById('mobile-account').addEventListener('click', () => {
-  setMobileNav(false);
-  const actions = document.createElement('div');
-  actions.className = 'mobile-account-actions';
-  for (const [korean, english] of Object.entries(accountTitles)) {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'button outline';
-    setLocalized(button, korean, english);
-    button.addEventListener('click', () => {
-      showAccount(korean);
-      panel.querySelector('button').focus({ preventScroll: true });
-    });
-    actions.append(button);
-  }
-  openPanel('계정 메뉴', actions, 'Account menu');
+document.addEventListener('click', event => {
+  const button = event.target.closest('[data-account]');
+  if (button) showAccount(button.dataset.account);
 });
 
 const home = document.getElementById('main');

@@ -20,9 +20,9 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=review-product-link">
+  <link rel="stylesheet" href="styles.css?v=responsive-account">
   <script src="catalog.js?v=alternate-photos-and-review-products" defer></script>
-  <script src="app.js?v=single-banner-move-and-review-links" defer></script>
+  <script src="app.js?v=responsive-login" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -43,7 +43,7 @@
         <button data-account="로그인" data-en="Log in">로그인</button>
         <button data-account="회원가입" data-en="Sign up">회원가입</button>
         <button data-account="마이페이지" data-en="My account">마이페이지</button>
-        <button class="utility-icon mobile-account" id="mobile-account" type="button" aria-label="계정 메뉴" aria-haspopup="dialog" data-en-aria-label="Account menu"><span class="account-icon" aria-hidden="true"></span></button>
+        <button class="utility-icon account-launch" type="button" data-account="로그인" aria-label="로그인" aria-haspopup="dialog" data-en-aria-label="Log in"><span class="account-icon" aria-hidden="true"></span></button>
         <a id="cart-link" href="#cart" aria-label="장바구니" data-en-aria-label="Cart"><span class="shop-bag-icon" aria-hidden="true"></span><span id="cart-link-label" data-en="Cart">장바구니</span><span id="cart-icon-count" aria-hidden="true" hidden></span></a>
       </div>
       <div class="navigation-row">
@@ -427,6 +427,16 @@
       <div id="search-results" hidden><p id="search-count" role="status"></p><ul class="product-grid" id="search-products"></ul></div>
     </div>
   </dialog>
+
+  <template id="login-template">
+    <form class="login-form" method="dialog">
+      <label><span data-en="Username">아이디</span><input type="text" autocomplete="username" required></label>
+      <label><span data-en="Password">비밀번호</span><input type="password" autocomplete="current-password" required></label>
+      <button type="submit" class="button dark" data-en="Log in">로그인</button>
+      <p class="login-message" role="status" hidden data-en="You can log in once the live store is connected.">운영몰 연결 후 로그인할 수 있어요.</p>
+      <button type="button" class="login-signup" data-account="회원가입" data-en="Sign up">회원가입</button>
+    </form>
+  </template>
 
   <dialog id="panel" class="panel" aria-labelledby="panel-title">
     <div class="panel-header"><h2 id="panel-title"></h2><form method="dialog"><button class="nav-button" aria-label="닫기" data-en-aria-label="Close">×</button></form></div>
