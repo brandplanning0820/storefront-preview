@@ -861,6 +861,11 @@ function showCheckout(checkout) {
   setPrice(checkoutTotal, totals.subtotal);
 }
 
+document.getElementById('checkout-pay')?.addEventListener('click', () => {
+  const note = document.getElementById('checkout-note');
+  openPanel('결제 안내', description(note.dataset.ko, note.dataset.en), 'Payment information');
+});
+
 document.getElementById('inquiry-launch').addEventListener('click', () => {
   const form = document.getElementById('inquiry-template').content.firstElementChild.cloneNode(true);
   const mail = form.querySelector('.inquiry-mail');
