@@ -21,8 +21,8 @@
     }
   </script>
   <link rel="stylesheet" href="styles.css?v=notice-inquiry">
-  <script src="catalog.js?v=inquiry-submit" defer></script>
-  <script src="app.js?v=inquiry-submit" defer></script>
+  <script src="catalog.js?v=inquiry-email" defer></script>
+  <script src="app.js?v=inquiry-email" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -385,7 +385,7 @@
   </template>
 
   <template id="inquiry-template">
-    <form class="inquiry-form" data-inquiry-endpoint="">
+    <form class="inquiry-form" data-inquiry-endpoint="https://formspree.io/f/mvkalrpd">
       <label><span data-en="Brand">상품 브랜드</span><input name="brand" required pattern=".*\S.*" maxlength="80" autofocus></label>
       <label><span data-en="Product listing URL">판매 페이지 URL</span><input type="url" name="url" placeholder="https://" pattern="https?://.+" required maxlength="400"></label>
       <label><span data-en="Preferred size">원하는 사이즈</span><input name="size" required pattern=".*\S.*" maxlength="40"></label>

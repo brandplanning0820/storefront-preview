@@ -2066,7 +2066,7 @@ const NOTICES = [
     "title": "상품 문의 안내",
     "paragraphs": [
       "상품 브랜드와 원하시는 사이즈, 상품을 보신 판매 페이지 URL을 알려주시면 확인하기 쉽습니다.",
-      "오른쪽 문의하기에서 내용을 작성하실 수 있습니다. 시안에서는 문의 접수와 이메일 전송 완료 화면을 확인할 수 있습니다."
+      "오른쪽 문의하기에서 내용을 작성하신 뒤 메일로 문의 보내기를 선택해 주세요. 상품을 확인하는 대로 입력하신 이메일로 연락드리겠습니다."
     ]
   }
 ];
@@ -2144,7 +2144,7 @@ const NOTICES_EN = {
     title: 'Product inquiries',
     paragraphs: [
       'Please include the brand, your preferred size and the URL of the listing where you found the item.',
-      'Select Contact us on the right to enter the details. This preview shows the confirmation for each submission option.',
+      'Select Contact us on the right, fill in the details and choose Send inquiry by email. We’ll reply to the email address you enter once we’ve checked on the item.',
     ],
   },
 };

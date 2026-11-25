@@ -875,8 +875,11 @@ function showInquiryConfirmation(byEmail, sent = false) {
   setLocalized(confirm, '확인', 'OK');
   const message = sent
     ? description('입력하신 이메일로 연락드리겠습니다.', 'We’ll get back to you at the email address you entered.')
-    : description('이 화면은 시안입니다. 실제 접수와 메일 발송은 운영몰 또는 전송 서비스 연결 후 이용할 수 있어요.',
-      'This is a preview. Live inquiries and email delivery become available once a submission service is connected.');
+    : byEmail
+      ? description('이 화면은 시안입니다. 메일 발송은 전송 서비스 연결 후 이용할 수 있어요.',
+        'This is a preview. Email delivery becomes available once a submission service is connected.')
+      : description('이 화면은 시안입니다. 문의 접수는 카페24 운영몰 연결 후 이용할 수 있어요.',
+        'This is a preview. Store inquiries become available once the Cafe24 store is connected.');
   confirmation.append(message, confirm);
   openPanel(byEmail ? '메일로 문의가 전송되었습니다' : '문의가 전송되었습니다',
     confirmation, byEmail ? 'Inquiry sent by email' : 'Inquiry submitted');
