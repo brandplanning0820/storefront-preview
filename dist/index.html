@@ -20,9 +20,9 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=responsive-account">
+  <link rel="stylesheet" href="styles.css?v=review-product-details">
   <script src="catalog.js?v=alternate-photos-and-review-products" defer></script>
-  <script src="app.js?v=responsive-login" defer></script>
+  <script src="app.js?v=internal-review-products" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -189,6 +189,10 @@
           <h1 id="detail-name" tabindex="-1"></h1>
           <strong class="detail-price" id="detail-price"></strong>
           <p class="detail-description" id="detail-description"></p>
+          <div class="detail-availability" id="detail-availability" hidden>
+            <p data-en="Contact us to confirm the price and available sizes.">가격과 주문 가능 사이즈는 문의해 주세요.</p>
+            <button class="button dark" type="button" data-inquiry-launch aria-haspopup="dialog" data-en="Ask about this product">상품 문의하기</button>
+          </div>
           <div class="weekly-deadline detail-deadline" id="detail-deadline" hidden>
             <h2 id="detail-deadline-heading" data-en="Weekly order deadline">위클리 주문 마감</h2>
             <time data-weekly-countdown role="timer" aria-labelledby="detail-deadline-heading" datetime="PT0S">0D 00H 00M 00S</time>

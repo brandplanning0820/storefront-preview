@@ -387,6 +387,8 @@ html[lang="en"] .brand-letter a span[lang="ko"] { display: none; }
 .detail-info h1 { font-size: clamp(1.325rem, 1.82vw, 2rem); line-height: 1.32; margin: 12px 0 14px; font-weight: 700; letter-spacing: -.026em; word-break: keep-all; overflow-wrap: anywhere; }
 .detail-price { font-size: clamp(1.35rem, 1.75vw, 1.9rem); }
 .detail-description { margin-top: 13px; color: #514942; line-height: 1.65; word-break: keep-all; }
+.detail-availability { display: grid; gap: 14px; max-width: 440px; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line); }
+.detail-availability p { color: var(--muted); font-size: .9375rem; }
 .detail-deadline { margin-top: 17px; }
 .detail-demo { font-size: .875rem; color: var(--muted); }
 #detail-form { display: grid; gap: 12px; margin-top: 26px; }

@@ -164,6 +164,13 @@ function description(text, english = text) {
 
 const allProducts = [...new Map(Object.values(CATALOG).flat().map(product => [product.id, product])).values()];
 const byId = new Map(allProducts.map(product => [product.id, product]));
+const reviewedProducts = new Map(REVIEWS.map(review => [review.productId, {
+  id: review.productId,
+  name: review.title,
+  nameEn: REVIEW_TITLES_EN[review.title],
+  image: review.image,
+  sizes: [],
+}]));
 const collectionTitles = {
   all: '브랜드', men: '남성', women: '여성', weekly: '위클리',
   classic: '클래식', domestic: '국내배송', best: 'BEST', new: 'NEW', 'max-mara': '막스마라',
@@ -545,7 +552,7 @@ function groupFor(product) {
 }
 
 function updateDetailTotal() {
-  if (!currentProduct) return;
+  if (!Number.isFinite(currentProduct?.price)) return;
   const quantity = detailQuantity.valueAsNumber;
   quantityDecrease.disabled = quantity <= Number(detailQuantity.min);
   quantityIncrease.disabled = quantity >= Number(detailQuantity.max);
@@ -601,7 +608,7 @@ function showProductGallery(product) {
     const [koreanTitle, englishTitle] = photoLabel(photo, index);
     image.src = asset(photo);
     setLocalized(image, product.name + ' · ' + koreanTitle,
-      (PRODUCT_NAMES_EN[product.id] || product.name) + ' · ' + englishTitle, 'alt');
+      (PRODUCT_NAMES_EN[product.id] || product.nameEn || product.name) + ' · ' + englishTitle, 'alt');
     [...thumbnails.children].forEach((button, position) => button.setAttribute('aria-pressed', String(position === index)));
   }
 
@@ -626,25 +633,36 @@ function showProductGallery(product) {
 
 function showProduct(product, orderItem) {
   const group = groupFor(product);
+  const hasPrice = Number.isFinite(product.price);
   currentProduct = product;
   detailForm.reset();
+  detailForm.hidden = !hasPrice;
+  document.getElementById('detail-availability').hidden = hasPrice;
   setLocalized(detailStatus, '');
   detailCartLink.hidden = true;
-  const parentHash = detailReturnHash || '#catalog/' + group;
+  const parentHash = detailReturnHash || (hasPrice ? '#catalog/' + group : '#reviews/all');
   const parentBrand = brandRoutes.get(parentHash);
   const parentGroup = parentHash.split(/[/?]/)[1];
   storeParent.href = parentHash;
   if (parentHash === '#cart') setLocalized(storeParent, '장바구니', 'Cart');
+  else if (parentHash === '#reviews/all') setLocalized(storeParent, '리뷰', 'Reviews');
   else setLocalized(storeParent, brandTitle(parentBrand) || collectionTitles[parentGroup] || '상품 목록',
     brandTitleEn(parentBrand) || collectionTitlesEn[parentGroup] || 'Products');
   storeParent.removeAttribute('aria-current');
   showProductGallery(product);
-  describeDelivery(document.getElementById('detail-delivery'), product);
-  document.getElementById('detail-brand').textContent = product.brand;
-  setLocalized(detailName, product.name, PRODUCT_NAMES_EN[product.id]);
-  setPrice(document.getElementById('detail-price'), product.price);
+  const delivery = document.getElementById('detail-delivery');
+  const brand = document.getElementById('detail-brand');
+  delivery.hidden = !product.delivery;
+  brand.textContent = product.brand || '';
+  brand.parentElement.hidden = !product.brand && !product.delivery;
+  if (product.delivery) describeDelivery(delivery, product);
+  setLocalized(detailName, product.name, PRODUCT_NAMES_EN[product.id] || product.nameEn);
+  const price = document.getElementById('detail-price');
+  price.hidden = !hasPrice;
+  if (hasPrice) setPrice(price, product.price);
   document.getElementById('detail-deadline').hidden = group !== 'weekly';
   showProductSpecs(product);
+  if (!hasPrice) return;
   if (orderItem) detailQuantity.value = orderItem.quantity;
 
   const chips = document.getElementById('detail-sizes');
@@ -974,8 +992,13 @@ function openInquiry() {
     form.elements.email.closest('label').hidden = false;
   }
   if (!productPage.hidden && currentProduct) {
-    form.elements.brand.value = currentProduct.brand;
-    form.elements.size.value = detailForm.querySelector('[name="size"]:checked')?.value || '';
+    form.elements.brand.value = currentProduct.brand || '';
+    if (detailForm.hidden) {
+      if (/^https?:$/.test(location.protocol)) form.elements.url.value = location.href;
+      form.elements.message.value = currentProduct.name;
+    } else {
+      form.elements.size.value = detailForm.querySelector('[name="size"]:checked')?.value || '';
+    }
   }
   form.addEventListener('input', () => {
     setLocalized(note, '', '');
@@ -1012,7 +1035,8 @@ function updatePageTitle() {
 function renderRoute(moveFocus = false) {
   const hash = location.hash;
   const checkout = checkoutFor(hash);
-  const product = byId.get(hash.match(/^#product\/([0-9]+)$/)?.[1]);
+  const productId = hash.match(/^#product\/([0-9]+)$/)?.[1];
+  const product = byId.get(productId) || reviewedProducts.get(productId);
   const [requestedGroup, query] = hash.startsWith('#catalog/') ? hash.slice(9).split('?') : [];
   const scopedBrand = brandRoutes.get(hash) || (requestedGroup === 'max-mara' ? maxMaraGroup : undefined);
   const group = scopedBrand ? 'brand' : Object.hasOwn(collectionTitles, requestedGroup) ? requestedGroup : null;
@@ -1026,6 +1050,7 @@ function renderRoute(moveFocus = false) {
   const entry = magazineEntry || notice;
   const wasStore = !storePage.hidden;
   const wasCart = !cartPage.hidden;
+  const wasReviews = !reviewPage.hidden;
   const heading = product ? detailName : checkout ? checkoutTitle : group ? collectionTitle : showCart ? cartTitle : showBrands ? brandDirectoryTitle
     : showReviews ? reviewPageTitle : showMagazine ? magazinePageTitle : showNotices ? noticePageTitle : entry ? editorialTitle : null;
   storePage.hidden = !heading;
@@ -1045,7 +1070,7 @@ function renderRoute(moveFocus = false) {
 
   if (product) {
     const returning = activeCheckout?.returnHash === hash ? activeCheckout.items[0] : undefined;
-    if (!returning) detailReturnHash = wasCart ? '#cart' : currentCollectionHash;
+    if (!returning) detailReturnHash = wasCart ? '#cart' : wasReviews ? '#reviews/all' : currentCollectionHash;
     showProduct(product, returning);
   } else if (checkout) {
     showCheckout(checkout);
@@ -1325,8 +1350,7 @@ function reviewContent(review) {
 function reviewProductLink(review) {
   const link = document.createElement('a');
   link.className = 'button outline review-product-link';
-  link.href = byId.has(review.productId) ? '#product/' + review.productId
-    : 'https://smartstore.naver.com/brandplanning/products/' + review.productId;
+  link.href = '#product/' + review.productId;
   setLocalized(link, '해당 상품 보러가기', 'View product');
   setLocalized(link, '해당 상품 보러가기 · ' + review.title,
     'View product: ' + (REVIEW_TITLES_EN[review.title] || review.title), 'aria-label');
