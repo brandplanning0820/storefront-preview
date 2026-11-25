@@ -825,7 +825,39 @@ function renderRoute(moveFocus = false) {
 }
 
 // A direct link, refresh, and browser history all resolve under a repository subpath.
-window.addEventListener('hashchange', () => renderRoute(true));
+window.addEventListener('hashchange', () => {
+  if (location.hash === '#notice' || location.hash === '#review') {
+    history.replaceState(history.state, '', location.pathname + location.search);
+    renderRoute();
+  } else {
+    renderRoute(true);
+  }
+});
+
+// Homepage sections can scroll without putting the current section in the share URL.
+const homeSectionIds = { '#top': 'top', '#notice': 'home-notice', '#review': 'home-review', '#weekly': 'weekly', '#classic': 'classic' };
+document.addEventListener('click', event => {
+  if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+  const link = event.target.closest('a[href^="#"]');
+  const sectionId = link && !link.target && homeSectionIds[link.hash];
+  const section = sectionId && document.getElementById(sectionId);
+  if (!section) return;
+
+  event.preventDefault();
+  const top = section === document.body;
+  if (!top || location.hash) history.pushState(history.state, '', location.pathname + location.search);
+  if (!storePage.hidden) renderRoute();
+  if (top) {
+    window.scrollTo(0, 0);
+  } else {
+    section.scrollIntoView();
+    if (event.detail === 0) {
+      section.tabIndex = -1;
+      section.focus({ preventScroll: true });
+    }
+  }
+});
+
 skipLink.addEventListener('click', event => {
   if (storePage.hidden) return;
   event.preventDefault();

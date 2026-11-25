@@ -6,7 +6,9 @@
   <meta name="description" content="브랜드플래닝의 해외배송, 위클리 럭셔리와 브루넬로 쿠치넬리 컬렉션">
   <title>BRAND PLANNING | 브랜드플래닝</title>
   <script>
-    if (performance.getEntriesByType('navigation')[0]?.type === 'reload') {
+    const isReload = performance.getEntriesByType('navigation')[0]?.type === 'reload';
+    const isOldHomeLink = location.hash === '#notice' || location.hash === '#review';
+    if (isReload || isOldHomeLink) {
       const previousRestoration = history.scrollRestoration;
       history.scrollRestoration = 'manual';
       if (location.hash && location.hash !== '#cart' && !location.hash.includes('/')) {
@@ -137,7 +139,7 @@
       <button class="button light" data-account="회원가입" data-en="Sign up">회원가입</button>
     </section>
 
-    <section class="wrap review" id="review" aria-labelledby="review-heading">
+    <section class="wrap review" id="home-review" aria-labelledby="review-heading">
       <div class="section-heading"><h2 id="review-heading">REVIEW</h2></div>
       <div class="review-carousel" id="review-carousel" aria-roledescription="캐러셀" aria-label="스마트스토어 리뷰" data-en-aria-roledescription="carousel" data-en-aria-label="Naver Smart Store reviews">
         <div class="review-stage" id="review-stage" aria-live="off"></div>
@@ -156,7 +158,7 @@
       <div class="more-row"><a class="button outline" href="#magazine/all" data-en="Read more">글 더보기</a></div>
     </section>
 
-    <section class="wrap notice" id="notice" aria-labelledby="notice-heading">
+    <section class="wrap notice" id="home-notice" aria-labelledby="notice-heading">
       <img class="notice-photo" src="assets/city.jpg" alt="" loading="lazy">
       <div class="notice-content">
         <h2 id="notice-heading">NOTICE</h2>
