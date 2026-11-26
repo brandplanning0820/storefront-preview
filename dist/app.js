@@ -159,10 +159,11 @@ const searchPanel = document.getElementById('search-panel');
 const searchLaunch = document.getElementById('search-launch');
 const searchInput = document.getElementById('search');
 const searchResults = document.getElementById('search-results');
-const recentTerms = [];
+const recentTermKey = 'brandplanning-recent-search-terms';
+const recentTermLimit = 5;
 const recentProductKey = 'brandplanning-recent-search-products';
 const recentProductLimit = 6;
-let temporaryRecentProducts;
+const temporarySearchHistory = new Map();
 const headerShell = document.querySelector('.site-header-shell');
 const siteHeader = headerShell.querySelector('.site-header');
 
@@ -351,12 +352,37 @@ function rankedSearch(tokens, index) {
 
 let searchPreviewTimer;
 
+function readSearchHistory(key, limit, isValid) {
+  const temporary = temporarySearchHistory.get(key);
+  if (temporary) return temporary;
+  try {
+    const saved = JSON.parse(localStorage.getItem(key));
+    if (Array.isArray(saved)) return [...new Set(saved.filter(isValid))].slice(0, limit);
+  } catch { /* Search remains available without browser storage. */ }
+  return [];
+}
+
+function writeSearchHistory(key, entries) {
+  try {
+    localStorage.setItem(key, JSON.stringify(entries));
+    temporarySearchHistory.delete(key);
+  } catch {
+    temporarySearchHistory.set(key, entries);
+  }
+}
+
+function recentSearchTerms() {
+  return readSearchHistory(recentTermKey, recentTermLimit, term =>
+    typeof term === 'string' && term.length > 0 && term.length <= searchInput.maxLength && term === term.trim());
+}
+
 function rememberSearchTerm(term) {
-  if (!term || recentTerms[0] === term) return;
-  const duplicate = recentTerms.indexOf(term);
-  if (duplicate !== -1) recentTerms.splice(duplicate, 1);
-  recentTerms.unshift(term);
-  if (recentTerms.length > 5) recentTerms.pop();
+  if (!term) return;
+  const previous = recentSearchTerms();
+  if (previous[0] !== term) {
+    const terms = [term, ...previous.filter(entry => entry !== term)].slice(0, recentTermLimit);
+    writeSearchHistory(recentTermKey, terms);
+  }
   showRecentSearchTerms();
 }
 
@@ -413,7 +439,7 @@ window.addEventListener('resize', () => {
 function showRecentSearchTerms() {
   const recent = document.getElementById('search-recent');
   const focusedTerm = recent.contains(document.activeElement) ? document.activeElement.dataset.searchTerm : undefined;
-  const buttons = recentTerms.map(term => {
+  const buttons = recentSearchTerms().map(term => {
     const button = document.createElement('button');
     button.type = 'button';
     button.dataset.searchTerm = term;
@@ -422,7 +448,7 @@ function showRecentSearchTerms() {
   });
   recent.replaceChildren(...buttons);
   buttons.find(button => button.dataset.searchTerm === focusedTerm)?.focus({ preventScroll: true });
-  if (!recentTerms.length) recent.append(description('최근 검색어가 없어요.', 'No recent searches.'));
+  if (!buttons.length) recent.append(description('최근 검색어가 없어요.', 'No recent searches.'));
 }
 
 function showSearchOverview() {
@@ -432,22 +458,12 @@ function showSearchOverview() {
 }
 
 function recentSearchProductIds() {
-  if (temporaryRecentProducts) return temporaryRecentProducts;
-  try {
-    const saved = JSON.parse(localStorage.getItem(recentProductKey));
-    if (Array.isArray(saved)) return [...new Set(saved.filter(id => byId.has(id)))].slice(0, recentProductLimit);
-  } catch { /* The search panel also works without browser storage. */ }
-  return [];
+  return readSearchHistory(recentProductKey, recentProductLimit, id => byId.has(id));
 }
 
 function rememberSearchProduct(id) {
   const ids = [id, ...recentSearchProductIds().filter(productId => productId !== id)].slice(0, recentProductLimit);
-  try {
-    localStorage.setItem(recentProductKey, JSON.stringify(ids));
-    temporaryRecentProducts = undefined;
-  } catch {
-    temporaryRecentProducts = ids;
-  }
+  writeSearchHistory(recentProductKey, ids);
 }
 
 function showRecentSearchProducts() {

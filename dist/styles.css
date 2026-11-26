@@ -405,12 +405,15 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
 .search-topline .search-box { border-radius: 8px; height: 48px; }
 .search-topline .search-box input { font-size: 1rem; }
 .search-close { font-size: 1.85rem; }
-.search-keyword-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(12px, 2vw, 22px); max-width: 440px; margin-top: 23px; }
+.search-keyword-groups { display: grid; grid-template-columns: min(65%, 28rem) minmax(0, 1fr); gap: clamp(12px, 2vw, 26px); margin-top: 23px; }
 :is(.search-keyword-groups, .search-viewed) h3 { font-size: .9375rem; padding-bottom: 10px; border-bottom: 1px solid var(--line); margin-bottom: 10px; }
 :is(.search-keyword-groups, .search-viewed) p, #search-count { color: var(--muted); font-size: .875rem; }
 .search-chips { display: flex; flex-wrap: wrap; gap: 7px; }
 .search-chips :is(button, a) { display: inline-flex; align-items: center; max-width: 100%; min-height: 34px; border: 1px solid var(--line); border-radius: 999px; padding: 5px 10px; font-size: .875rem; overflow-wrap: anywhere; }
 .search-chips :is(button, a):hover { background: var(--sand); }
+.search-suggested-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; padding-bottom: 4px; }
+.search-suggested-chips > button { flex: none; white-space: nowrap; }
+.search-suggested-chips > button:focus-visible { outline-offset: -2px; }
 .search-viewed-products { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; max-width: 264px; }
 .search-viewed-card { display: grid; grid-template-rows: auto auto 1fr auto; height: 100%; gap: 4px; text-align: center; }
 .search-viewed-card img { width: 100%; aspect-ratio: 1; object-fit: contain; border-radius: 5px; background: #f6f4f1; }
