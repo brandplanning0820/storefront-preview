@@ -176,11 +176,11 @@ const reviewedProducts = new Map(REVIEWS.map(review => [review.productId, {
 }]));
 const collectionTitles = {
   all: '브랜드', men: '남성', women: '여성', weekly: '위클리',
-  classic: '클래식', domestic: '당일출고', best: 'BEST', new: 'NEW', 'max-mara': '막스마라',
+  classic: '기획전', domestic: '당일출고', best: 'BEST', new: 'NEW', 'max-mara': '막스마라',
 };
 const collectionTitlesEn = {
   all: 'Brands', men: 'Men', women: 'Women', weekly: 'Weekly',
-  classic: 'Classic', domestic: 'Same-day dispatch', best: 'BEST', new: 'NEW', 'max-mara': 'Max Mara',
+  classic: 'Specials', domestic: 'Same-day dispatch', best: 'BEST', new: 'NEW', 'max-mara': 'Max Mara',
 };
 
 function showCatalogResults(term) {
