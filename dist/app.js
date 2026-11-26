@@ -424,10 +424,45 @@ const languageSwitch = document.getElementById('language-switch');
 const languageToggle = languageSwitch.querySelector('summary');
 const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
 const siteNav = document.getElementById('site-nav');
+const weeklyNavLink = document.getElementById('weekly-nav-link');
+const weeklyNavTooltip = document.getElementById('weekly-nav-tooltip');
 const arrivalsMenu = document.getElementById('arrivals-menu');
 const arrivalsMenuToggle = document.getElementById('arrivals-menu-toggle');
 const arrivalsMenuList = document.getElementById('arrivals-menu-list');
 const accountTitles = { 로그인: 'Log in', 회원가입: 'Sign up', 마이페이지: 'My account' };
+
+function positionWeeklyTooltip() {
+  if (weeklyNavTooltip.hidden) return;
+  const link = weeklyNavLink.getBoundingClientRect();
+  const navigation = siteNav.getBoundingClientRect();
+  const visibleLeft = Math.max(link.left, navigation.left);
+  const visibleRight = Math.min(link.right, navigation.right);
+  if (visibleRight <= visibleLeft || link.bottom <= 0 || link.top >= document.documentElement.clientHeight) {
+    setWeeklyTooltip(false);
+    return;
+  }
+  const center = (visibleLeft + visibleRight) / 2;
+  const { offsetWidth, offsetHeight } = weeklyNavTooltip;
+  const left = Math.max(4, Math.min(document.documentElement.clientWidth - offsetWidth - 4, center - offsetWidth / 2));
+  weeklyNavTooltip.style.left = left + 'px';
+  weeklyNavTooltip.style.top = Math.max(0, link.top - offsetHeight - 4) + 'px';
+  weeklyNavTooltip.style.setProperty('--weekly-tooltip-arrow', center - left + 'px');
+}
+
+function setWeeklyTooltip(open) {
+  weeklyNavTooltip.hidden = !open;
+  if (open) positionWeeklyTooltip();
+}
+
+weeklyNavLink.addEventListener('pointerenter', event => {
+  if (event.pointerType === 'mouse') setWeeklyTooltip(true);
+});
+weeklyNavLink.addEventListener('pointerleave', () => {
+  if (document.activeElement !== weeklyNavLink) setWeeklyTooltip(false);
+});
+weeklyNavLink.addEventListener('focus', () => setWeeklyTooltip(true));
+weeklyNavLink.addEventListener('blur', () => setWeeklyTooltip(false));
+weeklyNavLink.addEventListener('click', () => setWeeklyTooltip(false));
 
 function positionArrivalsMenu() {
   if (arrivalsMenuList.hidden) return;
@@ -464,14 +499,23 @@ arrivalsMenu.addEventListener('focusout', event => {
   if (!arrivalsMenu.contains(event.relatedTarget)) setArrivalsMenu(false);
 });
 arrivalsMenuToggle.addEventListener('click', () => setArrivalsMenu(arrivalsMenuList.hidden));
-window.addEventListener('scroll', positionArrivalsMenu, { passive: true });
-window.addEventListener('resize', positionArrivalsMenu);
-siteNav.addEventListener('scroll', positionArrivalsMenu, { passive: true });
+
+function positionNavOverlays() {
+  positionWeeklyTooltip();
+  positionArrivalsMenu();
+}
+
+window.addEventListener('scroll', positionNavOverlays, { passive: true });
+window.addEventListener('resize', positionNavOverlays);
+siteNav.addEventListener('scroll', positionNavOverlays, { passive: true });
 
 function setMobileNav(open) {
   siteHeader.classList.toggle('is-menu-open', open);
   mobileMenuToggle.setAttribute('aria-expanded', String(open));
-  if (!open) setArrivalsMenu(false);
+  if (!open) {
+    setArrivalsMenu(false);
+    setWeeklyTooltip(false);
+  }
 }
 
 languageSwitch.addEventListener('toggle', () => {
@@ -508,6 +552,8 @@ document.addEventListener('keydown', event => {
     const hadFocus = arrivalsMenu.contains(document.activeElement);
     setArrivalsMenu(false);
     if (hadFocus) arrivalsMenuToggle.focus({ preventScroll: true });
+  } else if (!weeklyNavTooltip.hidden) {
+    setWeeklyTooltip(false);
   } else if (languageSwitch.open) {
     languageSwitch.open = false;
     languageToggle.focus({ preventScroll: true });
@@ -637,27 +683,27 @@ function updateCollection() {
 
 function renderBrandFilters(initialBrand) {
   const availableBrands = new Set(collectionProducts.map(product => product.brand));
-  for (const [brand, title] of brandNames) {
+  for (const brand of brandNames.keys()) {
     if (brand === 'MAX MARA') {
       const subBrands = maxMaraBrands.filter(value => availableBrands.has(value));
       if (!subBrands.length) continue;
       const block = document.createElement('div');
       block.className = 'brand-group';
-      const parent = filterCheckbox(title, '', false, 'brand', brand);
+      const parent = filterCheckbox('MAX MARA (ALL)');
       parent.firstElementChild.dataset.brandParent = '';
       const options = document.createElement('div');
       options.className = 'brand-group-options';
       options.setAttribute('role', 'group');
-      setLocalized(options, '막스마라 하위 브랜드', 'Max Mara lines', 'aria-label');
+      setLocalized(options, 'MAX MARA 하위 브랜드', 'Max Mara lines', 'aria-label');
       for (const value of subBrands) {
-        const option = filterCheckbox(brandNames.get(value), value, value === initialBrand, 'brand', value);
-        if (value === 'MAX MARA') setLocalized(option.firstElementChild, '막스마라 단일 브랜드', 'Max Mara main line', 'aria-label');
+        const option = filterCheckbox(value, value, value === initialBrand);
+        if (value === 'MAX MARA') setLocalized(option.firstElementChild, 'MAX MARA 단일 브랜드', 'Max Mara main line', 'aria-label');
         options.append(option);
       }
       block.append(parent, options);
       collectionBrands.append(block);
     } else if (!maxMaraBrands.includes(brand) && availableBrands.has(brand)) {
-      collectionBrands.append(filterCheckbox(title, brand, brand === initialBrand, 'brand', brand));
+      collectionBrands.append(filterCheckbox(brand, brand, brand === initialBrand));
     }
   }
 }
@@ -692,8 +738,7 @@ function showCollection(group, initialBrand, scopedBrand) {
     for (const line of [maxMaraGroup, ...maxMaraBrands]) {
       const link = document.createElement('a');
       link.href = brandHref(line);
-      setLocalized(link, line === maxMaraGroup ? '막스마라 전체' : brandTitle(line),
-        line === maxMaraGroup ? 'All Max Mara lines' : brandTitleEn(line));
+      setLocalized(link, line === maxMaraGroup ? 'MAX MARA (ALL)' : line);
       if (line === scopedBrand) link.setAttribute('aria-current', 'page');
       collectionBrandLines.append(link);
     }

@@ -21,9 +21,9 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=arrivals-menu">
+  <link rel="stylesheet" href="styles.css?v=weekly-tooltip">
   <script src="catalog.js?v=community-comments" defer></script>
-  <script src="app.js?v=arrivals-menu" defer></script>
+  <script src="app.js?v=weekly-tooltip" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -52,7 +52,10 @@
           <a href="#brands/all" data-en="Brands">브랜드</a>
           <a href="#catalog/men" data-en="Men">남성</a>
           <a href="#catalog/women" data-en="Women">여성</a>
-          <a href="#catalog/weekly" data-en="Weekly">위클리</a>
+          <div class="weekly-nav">
+            <a id="weekly-nav-link" href="#catalog/weekly" aria-describedby="weekly-nav-tooltip" data-en="Weekly">위클리</a>
+            <span class="weekly-nav-tooltip" id="weekly-nav-tooltip" role="tooltip" data-en="Items available for one week only" hidden>1주간만 진행하는 상품</span>
+          </div>
           <a href="#catalog/classic" data-en="Specials">기획전</a>
           <a href="#catalog/domestic" data-en="Same-day dispatch">당일출고</a>
           <a href="#community/all" data-en="Community">커뮤니티</a>
