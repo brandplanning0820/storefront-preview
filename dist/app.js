@@ -135,7 +135,9 @@ function productCard(product) {
 }
 
 document.querySelectorAll('[data-catalog]').forEach((list) => {
-  list.replaceChildren(...CATALOG[list.dataset.catalog].map(productCard));
+  const group = list.dataset.catalog;
+  const products = HOME_CATALOG[group] ?? CATALOG[group];
+  list.replaceChildren(...products.map(productCard));
 });
 
 const panel = document.getElementById('panel');
@@ -174,11 +176,11 @@ const reviewedProducts = new Map(REVIEWS.map(review => [review.productId, {
 }]));
 const collectionTitles = {
   all: '브랜드', men: '남성', women: '여성', weekly: '위클리',
-  classic: '클래식', domestic: '국내배송', best: 'BEST', new: 'NEW', 'max-mara': '막스마라',
+  classic: '클래식', domestic: '당일출고', best: 'BEST', new: 'NEW', 'max-mara': '막스마라',
 };
 const collectionTitlesEn = {
   all: 'Brands', men: 'Men', women: 'Women', weekly: 'Weekly',
-  classic: 'Classic', domestic: 'Domestic shipping', best: 'BEST', new: 'NEW', 'max-mara': 'Max Mara',
+  classic: 'Classic', domestic: 'Same-day dispatch', best: 'BEST', new: 'NEW', 'max-mara': 'Max Mara',
 };
 
 function showCatalogResults(term) {
@@ -1525,7 +1527,7 @@ function showEditorialEntry(entry, listPath) {
   const isMagazine = listPath === '#magazine/all';
   const noticeEn = NOTICES_EN[entry.id];
   setLocalized(document.getElementById('editorial-source'), isMagazine ? '브랜드플래닝' : '브랜드플래닝 공지사항',
-    isMagazine ? 'Brand Planning' : 'Brand Planning notices');
+    isMagazine ? 'Brand Planning' : 'Brand Planning announcements');
   setLocalized(editorialTitle, entry.title, isMagazine ? MAGAZINE_TITLES_EN[entry.id] : noticeEn?.title);
   const body = document.getElementById('editorial-body');
   body.classList.toggle('magazine-body', isMagazine);

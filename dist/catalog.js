@@ -565,6 +565,28 @@ const CATALOG = {
     }
   ]
 };
+const homeProductLimit = 20;
+
+function homeOverseasSelection(featured, candidates) {
+  const products = new Map();
+  for (const product of [...featured, ...candidates]) {
+    if (product.delivery === 'overseas' && !products.has(product.id)) {
+      products.set(product.id, product);
+    }
+  }
+  return [...products.values()].slice(0, homeProductLimit);
+}
+
+const newestOverseasSamples = [...CATALOG.best, ...CATALOG.classic, ...CATALOG.brands]
+  .sort((a, b) => Number(b.id) - Number(a.id));
+const HOME_CATALOG = {
+  best: homeOverseasSelection(CATALOG.best, CATALOG.brands),
+  new: homeOverseasSelection(CATALOG.new, newestOverseasSamples),
+  // The preview repeats its verified Weekly items when the list is shorter than the grid.
+  weekly: Array.from({ length: CATALOG.weekly.length ? homeProductLimit : 0 },
+    (_, index) => CATALOG.weekly[index % CATALOG.weekly.length]),
+};
+
 const REVIEWS = [
   {
     "productId": "13160727541",
