@@ -137,7 +137,17 @@ function productCard(product) {
 document.querySelectorAll('[data-catalog]').forEach((list) => {
   const group = list.dataset.catalog;
   const products = HOME_CATALOG[group] ?? CATALOG[group];
-  list.replaceChildren(...products.map(productCard));
+  const cards = products.map(product => {
+    const card = productCard(product);
+    if (group === 'weekly' && CATALOG.weekly.includes(product)) {
+      const badge = card.querySelector('.delivery');
+      badge.dataset.weeklyOffer = '';
+      setLocalized(badge, '위클리', 'Weekly');
+      setLocalized(badge, '위클리 해외배송', 'Weekly overseas shipping', 'aria-label');
+    }
+    return card;
+  });
+  list.replaceChildren(...cards);
 });
 
 const panel = document.getElementById('panel');
@@ -987,7 +997,54 @@ async function sendInquiry(form, endpoint, data, note) {
   }
 }
 
+const supportChat = document.getElementById('support-chat');
+const chatLaunchers = document.querySelectorAll('[data-chat-launch]');
+const chatClose = supportChat.querySelector('.chat-close');
+const chatMessages = supportChat.querySelector('.chat-messages');
+const chatForm = supportChat.querySelector('.chat-compose');
+const chatInput = chatForm.elements.message;
+let chatLauncher;
+
+function closeChat(restoreFocus = true) {
+  if (supportChat.hidden) return;
+  supportChat.hidden = true;
+  chatLaunchers.forEach(button => button.setAttribute('aria-expanded', 'false'));
+  if (restoreFocus) {
+    const visibleLauncher = chatLauncher?.getClientRects().length ? chatLauncher : document.querySelector('.chat-launch');
+    visibleLauncher.focus({ preventScroll: true });
+  }
+}
+
+chatLaunchers.forEach(button => {
+  button.addEventListener('click', () => {
+    chatLauncher = button;
+    supportChat.hidden = false;
+    chatLaunchers.forEach(launcher => launcher.setAttribute('aria-expanded', 'true'));
+    chatClose.focus({ preventScroll: true });
+  });
+});
+chatClose.addEventListener('click', () => closeChat());
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && !supportChat.hidden && !panel.open && !searchPanel.open) closeChat();
+});
+chatForm.addEventListener('submit', event => {
+  event.preventDefault();
+  const message = chatInput.value.trim();
+  if (!message) return;
+
+  const bubble = document.createElement('p');
+  bubble.className = 'chat-user-message';
+  bubble.textContent = message;
+  const reply = description('답변이 필요한 문의는 아래 ‘문의하기’에 남겨 주세요.',
+    'For a reply from our team, use Contact us below.');
+  chatMessages.append(bubble, reply);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  chatForm.reset();
+  chatInput.focus({ preventScroll: true });
+});
+
 function openInquiry() {
+  closeChat(false);
   const form = document.getElementById('inquiry-template').content.firstElementChild.cloneNode(true);
   const endpoint = form.dataset.inquiryEndpoint?.trim();
   const note = form.querySelector('.inquiry-note');
@@ -1113,7 +1170,8 @@ function renderRoute(moveFocus = false) {
 
 // A direct link, refresh, and browser history all resolve under a repository subpath.
 window.addEventListener('hashchange', () => {
-  if (location.hash === '#notice' || location.hash === '#review') {
+  if (location.hash === '#notice') history.replaceState(history.state, '', '#notices/all');
+  if (location.hash === '#review') {
     history.replaceState(history.state, '', location.pathname + location.search);
     renderRoute();
   } else {
@@ -1122,7 +1180,7 @@ window.addEventListener('hashchange', () => {
 });
 
 // Homepage sections can scroll without putting the current section in the share URL.
-const homeSectionIds = { '#top': 'top', '#notice': 'home-notice', '#review': 'home-review', '#weekly': 'weekly', '#classic': 'classic' };
+const homeSectionIds = { '#top': 'top', '#review': 'home-review', '#weekly': 'weekly', '#classic': 'classic' };
 document.addEventListener('click', event => {
   if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
   const link = event.target.closest('a[href^="#"]');
@@ -1574,25 +1632,23 @@ function magazineBlock(block) {
 }
 
 const campaign = document.getElementById('classic-campaign');
-if (/^https?:$/.test(location.protocol)) {
-  const campaignVideoId = 'MVKHFd_gxZw';
-  const campaignObserver = new IntersectionObserver(([entry], observer) => {
-    if (home.hidden || entry.intersectionRatio < 0.25) return;
-    const player = document.createElement('iframe');
-    player.className = 'campaign-video';
-    setLocalized(player, '브루넬로 쿠치넬리 2026 가을·겨울 공식 캠페인',
-      'Brunello Cucinelli Fall/Winter 2026 campaign', 'title');
-    player.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-    player.allowFullscreen = true;
-    player.referrerPolicy = 'strict-origin-when-cross-origin';
-    player.src = `https://www.youtube-nocookie.com/embed/${campaignVideoId}?autoplay=1&mute=1&playsinline=1&rel=0&loop=1&playlist=${campaignVideoId}`;
-    campaign.append(player);
-    observer.disconnect();
-  }, { threshold: 0.25 });
-  campaignObserver.observe(campaign);
-} else {
-  document.getElementById('campaign-file-note').hidden = false;
-}
+const campaignVideo = document.getElementById('classic-campaign-video');
+let resumeCampaign = true;
+let campaignVisible = false;
+const campaignObserver = new IntersectionObserver(([entry]) => {
+  const visible = !home.hidden && entry.intersectionRatio >= 0.25;
+  if (visible === campaignVisible) return;
+  campaignVisible = visible;
+  if (visible) {
+    campaignVideo.hidden = false;
+    if (resumeCampaign && !reducedMotion.matches) campaignVideo.play().catch(() => {});
+  } else {
+    resumeCampaign = !campaignVideo.paused;
+    campaignVideo.pause();
+  }
+}, { threshold: 0.25 });
+campaignObserver.observe(campaign);
+campaignVideo.querySelector('source').addEventListener('error', () => { campaignVideo.hidden = true; });
 panel.addEventListener('close', () => {
   if (!panel.open) panelBody.replaceChildren();
   scheduleReview();

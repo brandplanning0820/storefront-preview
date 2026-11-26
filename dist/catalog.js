@@ -579,12 +579,25 @@ function homeOverseasSelection(featured, candidates) {
 
 const newestOverseasSamples = [...CATALOG.best, ...CATALOG.classic, ...CATALOG.brands]
   .sort((a, b) => Number(b.id) - Number(a.id));
+const overseasSamplesById = new Map([...CATALOG.best, ...CATALOG.new, ...CATALOG.brands]
+  .map(product => [product.id, product]));
+const weeklyCompanions = [
+  '13851874254', '13871969099', '13892117876',
+  '13871854526', '13892302203', '13851900920',
+  '13850707048', '13892319386', '13855954759',
+  '13871846270', '13892310828', '13892114226',
+  '13892325902', '13871827399', '13892307125',
+].map(id => overseasSamplesById.get(id))
+  .filter(product => product?.delivery === 'overseas' && !CATALOG.weekly.includes(product))
+  .slice(0, Math.max(0, homeProductLimit - CATALOG.weekly.length));
+const mixedWeeklyProducts = CATALOG.weekly.flatMap((product, index) => [
+  product, ...weeklyCompanions.slice(index * 3, (index + 1) * 3),
+]);
+
 const HOME_CATALOG = {
   best: homeOverseasSelection(CATALOG.best, CATALOG.brands),
   new: homeOverseasSelection(CATALOG.new, newestOverseasSamples),
-  // The preview repeats its verified Weekly items when the list is shorter than the grid.
-  weekly: Array.from({ length: CATALOG.weekly.length ? homeProductLimit : 0 },
-    (_, index) => CATALOG.weekly[index % CATALOG.weekly.length]),
+  weekly: homeOverseasSelection(mixedWeeklyProducts, weeklyCompanions),
 };
 
 const REVIEWS = [

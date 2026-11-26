@@ -4,7 +4,7 @@ import path from 'node:path';
 const source = path.resolve(process.argv[2] || 'dist');
 const target = path.resolve(process.argv[3] || 'index.html');
 const assetDirectory = path.join(source, 'assets');
-const mimeTypes = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.woff2': 'font/woff2' };
+const mimeTypes = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.woff2': 'font/woff2', '.mp4': 'video/mp4' };
 const dataUrls = Object.fromEntries(fs.readdirSync(assetDirectory).map((name) => {
   const type = mimeTypes[path.extname(name)];
   if (!type) throw new Error('Unknown asset type: ' + name);
@@ -13,7 +13,7 @@ const dataUrls = Object.fromEntries(fs.readdirSync(assetDirectory).map((name) =>
   return [name, 'data:' + type + ';base64,' + bytes.toString('base64')];
 }));
 
-const inlineAssets = (text) => text.replace(/assets\/([-\w.]+\.(?:jpe?g|png|svg|webp|woff2))/gi, (_, name) => {
+const inlineAssets = (text) => text.replace(/assets\/([-\w.]+\.(?:jpe?g|png|svg|webp|woff2|mp4))/gi, (_, name) => {
   if (!dataUrls[name]) throw new Error('Asset not found: ' + name);
   return dataUrls[name];
 });
