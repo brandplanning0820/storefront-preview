@@ -377,7 +377,9 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
 .inquiry-note:empty { display: none; }
 .search-panel { position: fixed; inset: var(--search-top, 0px) 0 auto; width: 100%; max-width: none; max-height: calc(100dvh - var(--search-top, 0px)); margin: 0; padding: 0; overflow: auto; overscroll-behavior: contain; border: 0; border-block: 1px solid var(--line); background: #fff; color: var(--ink); }
 .search-panel::backdrop { background: rgb(27 20 14 / .22); }
-.search-inner { width: min(1120px, calc(100% - 40px)); margin-inline: auto; padding-block: clamp(18px, 3vw, 42px); }
+.search-inner { display: grid; grid-template-columns: clamp(210px, 25%, 330px) minmax(0, 1fr); grid-template-areas: "viewed search"; gap: clamp(24px, 4.8vw, 72px); width: min(1440px, calc(100% - clamp(32px, 5vw, 64px))); margin-inline: auto; padding-block: clamp(18px, 3vw, 42px); }
+.search-main { grid-area: search; min-width: 0; }
+.search-viewed { grid-area: viewed; min-width: 0; padding-inline-end: clamp(14px, 2.8vw, 36px); border-inline-end: 1px solid var(--line); }
 
 @media (prefers-reduced-motion: no-preference) {
   .search-panel[open] { animation: search-panel-enter 180ms cubic-bezier(.22, .72, .32, 1); }
@@ -403,28 +405,31 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
 .search-topline .search-box { border-radius: 8px; height: 48px; }
 .search-topline .search-box input { font-size: 1rem; }
 .search-close { font-size: 1.85rem; }
-.search-keywords { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); align-items: start; gap: clamp(20px, 4vw, 56px); margin-top: 23px; }
-.search-keyword-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(12px, 2vw, 26px); }
-.search-keywords h3 { font-size: .9375rem; padding-bottom: 10px; border-bottom: 1px solid var(--line); margin-bottom: 10px; }
-.search-keywords p, #search-count { color: var(--muted); font-size: .875rem; }
+.search-keyword-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(12px, 2vw, 22px); max-width: 440px; margin-top: 23px; }
+:is(.search-keyword-groups, .search-viewed) h3 { font-size: .9375rem; padding-bottom: 10px; border-bottom: 1px solid var(--line); margin-bottom: 10px; }
+:is(.search-keyword-groups, .search-viewed) p, #search-count { color: var(--muted); font-size: .875rem; }
 .search-chips { display: flex; flex-wrap: wrap; gap: 7px; }
 .search-chips :is(button, a) { display: inline-flex; align-items: center; max-width: 100%; min-height: 34px; border: 1px solid var(--line); border-radius: 999px; padding: 5px 10px; font-size: .875rem; overflow-wrap: anywhere; }
 .search-chips :is(button, a):hover { background: var(--sand); }
-.search-viewed-products { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(8px, 1vw, 13px); max-width: 396px; }
+.search-viewed-products { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; max-width: 264px; }
 .search-viewed-card { display: grid; grid-template-rows: auto auto 1fr auto; height: 100%; gap: 4px; text-align: center; }
 .search-viewed-card img { width: 100%; aspect-ratio: 1; object-fit: contain; border-radius: 5px; background: #f6f4f1; }
 .search-viewed-brand { min-height: 2.4em; display: grid; align-content: end; color: var(--ink); font-size: .6875rem; line-height: 1.2; overflow-wrap: anywhere; }
 .search-viewed-name { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-size: .8125rem; line-height: 1.3; overflow-wrap: anywhere; }
 .search-viewed-card:hover .search-viewed-name { text-decoration: underline; text-underline-offset: 3px; }
 .search-viewed-price { color: var(--muted); font-size: .75rem; font-weight: 600; }
-@media (max-width: 720px) {
-  .search-keywords { grid-template-columns: minmax(0, 1fr); }
-}
-#search-results { margin-top: 18px; }
+#search-results { margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--line); }
 #search-count { margin-bottom: 12px; }
 #search-brand-results { display: grid; gap: 8px; margin-bottom: 16px; }
 #search-brand-results h3 { font-size: .875rem; }
-#search-products { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 13px; }
+#search-products { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
+@media (max-width: 1050px) {
+  #search-products { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .search-inner { grid-template-columns: minmax(0, 1fr); grid-template-areas: "search" "viewed"; gap: 24px; }
+  .search-viewed { padding: 16px 0 0; border: 0; border-top: 1px solid var(--line); }
+}
 .review-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap: clamp(12px, 2vw, 28px); }
 .review-list li { display: grid; grid-template-columns: clamp(88px, 13vw, 164px) minmax(0, 1fr); align-items: start; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
 .review-list img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center top; }
@@ -625,7 +630,6 @@ html[lang="en"] .brand-letter a span[lang="ko"] { display: none; }
   .site-header.is-compact .search-launch { justify-content: center; padding: 0; }
   .site-header.is-compact .search-label { display: none; }
   .site-header.is-compact .account-links { font-size: .8125rem; }
-  #search-products { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .shortcuts { grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; }
   .shortcuts > * { aspect-ratio: 1.6; }
   .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }

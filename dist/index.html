@@ -21,9 +21,9 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=recent-search-products">
+  <link rel="stylesheet" href="styles.css?v=split-search">
   <script src="catalog.js?v=home-ten-products" defer></script>
-  <script src="app.js?v=recent-search-products" defer></script>
+  <script src="app.js?v=split-search" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -503,17 +503,17 @@
 
   <dialog id="search-panel" class="search-panel" aria-labelledby="search-heading">
     <div class="search-inner">
-      <div class="search-topline">
-        <h2 id="search-heading" data-en="Product search">상품 검색</h2>
-        <form class="search-box" id="search-form" role="search">
-          <label for="search" class="visually-hidden" data-en="Brand or product name">브랜드 또는 상품명</label>
-          <input id="search" name="q" type="search" placeholder="브랜드 또는 상품명" required maxlength="80" autofocus data-en-placeholder="Brand or product name">
-          <button type="submit" aria-label="검색" data-en-aria-label="Search"><span class="search-icon" aria-hidden="true"></span></button>
-        </form>
-        <form method="dialog"><button type="submit" class="nav-button search-close" aria-label="검색 닫기" data-en-aria-label="Close search">×</button></form>
-      </div>
-      <div id="search-keywords" class="search-keywords">
-        <div class="search-keyword-groups">
+      <div class="search-main">
+        <div class="search-topline">
+          <h2 id="search-heading" data-en="Product search">상품 검색</h2>
+          <form class="search-box" id="search-form" role="search">
+            <label for="search" class="visually-hidden" data-en="Brand or product name">브랜드 또는 상품명</label>
+            <input id="search" name="q" type="search" placeholder="브랜드 또는 상품명" required maxlength="80" autofocus data-en-placeholder="Brand or product name">
+            <button type="submit" aria-label="검색" data-en-aria-label="Search"><span class="search-icon" aria-hidden="true"></span></button>
+          </form>
+          <form method="dialog"><button type="submit" class="nav-button search-close" aria-label="검색 닫기" data-en-aria-label="Close search">×</button></form>
+        </div>
+        <div id="search-keywords" class="search-keyword-groups">
           <section>
             <h3 data-en="Suggested searches">추천 검색어</h3>
             <div class="search-chips">
@@ -528,20 +528,20 @@
             <div class="search-chips" id="search-recent"></div>
           </section>
         </div>
-        <section aria-labelledby="search-viewed-heading">
-          <h3 id="search-viewed-heading" data-en="Recently viewed">최근 본 상품</h3>
-          <p id="search-viewed-empty" data-en="You haven’t viewed any products yet.">최근 본 상품이 없어요.</p>
-          <ul class="search-viewed-products" id="search-viewed-products" hidden></ul>
-        </section>
+        <div id="search-results" hidden>
+          <p id="search-count" role="status"></p>
+          <section id="search-brand-results" aria-labelledby="search-brand-heading" hidden>
+            <h3 id="search-brand-heading" data-en="Brands">브랜드</h3>
+            <div class="search-chips"></div>
+          </section>
+          <ul class="product-grid" id="search-products"></ul>
+        </div>
       </div>
-      <div id="search-results" hidden>
-        <p id="search-count" role="status"></p>
-        <section id="search-brand-results" aria-labelledby="search-brand-heading" hidden>
-          <h3 id="search-brand-heading" data-en="Brands">브랜드</h3>
-          <div class="search-chips"></div>
-        </section>
-        <ul class="product-grid" id="search-products"></ul>
-      </div>
+      <section class="search-viewed" aria-labelledby="search-viewed-heading">
+        <h3 id="search-viewed-heading" data-en="Recently viewed">최근 본 상품</h3>
+        <p id="search-viewed-empty" data-en="You haven’t viewed any products yet.">최근 본 상품이 없어요.</p>
+        <ul class="search-viewed-products" id="search-viewed-products" hidden></ul>
+      </section>
     </div>
   </dialog>
 

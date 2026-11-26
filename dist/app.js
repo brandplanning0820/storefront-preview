@@ -158,11 +158,10 @@ const panelBody = document.getElementById('panel-body');
 const searchPanel = document.getElementById('search-panel');
 const searchLaunch = document.getElementById('search-launch');
 const searchInput = document.getElementById('search');
-const searchKeywords = document.getElementById('search-keywords');
 const searchResults = document.getElementById('search-results');
 const recentTerms = [];
 const recentProductKey = 'brandplanning-recent-search-products';
-const recentProductLimit = 3;
+const recentProductLimit = 6;
 let temporaryRecentProducts;
 const headerShell = document.querySelector('.site-header-shell');
 const siteHeader = headerShell.querySelector('.site-header');
@@ -353,11 +352,12 @@ function rankedSearch(tokens, index) {
 let searchPreviewTimer;
 
 function rememberSearchTerm(term) {
-  if (!term) return;
+  if (!term || recentTerms[0] === term) return;
   const duplicate = recentTerms.indexOf(term);
   if (duplicate !== -1) recentTerms.splice(duplicate, 1);
   recentTerms.unshift(term);
   if (recentTerms.length > 5) recentTerms.pop();
+  showRecentSearchTerms();
 }
 
 function showCatalogResults(term, remember = true) {
@@ -377,7 +377,6 @@ function showCatalogResults(term, remember = true) {
     searchInput.value = term;
     rememberSearchTerm(term);
   }
-  searchKeywords.hidden = true;
   searchResults.hidden = false;
   searchResults.dataset.term = term;
   const count = matching.length;
@@ -411,18 +410,24 @@ window.addEventListener('resize', () => {
   if (searchPanel.open) positionSearchPanel();
 });
 
-function showSearchKeywords() {
-  searchKeywords.hidden = false;
-  searchResults.hidden = true;
+function showRecentSearchTerms() {
   const recent = document.getElementById('search-recent');
-  recent.replaceChildren(...recentTerms.map(term => {
+  const focusedTerm = recent.contains(document.activeElement) ? document.activeElement.dataset.searchTerm : undefined;
+  const buttons = recentTerms.map(term => {
     const button = document.createElement('button');
     button.type = 'button';
     button.dataset.searchTerm = term;
     button.textContent = term;
     return button;
-  }));
+  });
+  recent.replaceChildren(...buttons);
+  buttons.find(button => button.dataset.searchTerm === focusedTerm)?.focus({ preventScroll: true });
   if (!recentTerms.length) recent.append(description('최근 검색어가 없어요.', 'No recent searches.'));
+}
+
+function showSearchOverview() {
+  searchResults.hidden = true;
+  showRecentSearchTerms();
   showRecentSearchProducts();
 }
 
@@ -465,11 +470,12 @@ function showRecentSearchProducts() {
 
 function openSearch() {
   searchInput.value = '';
-  showSearchKeywords();
+  showSearchOverview();
   setMobileNav(false);
   positionSearchPanel();
   searchPanel.returnValue = '';
   searchPanel.showModal();
+  searchPanel.scrollTop = 0;
   document.documentElement.classList.add('search-open');
   searchLaunch.setAttribute('aria-expanded', 'true');
   searchInput.focus({ preventScroll: true });
@@ -481,7 +487,7 @@ function previewSearch() {
   clearTimeout(searchPreviewTimer);
   const query = searchInput.value.trim();
   if (query) searchPreviewTimer = setTimeout(() => showCatalogResults(query, false), 160);
-  else showSearchKeywords();
+  else showSearchOverview();
 }
 searchInput.addEventListener('input', event => {
   if (!event.isComposing) previewSearch();
