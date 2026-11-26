@@ -162,7 +162,7 @@ const searchResults = document.getElementById('search-results');
 const recentTermKey = 'brandplanning-recent-search-terms';
 const recentTermLimit = 5;
 const recentProductKey = 'brandplanning-recent-search-products';
-const recentProductLimit = 6;
+const recentProductLimit = 10;
 const temporarySearchHistory = new Map();
 const headerShell = document.querySelector('.site-header-shell');
 const siteHeader = headerShell.querySelector('.site-header');
@@ -436,19 +436,29 @@ window.addEventListener('resize', () => {
   if (searchPanel.open) positionSearchPanel();
 });
 
-function showRecentSearchTerms() {
+function showRecentSearchTerms(removedIndex) {
   const recent = document.getElementById('search-recent');
+  const template = document.getElementById('search-recent-term-template');
   const focusedTerm = recent.contains(document.activeElement) ? document.activeElement.dataset.searchTerm : undefined;
-  const buttons = recentSearchTerms().map(term => {
-    const button = document.createElement('button');
-    button.type = 'button';
+  const chips = recentSearchTerms().map(term => {
+    const chip = template.content.firstElementChild.cloneNode(true);
+    const button = chip.querySelector('[data-search-term]');
+    const remove = chip.querySelector('[data-remove-search-term]');
     button.dataset.searchTerm = term;
     button.textContent = term;
-    return button;
+    remove.dataset.removeSearchTerm = term;
+    setLocalized(remove, `${term} 삭제`, `Remove “${term}” from recent searches`, 'aria-label');
+    return { chip, button, remove };
   });
-  recent.replaceChildren(...buttons);
-  buttons.find(button => button.dataset.searchTerm === focusedTerm)?.focus({ preventScroll: true });
-  if (!buttons.length) recent.append(description('최근 검색어가 없어요.', 'No recent searches.'));
+  recent.replaceChildren(...chips.map(({ chip }) => chip));
+  if (!chips.length) recent.append(description('최근 검색어가 없어요.', 'No recent searches.'));
+  if (removedIndex !== undefined) {
+    const nextChip = chips[Math.min(removedIndex, chips.length - 1)];
+    const nextControl = nextChip?.remove ?? searchInput;
+    nextControl.focus({ preventScroll: true });
+  } else {
+    chips.find(({ button }) => button.dataset.searchTerm === focusedTerm)?.button.focus({ preventScroll: true });
+  }
 }
 
 function showSearchOverview() {
@@ -516,6 +526,15 @@ document.getElementById('search-form').addEventListener('submit', (event) => {
   if (query) showCatalogResults(query);
 });
 searchPanel.addEventListener('click', event => {
+  const remove = event.target.closest('[data-remove-search-term]');
+  if (remove) {
+    const term = remove.dataset.removeSearchTerm;
+    const terms = recentSearchTerms();
+    const index = terms.indexOf(term);
+    if (index !== -1) writeSearchHistory(recentTermKey, terms.filter(entry => entry !== term));
+    showRecentSearchTerms(Math.max(0, index));
+    return;
+  }
   const suggestion = event.target.closest('[data-search-term]');
   if (suggestion) showCatalogResults(suggestion.textContent);
   const resultLink = event.target.closest('#search-results a, #search-viewed-products a');
