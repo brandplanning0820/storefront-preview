@@ -414,8 +414,17 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
 .search-suggested-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; padding-bottom: 4px; }
 .search-suggested-chips > button { flex: none; white-space: nowrap; }
 .search-suggested-chips > button:focus-visible { outline-offset: -2px; }
-.search-recent-chip { position: relative; display: inline-flex; align-items: center; max-width: 100%; }
-.search-recent-chip > [data-search-term] { min-width: 0; }
+.search-recent-chip {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding-inline-end: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+.search-recent-chip:hover { background: var(--sand); }
+.search-recent-chip > [data-search-term] { min-width: 0; min-height: 32px; padding-inline-end: 2px; border: 0; }
+.search-recent-chip > [data-search-term]:hover { background: transparent; }
 .search-chips .search-recent-remove {
   display: grid;
   place-items: center;
@@ -429,21 +438,8 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
   font-size: .8125rem;
   line-height: 1;
 }
-.search-chips .search-recent-remove:hover { color: var(--ink); background: transparent; }
-.search-recent-remove:focus-visible { outline-offset: 0; }
-@media (hover: hover) and (pointer: fine) {
-  #search-recent { column-gap: 13px; }
-  .search-chips .search-recent-remove {
-    position: absolute;
-    inset-block-start: 50%;
-    inset-inline-end: -12px;
-    transform: translateY(-50%);
-    justify-items: end;
-    padding-inline-end: 3px;
-  }
-  .search-recent-chip:hover > [data-search-term] { background: var(--sand); }
-  .search-recent-chip:not(:hover):not(:focus-within) > .search-recent-remove { opacity: 0; pointer-events: none; }
-}
+.search-chips .search-recent-remove:hover { color: var(--ink); background: var(--line); }
+.search-recent-chip > button:focus-visible { outline-offset: -2px; }
 .search-viewed-products { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; max-width: 264px; }
 .search-viewed-card { display: grid; grid-template-rows: auto auto 1fr auto; height: 100%; gap: 4px; text-align: center; }
 .search-viewed-card img { width: 100%; aspect-ratio: 1; object-fit: contain; border-radius: 5px; background: #f6f4f1; }
