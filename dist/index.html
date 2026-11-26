@@ -21,9 +21,9 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=viewport-chat">
+  <link rel="stylesheet" href="styles.css?v=arrivals-menu">
   <script src="catalog.js?v=community-comments" defer></script>
-  <script src="app.js?v=viewport-chat" defer></script>
+  <script src="app.js?v=arrivals-menu" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -56,7 +56,15 @@
           <a href="#catalog/classic" data-en="Specials">기획전</a>
           <a href="#catalog/domestic" data-en="Same-day dispatch">당일출고</a>
           <a href="#community/all" data-en="Community">커뮤니티</a>
-          <a href="#arrivals/all" data-en="Arrivals">입고 소식</a>
+          <div class="arrivals-menu" id="arrivals-menu">
+            <a href="#arrivals/all" data-en="Arrivals">입고 소식</a>
+            <button type="button" class="arrivals-menu-toggle" id="arrivals-menu-toggle" aria-controls="arrivals-menu-list" aria-expanded="false"
+              aria-label="입고 소식 하위 메뉴" data-en-aria-label="Arrival categories"></button>
+            <ul class="arrivals-menu-list" id="arrivals-menu-list" hidden>
+              <li><a href="#arrivals/arrival-note">Arrival Note</a></li>
+              <li><a href="#arrivals/new-in">New In</a></li>
+            </ul>
+          </div>
           <a href="#reviews/all" data-en="Reviews">리뷰</a>
           <a href="#magazine/all" data-en="Magazine">매거진</a>
           <a href="#notices/all" data-en="Announcements">공지사항</a>

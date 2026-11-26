@@ -424,11 +424,54 @@ const languageSwitch = document.getElementById('language-switch');
 const languageToggle = languageSwitch.querySelector('summary');
 const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
 const siteNav = document.getElementById('site-nav');
+const arrivalsMenu = document.getElementById('arrivals-menu');
+const arrivalsMenuToggle = document.getElementById('arrivals-menu-toggle');
+const arrivalsMenuList = document.getElementById('arrivals-menu-list');
 const accountTitles = { 로그인: 'Log in', 회원가입: 'Sign up', 마이페이지: 'My account' };
+
+function positionArrivalsMenu() {
+  if (arrivalsMenuList.hidden) return;
+  const trigger = arrivalsMenu.getBoundingClientRect();
+  const navigation = siteNav.getBoundingClientRect();
+  const { clientWidth, clientHeight } = document.documentElement;
+  if (!trigger.width || trigger.bottom <= 0 || trigger.bottom >= clientHeight - 8
+    || trigger.right <= navigation.left || trigger.left >= navigation.right) {
+    setArrivalsMenu(false);
+    return;
+  }
+  const left = Math.min(clientWidth - arrivalsMenuList.offsetWidth - 8, Math.max(8, navigation.left, trigger.left));
+  arrivalsMenuList.style.left = left + 'px';
+  arrivalsMenuList.style.top = trigger.bottom + 'px';
+  arrivalsMenuList.style.maxHeight = clientHeight - trigger.bottom - 8 + 'px';
+}
+
+function setArrivalsMenu(open) {
+  arrivalsMenuList.hidden = !open;
+  arrivalsMenuToggle.setAttribute('aria-expanded', String(open));
+  if (open) positionArrivalsMenu();
+}
+
+arrivalsMenu.addEventListener('pointerenter', event => {
+  if (event.pointerType === 'mouse') setArrivalsMenu(true);
+});
+arrivalsMenu.addEventListener('pointerleave', event => {
+  if (event.pointerType !== 'mouse') return;
+  const linkHadFocus = arrivalsMenuList.contains(document.activeElement);
+  setArrivalsMenu(false);
+  if (linkHadFocus) arrivalsMenuToggle.focus({ preventScroll: true });
+});
+arrivalsMenu.addEventListener('focusout', event => {
+  if (!arrivalsMenu.contains(event.relatedTarget)) setArrivalsMenu(false);
+});
+arrivalsMenuToggle.addEventListener('click', () => setArrivalsMenu(arrivalsMenuList.hidden));
+window.addEventListener('scroll', positionArrivalsMenu, { passive: true });
+window.addEventListener('resize', positionArrivalsMenu);
+siteNav.addEventListener('scroll', positionArrivalsMenu, { passive: true });
 
 function setMobileNav(open) {
   siteHeader.classList.toggle('is-menu-open', open);
   mobileMenuToggle.setAttribute('aria-expanded', String(open));
+  if (!open) setArrivalsMenu(false);
 }
 
 languageSwitch.addEventListener('toggle', () => {
@@ -456,11 +499,16 @@ siteNav.addEventListener('click', event => {
 matchMedia('(max-width: 520px)').addEventListener('change', () => setMobileNav(false));
 document.addEventListener('click', event => {
   if (languageSwitch.open && !languageSwitch.contains(event.target)) languageSwitch.open = false;
+  if (!arrivalsMenu.contains(event.target)) setArrivalsMenu(false);
   if (!siteNav.contains(event.target) && !mobileMenuToggle.contains(event.target)) setMobileNav(false);
 });
 document.addEventListener('keydown', event => {
   if (event.key !== 'Escape') return;
-  if (languageSwitch.open) {
+  if (!arrivalsMenuList.hidden) {
+    const hadFocus = arrivalsMenu.contains(document.activeElement);
+    setArrivalsMenu(false);
+    if (hadFocus) arrivalsMenuToggle.focus({ preventScroll: true });
+  } else if (languageSwitch.open) {
     languageSwitch.open = false;
     languageToggle.focus({ preventScroll: true });
   } else if (siteHeader.classList.contains('is-menu-open')) {
