@@ -565,7 +565,7 @@ const CATALOG = {
     }
   ]
 };
-const homeProductLimit = 20;
+const homeProductLimit = 10;
 
 function homeOverseasSelection(featured, candidates) {
   const products = new Map();
@@ -2269,9 +2269,15 @@ const MAGAZINE_ARTICLES = [
     ]
   }
 ];
+const NOTICE_CATEGORIES = {
+  ordering: ['주문 안내', 'Ordering'],
+  support: ['고객지원', 'Customer support'],
+};
+
 const NOTICES = [
   {
     "id": "weekly-deadline",
+    "category": "ordering",
     "title": "위클리 주문 마감 안내",
     "paragraphs": [
       "위클리 상품 주문은 매주 월요일 오후 3시(한국 시간)에 마감합니다.",
@@ -2280,6 +2286,7 @@ const NOTICES = [
   },
   {
     "id": "product-inquiry",
+    "category": "support",
     "title": "상품 문의 안내",
     "paragraphs": [
       "상품 브랜드와 원하시는 사이즈, 상품을 보신 판매 페이지 URL을 알려주시면 확인하기 쉽습니다.",

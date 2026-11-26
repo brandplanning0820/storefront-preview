@@ -21,9 +21,9 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=weekly-tooltip">
-  <script src="catalog.js?v=community-comments" defer></script>
-  <script src="app.js?v=weekly-tooltip" defer></script>
+  <link rel="stylesheet" href="styles.css?v=collection-search">
+  <script src="catalog.js?v=home-ten-products" defer></script>
+  <script src="app.js?v=collection-search" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -49,28 +49,32 @@
       </div>
       <div class="navigation-row">
         <nav class="site-nav" id="site-nav" aria-label="주 메뉴" data-en-aria-label="Main navigation">
-          <a href="#brands/all" data-en="Brands">브랜드</a>
-          <a href="#catalog/men" data-en="Men">남성</a>
-          <a href="#catalog/women" data-en="Women">여성</a>
-          <div class="weekly-nav">
-            <a id="weekly-nav-link" href="#catalog/weekly" aria-describedby="weekly-nav-tooltip" data-en="Weekly">위클리</a>
-            <span class="weekly-nav-tooltip" id="weekly-nav-tooltip" role="tooltip" data-en="Items available for one week only" hidden>1주간만 진행하는 상품</span>
+          <div class="site-nav-group">
+            <a href="#brands/all" data-en="Brands">브랜드</a>
+            <a href="#catalog/men" data-en="Men">남성</a>
+            <a href="#catalog/women" data-en="Women">여성</a>
+            <div class="weekly-nav">
+              <a id="weekly-nav-link" href="#catalog/weekly" aria-describedby="weekly-nav-tooltip" data-en="Weekly">위클리</a>
+              <span class="weekly-nav-tooltip" id="weekly-nav-tooltip" role="tooltip" data-en="Items available for one week only" hidden>1주간만 진행하는 상품</span>
+            </div>
+            <a href="#catalog/classic" data-en="Specials">기획전</a>
+            <a href="#catalog/domestic" data-en="Same-day dispatch">당일출고</a>
           </div>
-          <a href="#catalog/classic" data-en="Specials">기획전</a>
-          <a href="#catalog/domestic" data-en="Same-day dispatch">당일출고</a>
-          <a href="#community/all" data-en="Community">커뮤니티</a>
-          <div class="arrivals-menu" id="arrivals-menu">
-            <a href="#arrivals/all" data-en="Arrivals">입고 소식</a>
-            <button type="button" class="arrivals-menu-toggle" id="arrivals-menu-toggle" aria-controls="arrivals-menu-list" aria-expanded="false"
-              aria-label="입고 소식 하위 메뉴" data-en-aria-label="Arrival categories"></button>
-            <ul class="arrivals-menu-list" id="arrivals-menu-list" hidden>
-              <li><a href="#arrivals/arrival-note">Arrival Note</a></li>
-              <li><a href="#arrivals/new-in">New In</a></li>
-            </ul>
+          <div class="site-nav-group">
+            <a href="#community/all" data-en="Community">커뮤니티</a>
+            <div class="arrivals-menu" id="arrivals-menu">
+              <a href="#arrivals/all" data-en="Arrivals">입고 소식</a>
+              <button type="button" class="arrivals-menu-toggle" id="arrivals-menu-toggle" aria-controls="arrivals-menu-list" aria-expanded="false"
+                aria-label="입고 소식 하위 메뉴" data-en-aria-label="Arrival categories"></button>
+              <ul class="arrivals-menu-list" id="arrivals-menu-list" hidden>
+                <li><a href="#arrivals/arrival-note">Arrival Note</a></li>
+                <li><a href="#arrivals/new-in">New In</a></li>
+              </ul>
+            </div>
+            <a href="#reviews/all" data-en="Reviews">리뷰</a>
+            <a href="#magazine/all" data-en="Magazine">매거진</a>
+            <a href="#notices/all" data-en="Announcements">공지사항</a>
           </div>
-          <a href="#reviews/all" data-en="Reviews">리뷰</a>
-          <a href="#magazine/all" data-en="Magazine">매거진</a>
-          <a href="#notices/all" data-en="Announcements">공지사항</a>
         </nav>
         <button class="search-box search-launch" id="search-launch" type="button" aria-label="상품 검색 열기" aria-haspopup="dialog" aria-expanded="false" data-en-aria-label="Open product search">
           <span class="search-label" aria-hidden="true" data-en="Search brands or products">브랜드 또는 상품명 검색</span><span class="search-icon" aria-hidden="true"></span>
@@ -270,6 +274,11 @@
               <fieldset class="brand-filter" id="collection-brand-filter"><legend data-en="Brands">브랜드</legend><div id="collection-brands" class="filter-options"></div></fieldset>
               <fieldset class="brand-filter" id="collection-gender-filter" hidden><legend data-en="Gender">성별</legend><div id="collection-genders" class="filter-options"></div></fieldset>
               <fieldset class="brand-filter" id="collection-category-filter" hidden><legend data-en="Product type">상품군</legend><div id="collection-categories" class="filter-options"></div></fieldset>
+              <label class="filter-search" for="collection-search">
+                <span data-en="Search within results">결과 내 검색</span>
+                <input id="collection-search" type="search" maxlength="80" autocomplete="off"
+                  placeholder="예: 캐시미어, 블랙, 첼시" data-en-placeholder="Cashmere, black, Chelsea">
+              </label>
               <button class="filter-reset" type="reset" data-en="Clear filters">필터 초기화</button>
             </form>
           </details>

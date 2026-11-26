@@ -279,7 +279,50 @@ const productSearchIndex = allProducts.map(product => {
   return { product, direct, related: searchFields([...brandAliases, ...synonyms.flatMap(group => group.phrases)]) };
 });
 
-function searchTermScore(query, { direct, related }) {
+const colorSearchAliases = [
+  ['블랙', '검정', '검은색', 'black'], ['화이트', '흰색', 'white'],
+  ['그레이', '회색', 'grey', 'gray'], ['블루', '파랑', '파란색', 'blue'],
+  ['브라운', '갈색', 'brown'], ['네이비', '남색', 'navy'],
+  ['그린', '초록', '초록색', 'green'], ['레드', '빨강', '빨간색', 'red'],
+  ['옐로우', '노랑', '노란색', 'yellow'],
+].map(aliases => searchFields(aliases).phrases);
+const materialSearchAliases = [
+  ['울', '양모', 'wool'], ['캐시미어', '카시미어', 'cashmere'], ['면', '코튼', 'cotton'],
+  ['가죽', '레더', 'leather'], ['스웨이드', 'suede'], ['실크', '견', 'silk'],
+  ['리넨', '린넨', 'linen'], ['비스코스', 'viscose'], ['나일론', 'nylon'],
+].map(aliases => searchFields(aliases).phrases);
+
+function indexRefinementTerms(terms, fields, aliases) {
+  for (const group of aliases) {
+    const match = group.some(term => fields.words.includes(term)
+      || (/[가-힣]{2,}/u.test(term) && fields.phrases.some(phrase => phrase.includes(term))));
+    for (const term of group) terms.set(term, match ? 4 : 0);
+  }
+}
+
+const collectionProductSearchIndex = new Map(productSearchIndex.map(entry => {
+  const { product, direct, related } = entry;
+  const details = PRODUCT_DETAILS[product.id];
+  const productNames = [product.name, PRODUCT_NAMES_EN[product.id]];
+  const colors = searchFields(details?.color ?? productNames);
+  const materials = searchFields(details?.materials?.flat() ?? productNames);
+  const refinements = new Map();
+  indexRefinementTerms(refinements, colors, colorSearchAliases);
+  indexRefinementTerms(refinements, materials, materialSearchAliases);
+  const matchingAliases = [...refinements].filter(([, score]) => score > 0).map(([term]) => term);
+  return [product.id, {
+    product,
+    direct: {
+      phrases: [...direct.phrases, ...colors.phrases, ...materials.phrases],
+      words: [...direct.words, ...colors.words, ...materials.words],
+    },
+    related: searchFields([...related.phrases, ...matchingAliases]),
+    refinements,
+  }];
+}));
+
+function searchTermScore(query, { direct, related, refinements }) {
+  if (refinements?.has(query)) return refinements.get(query);
   if (direct.words.includes(query) || direct.phrases.includes(query)) return 4;
   if (direct.phrases.some(phrase => phrase.includes(query))) return 3;
   if (related.phrases.includes(query)) return 2;
@@ -596,6 +639,7 @@ const collectionTitle = document.getElementById('collection-title');
 const collectionList = document.getElementById('collection-products');
 const collectionFilters = document.getElementById('collection-filters');
 const collectionSort = document.getElementById('collection-sort');
+const collectionSearch = document.getElementById('collection-search');
 const collectionBrands = document.getElementById('collection-brands');
 const collectionGenders = document.getElementById('collection-genders');
 const collectionCategories = document.getElementById('collection-categories');
@@ -664,11 +708,17 @@ function updateCollection() {
     groupSelector.checked = selectedCount === subBrands.length;
     groupSelector.indeterminate = selectedCount > 0 && !groupSelector.checked;
   }
-  const products = collectionProducts.filter(product => (
+  let products = collectionProducts.filter(product => (
     (!brands.size || brands.has(product.brand))
     && (!genders.size || genders.has(product.gender))
     && (!categories.size || categories.has(product.category))
   ));
+  const query = collectionSearch.value.trim();
+  if (query) {
+    const index = products.map(product => collectionProductSearchIndex.get(product.id));
+    const found = new Set(rankedSearch(searchWords(query), index).map(({ product }) => product.id));
+    products = products.filter(product => found.has(product.id));
+  }
   if (collectionSort.value === 'low') products.sort((a, b) => a.price - b.price);
   if (collectionSort.value === 'high') products.sort((a, b) => b.price - a.price);
   collectionList.replaceChildren(...products.map(productCard));
@@ -676,8 +726,9 @@ function updateCollection() {
   const empty = document.getElementById('collection-empty');
   empty.hidden = products.length > 0;
   if (!products.length) {
-    if (collectionProducts.length) setLocalized(empty, '선택한 조건에 해당하는 상품이 없어요.', 'No products match your filters.');
-    else setLocalized(empty, '아직 등록된 상품이 없어요.', 'No products have been added yet.');
+    if (!collectionProducts.length) setLocalized(empty, '아직 등록된 상품이 없어요.', 'No products have been added yet.');
+    else if (query) setLocalized(empty, `현재 결과에서 ‘${query}’에 해당하는 상품이 없어요.`, `No products in these results match “${query}”.`);
+    else setLocalized(empty, '선택한 조건에 해당하는 상품이 없어요.', 'No products match your filters.');
   }
 }
 
@@ -744,6 +795,7 @@ function showCollection(group, initialBrand, scopedBrand) {
     }
   }
   collectionSort.value = 'recommended';
+  collectionSearch.value = '';
   collectionFilters.closest('details').open = true;
   setLocalized(collectionTitle, scopedBrand ? brandTitle(scopedBrand) : collectionTitles[group],
     scopedBrand ? brandTitleEn(scopedBrand) : collectionTitlesEn[group]);
@@ -757,6 +809,7 @@ function showCollection(group, initialBrand, scopedBrand) {
 
 collectionFilters.addEventListener('change', event => {
   const checkbox = event.target;
+  if (checkbox === collectionSearch) return;
   if (checkbox.matches('[data-brand-parent]')) {
     checkbox.closest('.brand-group').querySelectorAll('input[name="brand"]').forEach(child => {
       child.checked = checkbox.checked;
@@ -764,10 +817,19 @@ collectionFilters.addEventListener('change', event => {
   }
   updateCollection();
 });
+collectionSearch.addEventListener('input', event => {
+  if (!event.isComposing) updateCollection();
+});
+collectionSearch.addEventListener('compositionend', updateCollection);
+collectionFilters.addEventListener('submit', event => {
+  event.preventDefault();
+  updateCollection();
+});
 collectionFilters.addEventListener('reset', event => {
   event.preventDefault();
   collectionFilters.querySelectorAll('input[type="checkbox"]').forEach(input => { input.checked = false; });
   collectionSort.value = 'recommended';
+  collectionSearch.value = '';
   updateCollection();
 });
 
@@ -2055,7 +2117,19 @@ for (const entry of NOTICES) {
   const item = document.createElement('li');
   const link = document.createElement('a');
   link.href = '#notices/' + entry.id;
-  setLocalized(link, entry.title, NOTICES_EN[entry.id]?.title);
+  const copy = document.createElement('span');
+  copy.className = 'notice-link-copy';
+  const category = NOTICE_CATEGORIES[entry.category];
+  if (category) {
+    const label = document.createElement('span');
+    label.className = 'notice-category';
+    setLocalized(label, ...category);
+    copy.append(label);
+  }
+  const title = document.createElement('span');
+  setLocalized(title, entry.title, NOTICES_EN[entry.id]?.title);
+  copy.append(title);
+  link.append(copy);
   item.append(link);
   noticeList.append(item);
 }
@@ -2063,8 +2137,11 @@ for (const entry of NOTICES) {
 function showEditorialEntry(entry, listPath) {
   const isMagazine = listPath === '#magazine/all';
   const noticeEn = NOTICES_EN[entry.id];
-  setLocalized(document.getElementById('editorial-source'), isMagazine ? '브랜드플래닝' : '브랜드플래닝 공지사항',
-    isMagazine ? 'Brand Planning' : 'Brand Planning announcements');
+  const source = document.getElementById('editorial-source');
+  const category = NOTICE_CATEGORIES[entry.category];
+  if (isMagazine) setLocalized(source, '브랜드플래닝', 'Brand Planning');
+  else if (category) setLocalized(source, '브랜드플래닝 공지사항 · ' + category[0], 'Brand Planning announcements · ' + category[1]);
+  else setLocalized(source, '브랜드플래닝 공지사항', 'Brand Planning announcements');
   setLocalized(editorialTitle, entry.title, isMagazine ? MAGAZINE_TITLES_EN[entry.id] : noticeEn?.title);
   const body = document.getElementById('editorial-body');
   body.classList.toggle('magazine-body', isMagazine);
