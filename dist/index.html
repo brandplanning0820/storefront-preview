@@ -21,9 +21,9 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=collection-search">
+  <link rel="stylesheet" href="styles.css?v=recent-search-products">
   <script src="catalog.js?v=home-ten-products" defer></script>
-  <script src="app.js?v=collection-search" defer></script>
+  <script src="app.js?v=recent-search-products" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -513,8 +513,26 @@
         <form method="dialog"><button type="submit" class="nav-button search-close" aria-label="검색 닫기" data-en-aria-label="Close search">×</button></form>
       </div>
       <div id="search-keywords" class="search-keywords">
-        <section><h3 data-en="Suggested searches">추천 검색어</h3><div class="search-chips"><button type="button" data-search-term="브루넬로 쿠치넬리" data-en="Brunello Cucinelli">브루넬로 쿠치넬리</button><button type="button" data-search-term="막스마라" data-en="Max Mara">막스마라</button><button type="button" data-search-term="버버리" data-en="Burberry">버버리</button><button type="button" data-search-term="펜디" data-en="Fendi">펜디</button></div></section>
-        <section><h3 data-en="Recent searches">최근 검색어</h3><div class="search-chips" id="search-recent"></div></section>
+        <div class="search-keyword-groups">
+          <section>
+            <h3 data-en="Suggested searches">추천 검색어</h3>
+            <div class="search-chips">
+              <button type="button" data-search-term="브루넬로 쿠치넬리" data-en="Brunello Cucinelli">브루넬로 쿠치넬리</button>
+              <button type="button" data-search-term="막스마라" data-en="Max Mara">막스마라</button>
+              <button type="button" data-search-term="버버리" data-en="Burberry">버버리</button>
+              <button type="button" data-search-term="펜디" data-en="Fendi">펜디</button>
+            </div>
+          </section>
+          <section>
+            <h3 data-en="Recent searches">최근 검색어</h3>
+            <div class="search-chips" id="search-recent"></div>
+          </section>
+        </div>
+        <section aria-labelledby="search-viewed-heading">
+          <h3 id="search-viewed-heading" data-en="Recently viewed">최근 본 상품</h3>
+          <p id="search-viewed-empty" data-en="You haven’t viewed any products yet.">최근 본 상품이 없어요.</p>
+          <ul class="search-viewed-products" id="search-viewed-products" hidden></ul>
+        </section>
       </div>
       <div id="search-results" hidden>
         <p id="search-count" role="status"></p>
@@ -526,6 +544,17 @@
       </div>
     </div>
   </dialog>
+
+  <template id="search-viewed-product-template">
+    <li>
+      <a class="search-viewed-card">
+        <img alt="" loading="lazy" decoding="async">
+        <strong class="search-viewed-brand"></strong>
+        <span class="search-viewed-name"></span>
+        <span class="search-viewed-price"></span>
+      </a>
+    </li>
+  </template>
 
   <template id="login-template">
     <form class="login-form" method="dialog">

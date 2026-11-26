@@ -161,6 +161,9 @@ const searchInput = document.getElementById('search');
 const searchKeywords = document.getElementById('search-keywords');
 const searchResults = document.getElementById('search-results');
 const recentTerms = [];
+const recentProductKey = 'brandplanning-recent-search-products';
+const recentProductLimit = 3;
+let temporaryRecentProducts;
 const headerShell = document.querySelector('.site-header-shell');
 const siteHeader = headerShell.querySelector('.site-header');
 
@@ -349,6 +352,14 @@ function rankedSearch(tokens, index) {
 
 let searchPreviewTimer;
 
+function rememberSearchTerm(term) {
+  if (!term) return;
+  const duplicate = recentTerms.indexOf(term);
+  if (duplicate !== -1) recentTerms.splice(duplicate, 1);
+  recentTerms.unshift(term);
+  if (recentTerms.length > 5) recentTerms.pop();
+}
+
 function showCatalogResults(term, remember = true) {
   clearTimeout(searchPreviewTimer);
   const tokens = searchWords(term);
@@ -364,13 +375,11 @@ function showCatalogResults(term, remember = true) {
   }));
   if (remember) {
     searchInput.value = term;
-    const duplicate = recentTerms.indexOf(term);
-    if (duplicate !== -1) recentTerms.splice(duplicate, 1);
-    recentTerms.unshift(term);
-    if (recentTerms.length > 5) recentTerms.pop();
+    rememberSearchTerm(term);
   }
   searchKeywords.hidden = true;
   searchResults.hidden = false;
+  searchResults.dataset.term = term;
   const count = matching.length;
   const emptyKo = brands.length ? `‘${term}’ 관련 브랜드 ${brands.length}개` : `‘${term}’에 해당하는 상품이나 브랜드가 없어요.`;
   const emptyEn = brands.length ? `${brands.length} matching ${brands.length === 1 ? 'brand' : 'brands'} for “${term}”`
@@ -414,6 +423,44 @@ function showSearchKeywords() {
     return button;
   }));
   if (!recentTerms.length) recent.append(description('최근 검색어가 없어요.', 'No recent searches.'));
+  showRecentSearchProducts();
+}
+
+function recentSearchProductIds() {
+  if (temporaryRecentProducts) return temporaryRecentProducts;
+  try {
+    const saved = JSON.parse(localStorage.getItem(recentProductKey));
+    if (Array.isArray(saved)) return [...new Set(saved.filter(id => byId.has(id)))].slice(0, recentProductLimit);
+  } catch { /* The search panel also works without browser storage. */ }
+  return [];
+}
+
+function rememberSearchProduct(id) {
+  const ids = [id, ...recentSearchProductIds().filter(productId => productId !== id)].slice(0, recentProductLimit);
+  try {
+    localStorage.setItem(recentProductKey, JSON.stringify(ids));
+    temporaryRecentProducts = undefined;
+  } catch {
+    temporaryRecentProducts = ids;
+  }
+}
+
+function showRecentSearchProducts() {
+  const list = document.getElementById('search-viewed-products');
+  const template = document.getElementById('search-viewed-product-template');
+  const cards = recentSearchProductIds().map(id => {
+    const product = byId.get(id);
+    const card = template.content.firstElementChild.cloneNode(true);
+    card.querySelector('a').href = '#product/' + id;
+    card.querySelector('img').src = asset(product.image);
+    card.querySelector('.search-viewed-brand').textContent = product.brand;
+    setLocalized(card.querySelector('.search-viewed-name'), product.name, PRODUCT_NAMES_EN[id]);
+    setPrice(card.querySelector('.search-viewed-price'), product.price);
+    return card;
+  });
+  list.replaceChildren(...cards);
+  list.hidden = !cards.length;
+  document.getElementById('search-viewed-empty').hidden = Boolean(cards.length);
 }
 
 function openSearch() {
@@ -449,9 +496,12 @@ document.getElementById('search-form').addEventListener('submit', (event) => {
 searchPanel.addEventListener('click', event => {
   const suggestion = event.target.closest('[data-search-term]');
   if (suggestion) showCatalogResults(suggestion.textContent);
-  const resultLink = event.target.closest('#search-results a');
+  const resultLink = event.target.closest('#search-results a, #search-viewed-products a');
+  if (searchResults.contains(resultLink)) rememberSearchTerm(searchResults.dataset.term);
+  const productId = resultLink?.hash.match(/^#product\/(\d+)$/)?.[1];
+  if (byId.has(productId)) rememberSearchProduct(productId);
   if (resultLink && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
-    searchPanel.close('result');
+    searchPanel.close(resultLink.hash === location.hash ? '' : 'result');
   }
   if (event.target === searchPanel && event.clientY < searchPanel.getBoundingClientRect().top) searchPanel.close();
   else if (event.target === searchPanel && event.clientY > searchPanel.getBoundingClientRect().bottom) searchPanel.close();
