@@ -1185,8 +1185,8 @@ chatForm.addEventListener('submit', event => {
   const bubble = document.createElement('p');
   bubble.className = 'chat-user-message';
   bubble.textContent = message;
-  const reply = description('답변이 필요한 문의는 아래 ‘문의하기’에 남겨 주세요.',
-    'For a reply from our team, use Contact us below.');
+  const reply = description('답변이 필요한 문의는 ‘문의하기’에 남겨 주세요.',
+    'For a reply from our team, use Contact us.');
   chatMessages.append(bubble, reply);
   chatMessages.scrollTop = chatMessages.scrollHeight;
   chatForm.reset();
