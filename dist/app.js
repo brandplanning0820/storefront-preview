@@ -195,26 +195,147 @@ const collectionTitlesEn = {
   classic: 'Specials', domestic: 'Same-day dispatch', best: 'BEST', new: 'NEW', 'max-mara': 'Max Mara',
 };
 
-function showCatalogResults(term) {
-  const query = term.toLocaleLowerCase('ko-KR').replace(/\s/g, '');
-  const matching = allProducts.filter(product => (
-    ((query === '막스마라' || query === 'maxmara') && maxMaraBrands.includes(product.brand))
-    || [product.brand, product.name, PRODUCT_NAMES_EN[product.id], brandNames.get(product.brand)]
-      .some(text => text?.toLocaleLowerCase('ko-KR').replace(/\s/g, '').includes(query))
-  ));
+const brandSearchAliases = new Map([
+  ['BRUNELLO CUCINELLI', ['쿠치넬리', '쿠치']],
+  ['MONCLER', ['몽끌레르', '몽클레어']],
+  ['HERNO', ['헤르노']],
+  ['WEEKEND MAX MARA', ['위켄드 막스']],
+  ['BOTTEGA VENETA', ['보테가']],
+  ['LOEWE', ['로웨']],
+]);
+const productSearchSynonyms = [
+  ['패딩', '다운', 'puffer', 'down'],
+  ['재킷', '자켓', 'jacket'],
+  ['가디건', '카디건', 'cardigan'],
+  ['바지', '팬츠', 'pants', 'trousers'],
+  ['목도리', '머플러', '스카프', 'scarf'],
+  ['운동화', '스니커즈', 'sneakers', 'trainers'],
+  ['토트', '토트백', 'tote'],
+  ['장화', '레인 부츠', 'rain boots'],
+];
 
-  searchInput.value = term;
-  const duplicate = recentTerms.indexOf(term);
-  if (duplicate !== -1) recentTerms.splice(duplicate, 1);
-  recentTerms.unshift(term);
-  if (recentTerms.length > 5) recentTerms.pop();
+function searchWords(text = '') {
+  return text.normalize('NFKC').toLocaleLowerCase('ko-KR').match(/[\p{L}\p{N}]+/gu) ?? [];
+}
+
+function searchFields(values) {
+  const groups = values.map(searchWords).filter(words => words.length);
+  return {
+    phrases: [...new Set(groups.map(words => words.join('')))],
+    words: [...new Set(groups.flat())],
+  };
+}
+
+function oneSpellingEdit(left, right) {
+  if (Math.abs(left.length - right.length) > 1 || left === right) return false;
+  if (left.length > right.length) [left, right] = [right, left];
+  let firstDifference = 0;
+  while (firstDifference < left.length && left[firstDifference] === right[firstDifference]) firstDifference++;
+
+  if (left.length !== right.length) return left.slice(firstDifference) === right.slice(firstDifference + 1);
+  return left.slice(firstDifference + 1) === right.slice(firstDifference + 1)
+    || (left[firstDifference] === right[firstDifference + 1]
+      && left[firstDifference + 1] === right[firstDifference]
+      && left.slice(firstDifference + 2) === right.slice(firstDifference + 2));
+}
+
+function closeSearchSpelling(query, candidate) {
+  if (/\d/u.test(query) || /\d/u.test(candidate)) return false;
+  if (query.length >= 3 && candidate.length >= 3 && oneSpellingEdit(query, candidate)) return true;
+  return /^[가-힣]{2}$/u.test(query) && /^[가-힣]{2}$/u.test(candidate)
+    && oneSpellingEdit(query.normalize('NFD'), candidate.normalize('NFD'));
+}
+
+function closeLongEnglishSpelling(query, candidate) {
+  if (!/^[a-z]{7,}$/u.test(candidate) || Math.abs(query.length - candidate.length) > 2) return false;
+  let previous = Array.from({ length: candidate.length + 1 }, (_, index) => index);
+  for (let row = 1; row <= query.length; row++) {
+    const current = [row];
+    for (let col = 1; col <= candidate.length; col++) {
+      const change = query[row - 1] === candidate[col - 1] ? 0 : 1;
+      current[col] = Math.min(previous[col] + 1, current[col - 1] + 1, previous[col - 1] + change);
+    }
+    if (Math.min(...current) > 2) return false;
+    previous = current;
+  }
+  return previous[candidate.length] <= 2;
+}
+
+const brandSearchIndex = [...brandNames].map(([brand, korean]) => ({
+  brand,
+  direct: searchFields([brand, korean]),
+  related: searchFields(brandSearchAliases.get(brand) ?? []),
+}));
+const indexedBrands = new Map(brandSearchIndex.map(entry => [entry.brand, entry]));
+const synonymFields = productSearchSynonyms.map(searchFields);
+const productSearchIndex = allProducts.map(product => {
+  const direct = searchFields([
+    product.brand, brandNames.get(product.brand), product.name, PRODUCT_NAMES_EN[product.id],
+    product.category, facetTitlesEn[product.category], product.gender, facetTitlesEn[product.gender],
+  ]);
+  const synonyms = synonymFields.filter(group => group.phrases.some(term =>
+    /^[a-z]+$/u.test(term) ? direct.words.includes(term) : direct.phrases.some(phrase => phrase.includes(term))));
+  const brandAliases = indexedBrands.get(product.brand)?.related.phrases ?? [];
+  return { product, direct, related: searchFields([...brandAliases, ...synonyms.flatMap(group => group.phrases)]) };
+});
+
+function searchTermScore(query, { direct, related }) {
+  if (direct.words.includes(query) || direct.phrases.includes(query)) return 4;
+  if (direct.phrases.some(phrase => phrase.includes(query))) return 3;
+  if (related.phrases.includes(query)) return 2;
+  const candidates = [...direct.words, ...direct.phrases, ...related.phrases];
+  if (candidates.some(candidate => closeSearchSpelling(query, candidate))) return 1;
+  if (/^[a-z]{7,}$/u.test(query) && candidates.some(candidate => closeLongEnglishSpelling(query, candidate))) return 0.5;
+  return 0;
+}
+
+function rankedSearch(tokens, index) {
+  if (!tokens.length) return [];
+  const query = tokens.join('');
+  const ranked = index.map(entry => {
+    const whole = searchTermScore(query, entry);
+    if (tokens.length === 1) return { entry, score: whole };
+    const parts = tokens.map(token => searchTermScore(token, entry));
+    const each = parts.every(Boolean) ? parts.reduce((sum, value) => sum + value, 0) / parts.length : 0;
+    return { entry, score: Math.max(whole, each) };
+  }).filter(result => result.score > 0).sort((left, right) => right.score - left.score);
+  const bestScore = ranked[0]?.score ?? 0;
+  const minimum = bestScore >= 3 ? 2 : bestScore >= 1 ? 1 : 0.5;
+  return ranked.filter(result => result.score >= minimum).map(result => result.entry);
+}
+
+let searchPreviewTimer;
+
+function showCatalogResults(term, remember = true) {
+  clearTimeout(searchPreviewTimer);
+  const tokens = searchWords(term);
+  const matching = rankedSearch(tokens, productSearchIndex);
+  const brands = rankedSearch(tokens, brandSearchIndex).slice(0, 4);
+  const brandResults = document.getElementById('search-brand-results');
+  brandResults.hidden = !brands.length;
+  brandResults.querySelector('.search-chips').replaceChildren(...brands.map(({ brand }) => {
+    const link = document.createElement('a');
+    link.href = brandHref(brand === 'MAX MARA' ? maxMaraGroup : brand);
+    setLocalized(link, brandTitle(brand), brandTitleEn(brand));
+    return link;
+  }));
+  if (remember) {
+    searchInput.value = term;
+    const duplicate = recentTerms.indexOf(term);
+    if (duplicate !== -1) recentTerms.splice(duplicate, 1);
+    recentTerms.unshift(term);
+    if (recentTerms.length > 5) recentTerms.pop();
+  }
   searchKeywords.hidden = true;
   searchResults.hidden = false;
   const count = matching.length;
+  const emptyKo = brands.length ? `‘${term}’ 관련 브랜드 ${brands.length}개` : `‘${term}’에 해당하는 상품이나 브랜드가 없어요.`;
+  const emptyEn = brands.length ? `${brands.length} matching ${brands.length === 1 ? 'brand' : 'brands'} for “${term}”`
+    : `No products or brands match “${term}”.`;
   setLocalized(document.getElementById('search-count'),
-    count ? `‘${term}’ 검색 결과 ${count}개` : `‘${term}’에 해당하는 상품이 없어요.`,
-    count ? `${countEn(count)} for “${term}”` : `No products match “${term}”.`);
-  document.getElementById('search-products').replaceChildren(...matching.map(productCard));
+    count ? `‘${term}’ 검색 결과 ${count}개` : emptyKo,
+    count ? `${countEn(count)} for “${term}”` : emptyEn);
+  document.getElementById('search-products').replaceChildren(...matching.map(({ product }) => productCard(product)));
 }
 
 function positionSearchPanel() {
@@ -238,8 +359,7 @@ window.addEventListener('resize', () => {
   if (searchPanel.open) positionSearchPanel();
 });
 
-function openSearch() {
-  searchInput.value = '';
+function showSearchKeywords() {
   searchKeywords.hidden = false;
   searchResults.hidden = true;
   const recent = document.getElementById('search-recent');
@@ -251,6 +371,11 @@ function openSearch() {
     return button;
   }));
   if (!recentTerms.length) recent.append(description('최근 검색어가 없어요.', 'No recent searches.'));
+}
+
+function openSearch() {
+  searchInput.value = '';
+  showSearchKeywords();
   setMobileNav(false);
   positionSearchPanel();
   searchPanel.returnValue = '';
@@ -262,6 +387,17 @@ function openSearch() {
 }
 
 searchLaunch.addEventListener('click', openSearch);
+function previewSearch() {
+  clearTimeout(searchPreviewTimer);
+  const query = searchInput.value.trim();
+  if (query) searchPreviewTimer = setTimeout(() => showCatalogResults(query, false), 160);
+  else showSearchKeywords();
+}
+searchInput.addEventListener('input', event => {
+  if (!event.isComposing) previewSearch();
+});
+searchInput.addEventListener('compositionstart', () => clearTimeout(searchPreviewTimer));
+searchInput.addEventListener('compositionend', previewSearch);
 document.getElementById('search-form').addEventListener('submit', (event) => {
   event.preventDefault();
   const query = searchInput.value.trim();
@@ -270,17 +406,18 @@ document.getElementById('search-form').addEventListener('submit', (event) => {
 searchPanel.addEventListener('click', event => {
   const suggestion = event.target.closest('[data-search-term]');
   if (suggestion) showCatalogResults(suggestion.textContent);
-  const productLink = event.target.closest('a[href^="#product/"]');
-  if (productLink && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
-    searchPanel.close('product');
+  const resultLink = event.target.closest('#search-results a');
+  if (resultLink && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
+    searchPanel.close('result');
   }
   if (event.target === searchPanel && event.clientY < searchPanel.getBoundingClientRect().top) searchPanel.close();
   else if (event.target === searchPanel && event.clientY > searchPanel.getBoundingClientRect().bottom) searchPanel.close();
 });
 searchPanel.addEventListener('close', () => {
+  clearTimeout(searchPreviewTimer);
   document.documentElement.classList.remove('search-open');
   searchLaunch.setAttribute('aria-expanded', 'false');
-  if (searchPanel.returnValue !== 'product') searchLaunch.focus({ preventScroll: true });
+  if (searchPanel.returnValue !== 'result') searchLaunch.focus({ preventScroll: true });
   scheduleReview();
 });
 const languageSwitch = document.getElementById('language-switch');
@@ -1569,6 +1706,11 @@ const magazineById = new Map(MAGAZINE_ARTICLES.map(entry => [entry.id, entry]));
 const noticesById = new Map(NOTICES.map(entry => [entry.id, entry]));
 const arrivalsById = new Map(ARRIVAL_POSTS.map(entry => [entry.id, entry]));
 const communityById = new Map(COMMUNITY_POSTS.map(entry => [entry.id, entry]));
+const communityCommentPrefix = 'brandplanning-community-comment:';
+const temporaryCommunityComments = new Map();
+const commentFormVisibility = new IntersectionObserver(entries => {
+  for (const entry of entries) entry.target.toggleAttribute('data-in-view', entry.isIntersecting);
+});
 
 function editorialCard({ href, cover, title, titleEn, label, labelEn, date }) {
   const item = document.createElement('li');
@@ -1662,6 +1804,30 @@ function showArrivalEntry(entry, listPath) {
   editorialOriginal.href = 'https://blog.naver.com/brandplanning/' + entry.id;
 }
 
+function communityComments(post) {
+  const comments = [...(temporaryCommunityComments.get(post.id) ?? [])];
+  const prefix = communityCommentPrefix + post.id + ':';
+  try {
+    for (const key of Object.keys(localStorage)) {
+      if (!key.startsWith(prefix)) continue;
+      try {
+        const comment = JSON.parse(localStorage.getItem(key));
+        if (typeof comment?.text === 'string' && typeof comment.author === 'string'
+          && Number.isFinite(comment.createdAt) && !Number.isNaN(new Date(comment.createdAt).getTime())) {
+          comments.push(comment);
+        }
+      } catch { /* Skip invalid entries. */ }
+    }
+  } catch { /* Keep comments available for this visit. */ }
+  comments.sort((left, right) => left.createdAt - right.createdAt);
+  return [...post.comments, ...comments];
+}
+
+function setCommunityMeta(meta, post, count) {
+  const englishCount = count === 1 ? '1 comment' : count + ' comments';
+  setLocalized(meta, post.topic + ' · 예시 글 · 댓글 ' + count, post.topicEn + ' · Sample post · ' + englishCount);
+}
+
 function communityRow(post) {
   const item = document.createElement('li');
   const link = document.createElement('a');
@@ -1674,8 +1840,10 @@ function communityRow(post) {
   setLocalized(title, post.title, post.titleEn);
   const excerpt = description(post.text, post.textEn);
   excerpt.className = 'community-excerpt';
-  const meta = description(post.topic + ' · 예시 글', post.topicEn + ' · Sample post');
+  const meta = document.createElement('p');
   meta.className = 'community-meta';
+  meta.dataset.communityMeta = post.id;
+  setCommunityMeta(meta, post, communityComments(post).length);
   copy.append(title, excerpt, meta);
 
   const image = document.createElement('img');
@@ -1690,13 +1858,102 @@ function communityRow(post) {
 document.getElementById('home-community-list').append(...COMMUNITY_POSTS.slice(0, 3).map(communityRow));
 document.getElementById('community-list').append(...COMMUNITY_POSTS.map(communityRow));
 
+function commentRow(comment) {
+  const row = document.createElement('li');
+  const meta = document.createElement('div');
+  meta.className = 'community-comment-meta';
+  const author = document.createElement('strong');
+  if (comment.author) author.textContent = comment.author;
+  else setLocalized(author, '방문자', 'Visitor');
+  meta.append(author);
+  if (comment.createdAt) {
+    const time = document.createElement('time');
+    const date = new Date(comment.createdAt);
+    const options = { timeZone: 'Asia/Seoul', dateStyle: 'short', timeStyle: 'short' };
+    time.dateTime = date.toISOString();
+    setLocalized(time, new Intl.DateTimeFormat('ko-KR', options).format(date),
+      new Intl.DateTimeFormat('en-US', options).format(date));
+    meta.append(time);
+  } else {
+    const sample = document.createElement('span');
+    setLocalized(sample, '예시 댓글', 'Sample comment');
+    meta.append(sample);
+  }
+  const text = description(comment.text, comment.textEn);
+  text.className = 'community-comment-text';
+  row.append(meta, text);
+  return row;
+}
+
+function renderCommentThread(thread, comments) {
+  const count = comments.length;
+  setLocalized(thread.querySelector('h2'), '댓글 ' + count, count === 1 ? '1 comment' : count + ' comments');
+  thread.querySelector('.community-comment-list').replaceChildren(...comments.map(commentRow));
+}
+
+function refreshCommunityComments(post) {
+  const comments = communityComments(post);
+  for (const meta of document.querySelectorAll('[data-community-meta="' + post.id + '"]')) {
+    setCommunityMeta(meta, post, comments.length);
+  }
+  const thread = document.querySelector('[data-community-thread="' + post.id + '"]');
+  if (thread) renderCommentThread(thread, comments);
+}
+
+window.addEventListener('storage', event => {
+  if (event.key === null) {
+    COMMUNITY_POSTS.forEach(refreshCommunityComments);
+  } else if (event.key.startsWith(communityCommentPrefix)) {
+    const post = communityById.get(event.key.slice(communityCommentPrefix.length).split(':')[0]);
+    if (post) refreshCommunityComments(post);
+  }
+});
+
+function communityCommentThread(post) {
+  const thread = document.getElementById('community-comments-template').content.firstElementChild.cloneNode(true);
+  thread.dataset.communityThread = post.id;
+  applyLanguage(thread);
+  renderCommentThread(thread, communityComments(post));
+  const form = thread.querySelector('form');
+  const message = form.elements.message;
+  const status = form.querySelector('.community-comment-status');
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    const text = message.value.trim();
+    if (!text) {
+      setLocalized(status, '댓글 내용을 입력해 주세요.', 'Enter a comment.');
+      message.focus();
+      return;
+    }
+
+    const comment = { author: form.elements.nickname.value.trim(), text, createdAt: Date.now() };
+    const unique = crypto.getRandomValues(new Uint32Array(2)).join('-');
+    const key = communityCommentPrefix + post.id + ':' + comment.createdAt + '-' + unique;
+    try {
+      localStorage.setItem(key, JSON.stringify(comment));
+      setLocalized(status, '댓글을 등록했어요.', 'Comment posted.');
+    } catch {
+      const temporary = temporaryCommunityComments.get(post.id) ?? [];
+      temporaryCommunityComments.set(post.id, [...temporary, comment]);
+      setLocalized(status, '이 창을 열어 둔 동안 댓글을 볼 수 있어요.', 'Your comment is visible while this tab stays open.');
+    }
+    message.value = '';
+    refreshCommunityComments(post);
+    message.focus();
+  });
+  return thread;
+}
+
 function showCommunityEntry(post, listPath) {
   setLocalized(document.getElementById('editorial-source'), post.topic + ' · 예시 글', post.topicEn + ' · Sample post');
   setLocalized(editorialTitle, post.title, post.titleEn);
   const body = document.getElementById('editorial-body');
   body.classList.remove('magazine-body');
   body.removeAttribute('lang');
-  body.replaceChildren(description(post.text, post.textEn), magazineBlock({ images: [post.image] }));
+  body.replaceChildren(description(post.text, post.textEn), magazineBlock({ images: [post.image] }),
+    communityCommentThread(post));
+  commentFormVisibility.disconnect();
+  commentFormVisibility.observe(body.querySelector('.community-comment-form'));
   document.getElementById('editorial-back').href = listPath;
 }
 

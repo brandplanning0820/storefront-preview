@@ -196,6 +196,22 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
 .community-excerpt { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin-top: 6px; color: var(--muted); font-size: .9375rem; line-height: 1.5; word-break: keep-all; }
 .community-meta { margin-top: 10px; color: var(--muted); font-size: .78rem; }
 .community-row img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 5px; background: var(--sand); }
+.community-comments { display: grid; gap: 16px; margin-top: clamp(12px, 2.8vw, 38px); padding-top: clamp(18px, 2.4vw, 32px); border-top: 1px solid var(--line); }
+.community-comments h2 { font-size: 1.15rem; line-height: 1.25; }
+.community-comment-list > li { padding: 14px 0; border-bottom: 1px solid var(--line); }
+.community-comment-list > li:first-child { padding-top: 0; }
+.community-comment-meta { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; line-height: 1.35; }
+.community-comment-meta strong { font-size: .875rem; }
+.community-comment-meta :is(span, time) { color: var(--muted); font-size: .75rem; }
+.community-comment-text { margin-top: 5px; font-size: .9375rem; white-space: pre-wrap; }
+.community-comment-form { display: grid; gap: 11px; padding: clamp(14px, 2.2vw, 24px); border: 1px solid var(--line); border-radius: 8px; background: #faf8f5; }
+.community-comment-form label { display: grid; gap: 5px; font-size: .875rem; font-weight: 650; }
+.community-comment-form :is(input, textarea) { width: 100%; min-height: 42px; padding: 8px 10px; border: 1px solid #bfb5a9; border-radius: 5px; background: #fff; color: var(--ink); font: inherit; font-size: 1rem; font-weight: 400; }
+.community-comment-form input { max-width: 260px; }
+.community-comment-form textarea { resize: vertical; }
+#community-comment-help, .community-comment-status { color: var(--muted); font-size: .8125rem; }
+.community-comment-status:empty { display: none; }
+.community-comment-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
 
 .review { margin-top: clamp(80px, 13vw, 250px); }
 .review-carousel { margin-inline: auto; max-width: 1390px; container-type: inline-size; }
@@ -365,10 +381,12 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
 .search-keywords h3 { font-size: .9375rem; padding-bottom: 10px; border-bottom: 1px solid var(--line); margin-bottom: 10px; }
 .search-keywords p, #search-count { color: var(--muted); font-size: .875rem; }
 .search-chips { display: flex; flex-wrap: wrap; gap: 7px; }
-.search-chips button { min-height: 34px; border: 1px solid var(--line); border-radius: 999px; padding: 5px 10px; font-size: .875rem; }
-.search-chips button:hover { background: var(--sand); }
+.search-chips :is(button, a) { display: inline-flex; align-items: center; min-height: 34px; border: 1px solid var(--line); border-radius: 999px; padding: 5px 10px; font-size: .875rem; }
+.search-chips :is(button, a):hover { background: var(--sand); }
 #search-results { margin-top: 18px; }
 #search-count { margin-bottom: 12px; }
+#search-brand-results { display: grid; gap: 8px; margin-bottom: 16px; }
+#search-brand-results h3 { font-size: .875rem; }
 #search-products { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 13px; }
 .review-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap: clamp(12px, 2vw, 28px); }
 .review-list li { display: grid; grid-template-columns: clamp(88px, 13vw, 164px) minmax(0, 1fr); align-items: start; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
@@ -580,6 +598,7 @@ html[lang="en"] .brand-letter a span[lang="ko"] { display: none; }
   .cart-layout { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 520px) {
+  body:has(.community-comment-form[data-in-view]) .support-widget:not(:has(.support-chat:not([hidden]))) { display: none; }
   .magazine-grid.arrival-posts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .arrival-photo-grid { grid-template-columns: 1fr; }
   .site-header, .site-header.is-compact {

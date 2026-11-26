@@ -711,21 +711,30 @@ const ARRIVAL_POSTS = [
 const COMMUNITY_POSTS = [
   {
     id: 'knitwear-under-a-black-coat',
-    topic: '스타일 이야기', topicEn: 'Styling',
-    title: '블랙 아우터에 어떤 색 니트를 매치하세요?',
-    titleEn: 'What color knitwear do you pair with black outerwear?',
-    text: '블랙 아우터를 자주 입어서 이번에는 안에 입는 니트로 분위기를 바꿔보려고 해요. 차콜처럼 톤을 맞추는 조합과 아이보리처럼 밝게 대비되는 조합 중에서 어떤 쪽을 더 자주 입으세요?',
-    textEn: 'I wear black outerwear often and want to change the look through knitwear. Do you usually stick to a similar shade like charcoal or add contrast with ivory?',
+    topic: '코디 후기', topicEn: 'Outfit notes',
+    title: '늘 입던 블랙 아우터에 아이보리 니트 입어봤어요',
+    titleEn: 'I tried ivory knitwear with my usual black outerwear',
+    text: '평소에는 차콜 니트만 받쳐 입다가 오늘은 아이보리로 바꿔봤어요. 지퍼를 조금 열어 목 쪽만 밝게 보이니까 같은 아우터인데도 느낌이 꽤 다르네요. 바지는 평소 입던 진청 그대로 입었습니다.',
+    textEn: 'I usually layer charcoal knitwear under this jacket, but today I tried ivory. Leaving the zip slightly open showed just enough of the lighter color at the neck. I wore my usual dark jeans with it.',
     image: '13871827399.jpg',
+    comments: [
+      { author: '온더행어', text: '진청까지 같이 입으니 색이 과하지 않겠네요. 저도 아이보리 목폴라 꺼내봐야겠어요.', textEn: 'Dark jeans sound like a good balance. I’m going to dig out my ivory turtleneck too.' },
+      { author: '차콜서랍', text: '저는 여기서 신발도 검정으로 맞추면 코디가 정돈돼서 좋더라고요.', textEn: 'I like adding black shoes to keep the outfit pulled together.' },
+    ],
   },
   {
     id: 'small-tote-for-work',
-    topic: '가방 이야기', topicEn: 'Bags',
-    title: '스몰 토트, 출근할 때도 자주 드시나요?',
-    titleEn: 'Do you use a small tote for work?',
-    text: '지갑과 파우치만 챙기는 날에는 작은 토트가 좋을 것 같아요. 손에 들었을 때와 스트랩으로 멨을 때 각각 편한 점이 궁금합니다.',
-    textEn: 'A small tote seems right for days when I only carry a wallet and a pouch. What do you prefer about carrying it by hand or wearing it with a strap?',
+    topic: '득템 자랑', topicEn: 'New finds',
+    title: '장바구니에만 담아두던 버버리 스몰 토트 드디어 들였어요',
+    titleEn: 'I finally bought the Burberry small tote I’d been eyeing',
+    text: '블랙이라 무난할 줄 알았는데 옆면 체크가 생각보다 예뻐서 자랑하고 싶었어요. 첫 출근에는 지갑이랑 작은 파우치만 넣고 들었더니 딱 좋았습니다. 한동안 이 가방만 들 것 같아요.',
+    textEn: 'I expected a simple black bag, but the checked sides are prettier than I imagined. I took it to work with just a wallet and a small pouch, and it was just the right size.',
     image: 'blog-224492748274-01.jpg',
+    comments: [
+      { author: '가방수납중', text: '득템 축하해요! 블랙 면이랑 체크가 번갈아 보이는 게 이 가방의 매력 같아요.', textEn: 'Congrats! I love how the black panels and checked sides show from different angles.' },
+      { author: '주말의옷장', text: '작은 파우치까지 들어가면 평일에도 손이 자주 가겠네요.', textEn: 'If it fits a small pouch too, I can see it getting plenty of use on weekdays.' },
+      { author: '모카한잔', text: '다음엔 스트랩으로 멘 느낌도 궁금해요.', textEn: 'I’d love to hear how it feels with the strap next time.' },
+    ],
   },
   {
     id: 'cashmere-scarf-storage',
@@ -735,15 +744,22 @@ const COMMUNITY_POSTS = [
     text: '겨울에 자주 쓰는 머플러를 옷장 어디에 두는 게 편할지 고민 중이에요. 접어서 서랍에 넣는 분이나 따로 보관함을 쓰는 분의 경험을 듣고 싶어요.',
     textEn: 'I’m deciding where to keep the scarf I wear most often in winter. Do you fold yours in a drawer or keep it in a separate storage box?',
     image: 'blog-224492728259-01.jpg',
+    comments: [
+      { author: '울니트수집가', text: '저는 보풀 생기기 쉬운 니트랑 섞이지 않게 서랍 한 칸을 머플러용으로 쓰고 있어요.', textEn: 'I keep a drawer section just for scarves so they don’t rub against knitwear that pills easily.' },
+      { author: '옷장정리중', text: '매일 쓰는 건 서랍 맨 앞에 느슨하게 접어 두니까 찾기 편했어요.', textEn: 'I loosely fold the one I wear daily and keep it right at the front of the drawer.' },
+    ],
   },
   {
     id: 'rain-boot-styling',
-    topic: '스타일 이야기', topicEn: 'Styling',
-    title: '긴 레인 부츠와 잘 어울리는 바지가 궁금해요',
-    titleEn: 'What trousers work with tall rain boots?',
-    text: '올리브 컬러 레인 부츠를 들여다보다가 바지 길이와 폭에 따라 느낌이 많이 달라질 것 같았어요. 좁은 팬츠를 부츠 안에 넣어 신는 코디 외에 자주 입는 조합이 있나요?',
-    textEn: 'I’ve been looking at olive rain boots and wondering how trouser length and width change the look. What combinations do you wear besides tucking a slim pair into the boots?',
+    topic: '착용 후기', topicEn: 'First wear',
+    title: '올리브 레인 부츠 첫 개시, 진청 데님이랑 잘 맞네요',
+    titleEn: 'First wear of my olive rain boots with dark jeans',
+    text: '검정만 신다가 올리브로 골랐는데 진청 데님이랑 잘 맞았어요. 바지를 조금 접고 부츠 입구가 보이게 입으니까 윗부분 조임 장식도 잘 보이더라고요.',
+    textEn: 'I usually wear black rain boots, but olive turned out to work nicely with dark denim. Cuffing the jeans a little left the opening and drawcord visible.',
     image: 'blog-224492764205-01.jpg',
+    comments: [
+      { author: '비오는토요일', text: '올리브에 진청 조합 좋네요. 베이지 트렌치에도 잘 맞을 것 같아요.', textEn: 'Olive and dark denim sound like a good pairing. I can see it working with a beige trench too.' },
+    ],
   },
   {
     id: 'winter-coat-fit',
@@ -753,6 +769,10 @@ const COMMUNITY_POSTS = [
     text: '두꺼운 니트를 입으면 어깨와 팔 부분이 편한 코트가 손이 자주 가네요. 여유 있는 핏의 코트를 볼 때 소매 길이와 가슴 여유 중 어디를 먼저 보세요?',
     textEn: 'I reach for coats with room at the shoulders and arms when I wear thick knitwear. Do you check sleeve length or room across the chest first?',
     image: 'blog-224491591583-02.jpg',
+    comments: [
+      { author: '겨울두겹', text: '저는 두꺼운 니트를 입고 팔을 앞으로 뻗어봐요. 그때 등이 당기지 않는지부터 봅니다.', textEn: 'I try it over a thick knit and reach my arms forward. I check first that it doesn’t pull across the back.' },
+      { author: '재단노트', text: '가슴 여유를 먼저 보고 소매는 손목뼈 근처에 오는지 확인하는 편이에요.', textEn: 'I check chest room first, then see where the sleeves land around my wrists.' },
+    ],
   },
 ];
 

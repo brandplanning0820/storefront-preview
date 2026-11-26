@@ -21,9 +21,9 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=arrivals-community">
-  <script src="catalog.js?v=arrivals-community" defer></script>
-  <script src="app.js?v=arrivals-community" defer></script>
+  <link rel="stylesheet" href="styles.css?v=community-comments">
+  <script src="catalog.js?v=community-comments" defer></script>
+  <script src="app.js?v=community-comments" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -54,7 +54,7 @@
           <a href="#catalog/women" data-en="Women">여성</a>
           <a href="#catalog/weekly" data-en="Weekly">위클리</a>
           <a href="#catalog/classic" data-en="Specials">기획전</a>
-          <a href="#catalog/domestic" data-en="Same-day">당일</a>
+          <a href="#catalog/domestic" data-en="Same-day dispatch">당일출고</a>
           <a href="#community/all" data-en="Community">커뮤니티</a>
           <a href="#arrivals/all" data-en="Arrivals">입고 소식</a>
           <a href="#reviews/all" data-en="Reviews">리뷰</a>
@@ -411,6 +411,28 @@
     <button type="button" class="inquiry-launch" id="inquiry-launch" data-inquiry-launch aria-haspopup="dialog"><span aria-hidden="true" class="inquiry-icon"></span><span data-en="Contact us">문의하기</span></button>
   </div>
 
+  <template id="community-comments-template">
+    <section class="community-comments" aria-labelledby="community-comments-title">
+      <h2 id="community-comments-title" data-en="Comments">댓글</h2>
+      <ul class="community-comment-list"></ul>
+      <form class="community-comment-form" aria-describedby="community-comment-help">
+        <p id="community-comment-help" data-en="Your comments are saved in this browser.">작성한 댓글은 이 브라우저에 저장돼요.</p>
+        <label for="community-comment-author">
+          <span data-en="Nickname (optional)">닉네임 (선택)</span>
+          <input id="community-comment-author" name="nickname" maxlength="24" autocomplete="nickname">
+        </label>
+        <label for="community-comment-message">
+          <span data-en="Write a comment">댓글 쓰기</span>
+          <textarea id="community-comment-message" name="message" rows="3" maxlength="500" required></textarea>
+        </label>
+        <div class="community-comment-actions">
+          <button type="submit" class="button dark" data-en="Post comment">댓글 등록</button>
+          <p class="community-comment-status" role="status"></p>
+        </div>
+      </form>
+    </section>
+  </template>
+
   <template id="product-template">
     <li class="product">
       <a class="product-link">
@@ -474,7 +496,14 @@
         <section><h3 data-en="Suggested searches">추천 검색어</h3><div class="search-chips"><button type="button" data-search-term="브루넬로 쿠치넬리" data-en="Brunello Cucinelli">브루넬로 쿠치넬리</button><button type="button" data-search-term="막스마라" data-en="Max Mara">막스마라</button><button type="button" data-search-term="버버리" data-en="Burberry">버버리</button><button type="button" data-search-term="펜디" data-en="Fendi">펜디</button></div></section>
         <section><h3 data-en="Recent searches">최근 검색어</h3><div class="search-chips" id="search-recent"></div></section>
       </div>
-      <div id="search-results" hidden><p id="search-count" role="status"></p><ul class="product-grid" id="search-products"></ul></div>
+      <div id="search-results" hidden>
+        <p id="search-count" role="status"></p>
+        <section id="search-brand-results" aria-labelledby="search-brand-heading" hidden>
+          <h3 id="search-brand-heading" data-en="Brands">브랜드</h3>
+          <div class="search-chips"></div>
+        </section>
+        <ul class="product-grid" id="search-products"></ul>
+      </div>
     </div>
   </dialog>
 

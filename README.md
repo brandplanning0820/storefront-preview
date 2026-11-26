@@ -27,7 +27,7 @@
 - 오른쪽 문의하기에서 **메일로 문의 보내기**를 선택하면 Formspree가 답변을 받을 이메일과 상품 문의 내용을 접수해 등록된 수신 주소로 전달합니다. **문의하기** 버튼은 카페24 운영몰에서 사용할 접수 완료 화면을 미리 보여줍니다. 전송 주소는 `dist/index.html`의 `data-inquiry-endpoint`에 설정되어 있습니다.
 - 기획전(`#catalog/classic`)은 상품 데이터에 등록된 브루넬로 쿠치넬리와 톰 포드 상품을 모두 표시합니다. 메인 클래식의 캠페인 MP4는 화면에 들어오면 음소거로 반복 재생됩니다. 단일 HTML에도 영상이 포함됩니다.
 - 매거진 카드는 자사몰 내부 글로 열립니다. 글 8편의 본문과 본문 사진은 `dist/catalog.js`의 `MAGAZINE_ARTICLES`에 있습니다. 기존 카페의 공통 배너와 카페 글 링크는 생략했습니다. 7개 표지는 본문 사진이며, 신발 글의 표지는 관련 상품 사진입니다.
-- 커뮤니티(`#community/all`)는 예시 게시글을 보여주며 메인에는 처음 3개를 표시합니다. 입고 소식(`#arrivals/all`)은 회사 블로그의 Arrival Note와 New In을 각각 별도 목록으로 엽니다. 게시글과 원문 링크는 `dist/catalog.js`의 `COMMUNITY_POSTS`와 `ARRIVAL_POSTS`에서 편집합니다.
+- 커뮤니티(`#community/all`)는 예시 게시글과 댓글을 보여주며 메인에는 처음 3개 글을 표시합니다. 방문자가 작성한 댓글은 해당 브라우저에 저장됩니다. 입고 소식(`#arrivals/all`)은 회사 블로그의 Arrival Note와 New In을 각각 별도 목록으로 엽니다. 게시글과 원문 링크는 `dist/catalog.js`의 `COMMUNITY_POSTS`와 `ARRIVAL_POSTS`에서 편집합니다.
 - 주 메뉴와 푸터의 공지사항은 `#notices/all`로 연결됩니다. 공지 목록과 상세 내용은 `dist/catalog.js`의 `NOTICES`에서 편집합니다.
 - 이미지와 폰트를 포함한 단일 미리보기는 이 폴더에서 `node build-standalone.mjs dist preview.html`로 만들 수 있습니다.
 
