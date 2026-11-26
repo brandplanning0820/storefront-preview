@@ -600,6 +600,162 @@ const HOME_CATALOG = {
   weekly: homeOverseasSelection(mixedWeeklyProducts, weeklyCompanions),
 };
 
+const ARRIVAL_SERIES = {
+  'arrival-note': {
+    title: 'Arrival Note',
+    label: '이번 주 입고 목록',
+    labelEn: 'Weekly arrival roundups',
+    source: 'https://blog.naver.com/PostList.naver?blogId=brandplanning&categoryNo=3&from=menu',
+  },
+  'new-in': {
+    title: 'New In',
+    label: '상품별 검수 사진',
+    labelEn: 'Product inspection photos',
+    source: 'https://blog.naver.com/PostList.naver?blogId=brandplanning&categoryNo=5&from=menu',
+  },
+};
+
+const ARRIVAL_POSTS = [
+  {
+    id: '224491591583',
+    series: 'arrival-note',
+    title: '셀프포트레이트 가디건·막스마라 코트·에르노 패딩 입고',
+    titleEn: 'Self-Portrait cardigans, Max Mara coats and Herno down jackets',
+    date: '2026-11-25',
+    cover: 'blog-224491591583-cover.jpg',
+    summary: '셀프포트레이트의 레이스 가디건, 막스마라와 에르노의 겨울 아우터가 입고됐어요. 제냐 캐시미어, 버버리 토트백, 몽클레르 레인 부츠, 생로랑 데님도 함께 소개합니다.',
+    summaryEn: 'This delivery includes Self-Portrait lace cardigans and winter outerwear from Max Mara and Herno, alongside Zegna cashmere, a Burberry tote, Moncler rain boots and Saint Laurent denim.',
+    photos: [
+      { image: 'blog-224491591583-01.jpg', caption: '막스마라 더큐브 팜 리버서블 케이프 패딩', captionEn: 'Max Mara The Cube Palm reversible down cape' },
+      { image: 'blog-224491591583-02.jpg', caption: '위켄드 막스마라 오페로소 버진 울 코트', captionEn: 'Weekend Max Mara Operoso virgin wool coat' },
+      { image: 'blog-224491591583-03.jpg', caption: '에르노 밍크 퍼 이펙트 패딩 재킷', captionEn: 'Herno mink-effect down jacket' },
+    ],
+  },
+  {
+    id: '224488702458',
+    series: 'arrival-note',
+    title: '이번 주에 도착한 26FW 의류&잡화',
+    titleEn: 'This week’s Fall/Winter 2026 clothing and accessories',
+    date: '2026-11-23',
+    cover: 'blog-224488702458-cover.jpg',
+    summary: '에르노 코트와 케이프, 막스마라 니트, 브루넬로 쿠치넬리의 후드 집업과 팬츠가 도착했어요. 제냐 니트와 캐시미어 캡, 펜디 머플러도 입고 목록에 포함됐습니다.',
+    summaryEn: 'The delivery includes Herno coats and capes, Max Mara knitwear, Brunello Cucinelli zip hoodies and trousers, Zegna knitwear and cashmere caps, and Fendi scarves.',
+    photos: [
+      { image: 'blog-224488702458-01.jpg', caption: '막스마라 카발로 버진울 모크넥 스웨터', captionEn: 'Max Mara Cavallo virgin wool mock-neck sweater' },
+      { image: 'blog-224488702458-02.jpg', caption: '위켄드 막스마라 니트라 스웨터', captionEn: 'Weekend Max Mara Nitra sweater' },
+      { image: 'blog-224488702458-03.jpg', caption: '위켄드 막스마라 칸네티 코튼 팬츠', captionEn: 'Weekend Max Mara Canneti cotton trousers' },
+    ],
+  },
+  {
+    id: '224488702145',
+    series: 'arrival-note',
+    title: '이번 주에 도착한 26FW 의류&백',
+    titleEn: 'This week’s Fall/Winter 2026 clothing and bags',
+    date: '2026-11-23',
+    cover: 'blog-224488702145-cover.jpg',
+    summary: '브루넬로 쿠치넬리 다운 재킷과 베스트, 위켄드 막스마라의 패딩과 니트, 에르노 퍼 아우터가 입고됐어요. 미우미우와 프라다의 가방과 슈즈도 이번 목록에 담았습니다.',
+    summaryEn: 'This roundup covers Brunello Cucinelli down jackets and vests, Weekend Max Mara outerwear and knitwear, Herno fur outerwear, and bags and footwear from Miu Miu and Prada.',
+    photos: [
+      { image: 'blog-224488702145-01.jpg', caption: '위켄드 막스마라 마사 발수 패딩', captionEn: 'Weekend Max Mara Masa water-repellent jacket' },
+      { image: 'blog-224488702145-02.jpg', caption: '위켄드 막스마라 테이에라 코튼 가디건', captionEn: 'Weekend Max Mara cotton cardigan' },
+      { image: 'blog-224488702145-03.jpg', caption: '위켄드 막스마라 니트라 스웨터', captionEn: 'Weekend Max Mara Nitra sweater' },
+    ],
+  },
+  {
+    id: '224492764205',
+    series: 'new-in',
+    title: '몽클레르 여성 킥스트림 하이 레인 부츠 올리브 그린',
+    titleEn: 'Moncler women’s Kickstream high rain boots in olive green',
+    date: '2026-11-26',
+    cover: 'blog-224492764205-cover.jpg',
+    summary: '올리브 그린 킥스트림 레인 부츠의 앞과 옆 실루엣을 확인할 수 있어요. 가까이 촬영한 사진에는 측면 로고와 입구 조임 장식이 담겨 있습니다.',
+    summaryEn: 'See the olive-green Kickstream boots from the front and side, with a close look at the side logo and drawcord opening.',
+    photos: [
+      { image: 'blog-224492764205-01.jpg', caption: '레인 부츠 전체 모습', captionEn: 'Full view of the rain boots' },
+      { image: 'blog-224492764205-02.jpg', caption: '부츠 측면과 밑창 형태', captionEn: 'Side profile and sole shape' },
+      { image: 'blog-224492764205-03.jpg', caption: '로고와 입구 조임 장식', captionEn: 'Logo and drawcord opening' },
+    ],
+  },
+  {
+    id: '224492748274',
+    series: 'new-in',
+    title: '버버리 여성 스몰 체크 코츠월드 토트 블랙',
+    titleEn: 'Burberry women’s small Check Cotswolds tote in black',
+    date: '2026-11-26',
+    cover: 'blog-224492748274-cover.jpg',
+    summary: '블랙 토트의 정면과 체크가 들어간 옆면을 각도별로 찍었어요. 로고와 핸들 연결부처럼 가까이에서 보이는 마감도 확인할 수 있습니다.',
+    summaryEn: 'See the black tote from several angles, including the checked sides, and take a closer look at the logo and handle construction.',
+    photos: [
+      { image: 'blog-224492748274-01.jpg', caption: '토트백 전체 실루엣', captionEn: 'Overall tote silhouette' },
+      { image: 'blog-224492748274-02.jpg', caption: '사선에서 본 체크 측면', captionEn: 'Angled view of the checked side' },
+      { image: 'blog-224492748274-03.jpg', caption: '로고와 핸들 연결부', captionEn: 'Logo and handle attachment' },
+    ],
+  },
+  {
+    id: '224492728259',
+    series: 'new-in',
+    title: '제냐 오아시 캐시미어 머플러 블랙',
+    titleEn: 'Zegna Oasi cashmere scarf in black',
+    date: '2026-11-26',
+    cover: 'blog-224492728259-cover.jpg',
+    summary: '블랙 오아시 캐시미어 머플러의 전체 모습과 함께 원단의 결, 작은 로고, 끝단의 프린지 마감을 담았습니다.',
+    summaryEn: 'Inspect the black Oasi cashmere scarf as a whole and see the fabric texture, small logo and fringe in closer photos.',
+    photos: [
+      { image: 'blog-224492728259-01.jpg', caption: '접어 놓은 머플러와 프린지', captionEn: 'Folded scarf and fringe' },
+      { image: 'blog-224492728259-02.jpg', caption: '원단과 프린지의 디테일', captionEn: 'Fabric and fringe detail' },
+      { image: 'blog-224492728259-03.jpg', caption: '블랙 머플러 전체 모습', captionEn: 'Full view of the black scarf' },
+    ],
+  },
+];
+
+const COMMUNITY_POSTS = [
+  {
+    id: 'knitwear-under-a-black-coat',
+    topic: '스타일 이야기', topicEn: 'Styling',
+    title: '블랙 아우터에 어떤 색 니트를 매치하세요?',
+    titleEn: 'What color knitwear do you pair with black outerwear?',
+    text: '블랙 아우터를 자주 입어서 이번에는 안에 입는 니트로 분위기를 바꿔보려고 해요. 차콜처럼 톤을 맞추는 조합과 아이보리처럼 밝게 대비되는 조합 중에서 어떤 쪽을 더 자주 입으세요?',
+    textEn: 'I wear black outerwear often and want to change the look through knitwear. Do you usually stick to a similar shade like charcoal or add contrast with ivory?',
+    image: '13871827399.jpg',
+  },
+  {
+    id: 'small-tote-for-work',
+    topic: '가방 이야기', topicEn: 'Bags',
+    title: '스몰 토트, 출근할 때도 자주 드시나요?',
+    titleEn: 'Do you use a small tote for work?',
+    text: '지갑과 파우치만 챙기는 날에는 작은 토트가 좋을 것 같아요. 손에 들었을 때와 스트랩으로 멨을 때 각각 편한 점이 궁금합니다.',
+    textEn: 'A small tote seems right for days when I only carry a wallet and a pouch. What do you prefer about carrying it by hand or wearing it with a strap?',
+    image: 'blog-224492748274-01.jpg',
+  },
+  {
+    id: 'cashmere-scarf-storage',
+    topic: '관리 팁', topicEn: 'Care tips',
+    title: '캐시미어 머플러는 어떻게 보관하세요?',
+    titleEn: 'How do you store your cashmere scarves?',
+    text: '겨울에 자주 쓰는 머플러를 옷장 어디에 두는 게 편할지 고민 중이에요. 접어서 서랍에 넣는 분이나 따로 보관함을 쓰는 분의 경험을 듣고 싶어요.',
+    textEn: 'I’m deciding where to keep the scarf I wear most often in winter. Do you fold yours in a drawer or keep it in a separate storage box?',
+    image: 'blog-224492728259-01.jpg',
+  },
+  {
+    id: 'rain-boot-styling',
+    topic: '스타일 이야기', topicEn: 'Styling',
+    title: '긴 레인 부츠와 잘 어울리는 바지가 궁금해요',
+    titleEn: 'What trousers work with tall rain boots?',
+    text: '올리브 컬러 레인 부츠를 들여다보다가 바지 길이와 폭에 따라 느낌이 많이 달라질 것 같았어요. 좁은 팬츠를 부츠 안에 넣어 신는 코디 외에 자주 입는 조합이 있나요?',
+    textEn: 'I’ve been looking at olive rain boots and wondering how trouser length and width change the look. What combinations do you wear besides tucking a slim pair into the boots?',
+    image: 'blog-224492764205-01.jpg',
+  },
+  {
+    id: 'winter-coat-fit',
+    topic: '핏과 사이즈', topicEn: 'Fit and sizing',
+    title: '니트를 겹쳐 입을 때 코트 핏은 어떻게 고르세요?',
+    titleEn: 'How do you choose a coat fit for winter layers?',
+    text: '두꺼운 니트를 입으면 어깨와 팔 부분이 편한 코트가 손이 자주 가네요. 여유 있는 핏의 코트를 볼 때 소매 길이와 가슴 여유 중 어디를 먼저 보세요?',
+    textEn: 'I reach for coats with room at the shoulders and arms when I wear thick knitwear. Do you check sleeve length or room across the chest first?',
+    image: 'blog-224491591583-02.jpg',
+  },
+];
+
 const REVIEWS = [
   {
     "productId": "13160727541",

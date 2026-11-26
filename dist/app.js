@@ -60,6 +60,8 @@ const brandNames = new Map([
   ['LOEWE', '로에베'], ['MAX MARA', '막스마라'], ["'S MAX MARA", '에스 막스마라'],
   ['MAX MARA STUDIO', '막스마라 스튜디오'], ['WEEKEND MAX MARA', '위켄드 막스마라'],
   ['BOTTEGA VENETA', '보테가 베네타'], ['TOM FORD', '톰 포드'],
+  ['LORO PIANA', '로로피아나'], ['BRIONI', '브리오니'], ['ZEGNA', '제냐'],
+  ['CESARE ATTOLINI', '체사레 아톨리니'], ['KITON', '키톤'], ['PEUTEREY', '페트레이'],
 ]);
 const classicBrands = new Set(['BRUNELLO CUCINELLI', 'TOM FORD']);
 const maxMaraBrands = ['MAX MARA', "'S MAX MARA", 'MAX MARA STUDIO', 'WEEKEND MAX MARA'];
@@ -369,6 +371,14 @@ const collectionCategories = document.getElementById('collection-categories');
 const collectionBrandLines = document.getElementById('collection-brand-lines');
 const brandDirectory = document.getElementById('brand-directory');
 const brandDirectoryTitle = document.getElementById('brand-directory-title');
+const communityPage = document.getElementById('community-page');
+const communityPageTitle = document.getElementById('community-page-title');
+const arrivalsPage = document.getElementById('arrivals-page');
+const arrivalsPageTitle = document.getElementById('arrivals-page-title');
+const arrivalsTabs = document.getElementById('arrivals-tabs');
+const arrivalsBlogList = document.getElementById('arrivals-blog-list');
+const arrivalCategories = document.getElementById('arrival-categories');
+const arrivalPosts = document.getElementById('arrival-posts');
 const reviewPage = document.getElementById('review-page');
 const reviewPageTitle = document.getElementById('review-page-title');
 const magazinePage = document.getElementById('magazine-page');
@@ -379,6 +389,7 @@ const cartPage = document.getElementById('cart-page');
 const cartTitle = document.getElementById('cart-title');
 const editorialArticle = document.getElementById('editorial-article');
 const editorialTitle = document.getElementById('editorial-title');
+const editorialOriginal = document.getElementById('editorial-original');
 const detailForm = document.getElementById('detail-form');
 const detailQuantity = document.getElementById('detail-quantity');
 const quantityDecrease = document.getElementById('quantity-decrease');
@@ -431,7 +442,12 @@ function updateCollection() {
   if (collectionSort.value === 'high') products.sort((a, b) => b.price - a.price);
   collectionList.replaceChildren(...products.map(productCard));
   setLocalized(document.getElementById('collection-count'), '상품 ' + products.length + '개', countEn(products.length));
-  document.getElementById('collection-empty').hidden = products.length > 0;
+  const empty = document.getElementById('collection-empty');
+  empty.hidden = products.length > 0;
+  if (!products.length) {
+    if (collectionProducts.length) setLocalized(empty, '선택한 조건에 해당하는 상품이 없어요.', 'No products match your filters.');
+    else setLocalized(empty, '아직 등록된 상품이 없어요.', 'No products have been added yet.');
+  }
 }
 
 function renderBrandFilters(initialBrand) {
@@ -527,9 +543,6 @@ collectionFilters.addEventListener('reset', event => {
 
 document.querySelectorAll('[data-brand]').forEach(button => {
   button.addEventListener('click', () => { location.hash = brandHref(button.dataset.brand); });
-});
-document.querySelector('[data-brand-group="max-mara"]').addEventListener('click', () => {
-  location.hash = brandHref(maxMaraGroup);
 });
 
 const availableBrands = new Set(allProducts.map(product => product.brand));
@@ -1102,18 +1115,26 @@ function renderRoute(moveFocus = false) {
   const scopedBrand = brandRoutes.get(hash) || (requestedGroup === 'max-mara' ? maxMaraGroup : undefined);
   const group = scopedBrand ? 'brand' : Object.hasOwn(collectionTitles, requestedGroup) ? requestedGroup : null;
   const showBrands = hash === '#brands/all';
+  const showCommunity = hash === '#community/all';
+  const communityEntry = communityById.get(hash.match(/^#community\/([a-z-]+)$/)?.[1]);
+  const arrivalRoute = hash.match(/^#arrivals\/(arrival-note|new-in)(?:\/(\d+))?$/);
+  const arrivalSeries = arrivalRoute?.[1];
+  const showArrivals = hash === '#arrivals/all' || Boolean(arrivalSeries && !arrivalRoute[2]);
+  const arrivalPost = arrivalsById.get(arrivalRoute?.[2]);
+  const arrivalEntry = arrivalPost?.series === arrivalSeries ? arrivalPost : undefined;
   const showReviews = hash === '#reviews/all';
   const showMagazine = hash === '#magazine/all';
   const showNotices = hash === '#notices/all';
   const showCart = hash === '#cart';
   const magazineEntry = magazineById.get(hash.match(/^#magazine\/(\d+)$/)?.[1]);
   const notice = noticesById.get(hash.match(/^#notices\/([a-z-]+)$/)?.[1]);
-  const entry = magazineEntry || notice;
+  const entry = magazineEntry || notice || arrivalEntry || communityEntry;
   const wasStore = !storePage.hidden;
   const wasCart = !cartPage.hidden;
   const wasReviews = !reviewPage.hidden;
   const heading = product ? detailName : checkout ? checkoutTitle : group ? collectionTitle : showCart ? cartTitle : showBrands ? brandDirectoryTitle
-    : showReviews ? reviewPageTitle : showMagazine ? magazinePageTitle : showNotices ? noticePageTitle : entry ? editorialTitle : null;
+    : showCommunity ? communityPageTitle : showArrivals ? arrivalsPageTitle : showReviews ? reviewPageTitle : showMagazine ? magazinePageTitle
+      : showNotices ? noticePageTitle : entry ? editorialTitle : null;
   storePage.hidden = !heading;
   home.hidden = !storePage.hidden;
   productPage.hidden = !product;
@@ -1123,10 +1144,13 @@ function renderRoute(moveFocus = false) {
   if (showCart) cartLink.setAttribute('aria-current', 'page');
   else cartLink.removeAttribute('aria-current');
   brandDirectory.hidden = !showBrands;
+  communityPage.hidden = !showCommunity;
+  arrivalsPage.hidden = !showArrivals;
   reviewPage.hidden = !showReviews;
   magazinePage.hidden = !showMagazine;
   noticePage.hidden = !showNotices;
   editorialArticle.hidden = !entry;
+  editorialOriginal.hidden = !arrivalEntry;
   skipLink.href = heading ? '#' + heading.id : '#main';
 
   if (product) {
@@ -1144,14 +1168,19 @@ function renderRoute(moveFocus = false) {
     currentCollectionHash = undefined;
     detailReturnHash = undefined;
     if (heading) {
+      if (showArrivals) showArrivalSeries(arrivalSeries);
       const listPath = showCart ? '#cart' : showBrands ? '#brands/all' : showReviews ? '#reviews/all'
-        : showNotices || notice ? '#notices/all' : '#magazine/all';
+        : showCommunity || communityEntry ? '#community/all' : showArrivals || arrivalEntry ? arrivalHref(arrivalSeries)
+          : showNotices || notice ? '#notices/all' : '#magazine/all';
       storeParent.href = listPath;
-      const parent = entry ? notice ? noticePageTitle : magazinePageTitle : heading;
-      setLocalized(storeParent, parent.dataset.ko, parent.dataset.en);
+      const parent = entry ? notice ? noticePageTitle : communityEntry ? communityPageTitle : magazinePageTitle : heading;
+      if (arrivalEntry) setLocalized(storeParent, ARRIVAL_SERIES[arrivalSeries].title);
+      else setLocalized(storeParent, parent.dataset.ko, parent.dataset.en);
       if (entry) {
         storeParent.removeAttribute('aria-current');
-        showEditorialEntry(entry, listPath);
+        if (arrivalEntry) showArrivalEntry(arrivalEntry, listPath);
+        else if (communityEntry) showCommunityEntry(communityEntry, listPath);
+        else showEditorialEntry(entry, listPath);
       } else storeParent.setAttribute('aria-current', 'page');
       if (showCart) renderCart();
     } else {
@@ -1171,16 +1200,12 @@ function renderRoute(moveFocus = false) {
 // A direct link, refresh, and browser history all resolve under a repository subpath.
 window.addEventListener('hashchange', () => {
   if (location.hash === '#notice') history.replaceState(history.state, '', '#notices/all');
-  if (location.hash === '#review') {
-    history.replaceState(history.state, '', location.pathname + location.search);
-    renderRoute();
-  } else {
-    renderRoute(true);
-  }
+  if (location.hash === '#review') history.replaceState(history.state, '', '#reviews/all');
+  renderRoute(true);
 });
 
 // Homepage sections can scroll without putting the current section in the share URL.
-const homeSectionIds = { '#top': 'top', '#review': 'home-review', '#weekly': 'weekly', '#classic': 'classic' };
+const homeSectionIds = { '#top': 'top', '#weekly': 'weekly', '#classic': 'classic' };
 document.addEventListener('click', event => {
   if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
   const link = event.target.closest('a[href^="#"]');
@@ -1542,33 +1567,137 @@ reviewList.append(...REVIEWS.map((review) => {
 
 const magazineById = new Map(MAGAZINE_ARTICLES.map(entry => [entry.id, entry]));
 const noticesById = new Map(NOTICES.map(entry => [entry.id, entry]));
+const arrivalsById = new Map(ARRIVAL_POSTS.map(entry => [entry.id, entry]));
+const communityById = new Map(COMMUNITY_POSTS.map(entry => [entry.id, entry]));
 
-function magazineCard(entry) {
+function editorialCard({ href, cover, title, titleEn, label, labelEn, date }) {
   const item = document.createElement('li');
   const link = document.createElement('a');
   link.className = 'magazine-card';
-  link.href = '#magazine/' + entry.id;
+  link.href = href;
   const frame = document.createElement('div');
   frame.className = 'magazine-image';
   const image = document.createElement('img');
-  image.src = asset(entry.image);
+  image.src = asset(cover);
   image.alt = '';
   image.loading = 'lazy';
   frame.append(image);
   const copy = document.createElement('span');
   copy.className = 'magazine-copy';
-  const source = document.createElement('span');
-  setLocalized(source, '브랜드플래닝', 'Brand Planning');
+  const source = document.createElement(date ? 'time' : 'span');
+  if (date) source.dateTime = date;
+  setLocalized(source, label, labelEn);
   const heading = document.createElement('strong');
-  setLocalized(heading, entry.title, MAGAZINE_TITLES_EN[entry.id]);
+  setLocalized(heading, title, titleEn);
   copy.append(source, heading);
   link.append(frame, copy);
   item.append(link);
   return item;
 }
 
+function magazineCard(entry) {
+  return editorialCard({
+    href: '#magazine/' + entry.id,
+    cover: entry.image,
+    title: entry.title,
+    titleEn: MAGAZINE_TITLES_EN[entry.id],
+    label: '브랜드플래닝',
+    labelEn: 'Brand Planning',
+  });
+}
+
 for (const id of ['magazine-grid', 'magazine-page-grid']) {
   document.getElementById(id).append(...MAGAZINE_ARTICLES.map(magazineCard));
+}
+
+function arrivalHref(series = 'all') {
+  return '#arrivals/' + series;
+}
+
+for (const [key, series] of Object.entries(ARRIVAL_SERIES)) {
+  const latest = ARRIVAL_POSTS.find(entry => entry.series === key);
+  if (latest) arrivalCategories.append(editorialCard({ ...series, href: arrivalHref(key), cover: latest.cover }));
+}
+
+function showArrivalSeries(key) {
+  const series = ARRIVAL_SERIES[key];
+  setLocalized(arrivalsPageTitle, series?.title ?? '입고 소식', series?.title ?? 'Arrivals');
+  arrivalCategories.hidden = Boolean(series);
+  arrivalPosts.hidden = !series;
+  arrivalsTabs.hidden = !series;
+  arrivalsBlogList.hidden = !series;
+  if (!series) return;
+
+  arrivalsBlogList.href = series.source;
+  for (const link of arrivalsTabs.querySelectorAll('a')) {
+    if (link.hash === arrivalHref(key)) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
+  }
+  const posts = ARRIVAL_POSTS.filter(entry => entry.series === key);
+  arrivalPosts.replaceChildren(...posts.map(entry => editorialCard({
+    ...entry,
+    href: arrivalHref(key) + '/' + entry.id,
+    label: entry.date.replaceAll('-', '.'),
+    labelEn: entry.date,
+  })));
+}
+
+function showArrivalEntry(entry, listPath) {
+  const title = ARRIVAL_SERIES[entry.series].title;
+  setLocalized(document.getElementById('editorial-source'), `${title} · ${entry.date.replaceAll('-', '.')}`, `${title} · ${entry.date}`);
+  setLocalized(editorialTitle, entry.title, entry.titleEn);
+
+  const body = document.getElementById('editorial-body');
+  body.classList.remove('magazine-body');
+  body.removeAttribute('lang');
+  const gallery = document.createElement('div');
+  gallery.className = 'arrival-photo-grid';
+  for (const photo of entry.photos) {
+    const figure = magazineBlock({ images: [photo.image], caption: photo.caption });
+    setLocalized(figure.querySelector('figcaption'), photo.caption, photo.captionEn);
+    gallery.append(figure);
+  }
+  body.replaceChildren(description(entry.summary, entry.summaryEn), gallery);
+  document.getElementById('editorial-back').href = listPath;
+  editorialOriginal.href = 'https://blog.naver.com/brandplanning/' + entry.id;
+}
+
+function communityRow(post) {
+  const item = document.createElement('li');
+  const link = document.createElement('a');
+  link.className = 'community-row';
+  link.href = '#community/' + post.id;
+
+  const copy = document.createElement('div');
+  copy.className = 'community-row-copy';
+  const title = document.createElement('strong');
+  setLocalized(title, post.title, post.titleEn);
+  const excerpt = description(post.text, post.textEn);
+  excerpt.className = 'community-excerpt';
+  const meta = description(post.topic + ' · 예시 글', post.topicEn + ' · Sample post');
+  meta.className = 'community-meta';
+  copy.append(title, excerpt, meta);
+
+  const image = document.createElement('img');
+  image.src = asset(post.image);
+  image.alt = '';
+  image.loading = 'lazy';
+  link.append(copy, image);
+  item.append(link);
+  return item;
+}
+
+document.getElementById('home-community-list').append(...COMMUNITY_POSTS.slice(0, 3).map(communityRow));
+document.getElementById('community-list').append(...COMMUNITY_POSTS.map(communityRow));
+
+function showCommunityEntry(post, listPath) {
+  setLocalized(document.getElementById('editorial-source'), post.topic + ' · 예시 글', post.topicEn + ' · Sample post');
+  setLocalized(editorialTitle, post.title, post.titleEn);
+  const body = document.getElementById('editorial-body');
+  body.classList.remove('magazine-body');
+  body.removeAttribute('lang');
+  body.replaceChildren(description(post.text, post.textEn), magazineBlock({ images: [post.image] }));
+  document.getElementById('editorial-back').href = listPath;
 }
 
 const noticeList = document.getElementById('notice-list');

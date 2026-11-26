@@ -22,8 +22,9 @@ let html = inlineAssets(fs.readFileSync(path.join(source, 'index.html'), 'utf8')
 const css = inlineAssets(fs.readFileSync(path.join(source, 'styles.css'), 'utf8'));
 const catalog = fs.readFileSync(path.join(source, 'catalog.js'), 'utf8');
 const script = fs.readFileSync(path.join(source, 'app.js'), 'utf8');
+const runtimeSource = catalog + '\n' + script;
 const runtimeImages = Object.fromEntries(Object.entries(dataUrls).filter(([name]) => (
-  catalog.includes('"' + name + '"') || script.includes("'" + name + "'")
+  runtimeSource.includes(JSON.stringify(name)) || runtimeSource.includes("'" + name + "'")
 )));
 const combinedScript = 'const PACKAGED_IMAGES = ' + JSON.stringify(runtimeImages) + ';\n' + catalog + '\n' + script;
 html = html.replace(/  <link rel="stylesheet" href="styles\.css(?:\?[^"\n]*)?">/, () => '  <style>\n' + css + '\n  </style>');

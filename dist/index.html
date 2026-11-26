@@ -7,9 +7,9 @@
   <title>BRAND PLANNING | 브랜드플래닝</title>
   <script>
     if (location.hash === '#notice') history.replaceState(history.state, '', '#notices/all');
+    if (location.hash === '#review') history.replaceState(history.state, '', '#reviews/all');
     const isReload = performance.getEntriesByType('navigation')[0]?.type === 'reload';
-    const isOldHomeLink = location.hash === '#review';
-    if (isReload || isOldHomeLink) {
+    if (isReload) {
       const previousRestoration = history.scrollRestoration;
       history.scrollRestoration = 'manual';
       if (location.hash && location.hash !== '#cart' && !location.hash.includes('/')) {
@@ -21,9 +21,9 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=brand-support">
-  <script src="catalog.js?v=weekly-product-mix" defer></script>
-  <script src="app.js?v=brand-support" defer></script>
+  <link rel="stylesheet" href="styles.css?v=arrivals-community">
+  <script src="catalog.js?v=arrivals-community" defer></script>
+  <script src="app.js?v=arrivals-community" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -55,7 +55,10 @@
           <a href="#catalog/weekly" data-en="Weekly">위클리</a>
           <a href="#catalog/classic" data-en="Specials">기획전</a>
           <a href="#catalog/domestic" data-en="Same-day">당일</a>
-          <a href="#review" data-en="Reviews">리뷰</a>
+          <a href="#community/all" data-en="Community">커뮤니티</a>
+          <a href="#arrivals/all" data-en="Arrivals">입고 소식</a>
+          <a href="#reviews/all" data-en="Reviews">리뷰</a>
+          <a href="#magazine/all" data-en="Magazine">매거진</a>
           <a href="#notices/all" data-en="Announcements">공지사항</a>
         </nav>
         <button class="search-box search-launch" id="search-launch" type="button" aria-label="상품 검색 열기" aria-haspopup="dialog" aria-expanded="false" data-en-aria-label="Open product search">
@@ -94,11 +97,12 @@
     <nav class="shortcuts wrap" id="brands" aria-label="브랜드 바로가기" data-en-aria-label="Shop by brand">
       <button type="button" data-brand="BRUNELLO CUCINELLI" aria-label="브루넬로 쿠치넬리 상품" data-en-aria-label="Shop Brunello Cucinelli"><img src="assets/logo-cucinelli.svg" alt="" loading="lazy"></button>
       <button type="button" data-brand="TOM FORD" aria-label="톰 포드 상품" data-en-aria-label="Shop Tom Ford"><span class="brand-wordmark" aria-hidden="true">TOM FORD</span></button>
-      <button type="button" data-brand-group="max-mara" aria-label="막스마라 전체 상품" data-en-aria-label="Shop all Max Mara lines"><img src="assets/logo-max-mara.png" alt="" loading="lazy"></button>
-      <button type="button" data-brand="HERNO" aria-label="에르노 상품" data-en-aria-label="Shop Herno"><img src="assets/logo-herno.svg" alt="" loading="lazy"></button>
-      <button type="button" data-brand="BURBERRY" aria-label="버버리 상품" data-en-aria-label="Shop Burberry"><img src="assets/logo-burberry.svg" alt="" loading="lazy"></button>
-      <button type="button" data-brand="BOTTEGA VENETA" aria-label="보테가 베네타 상품" data-en-aria-label="Shop Bottega Veneta"><img src="assets/logo-bottega.svg" alt="" loading="lazy"></button>
-      <button type="button" data-brand="LOEWE" aria-label="로에베 상품" data-en-aria-label="Shop Loewe"><img src="assets/logo-loewe.svg" alt="" loading="lazy"></button>
+      <button type="button" data-brand="LORO PIANA" aria-label="로로피아나 상품" data-en-aria-label="Shop Loro Piana"><span class="brand-wordmark serif-wordmark" aria-hidden="true">Loro Piana</span></button>
+      <button type="button" data-brand="BRIONI" aria-label="브리오니 상품" data-en-aria-label="Shop Brioni"><span class="brand-wordmark serif-wordmark" aria-hidden="true">Brioni</span></button>
+      <button type="button" data-brand="ZEGNA" aria-label="제냐 상품" data-en-aria-label="Shop Zegna"><span class="brand-wordmark" aria-hidden="true">ZEGNA</span></button>
+      <button type="button" data-brand="CESARE ATTOLINI" aria-label="체사레 아톨리니 상품" data-en-aria-label="Shop Cesare Attolini"><span class="brand-wordmark serif-wordmark" aria-hidden="true">Cesare<br>Attolini</span></button>
+      <button type="button" data-brand="KITON" aria-label="키톤 상품" data-en-aria-label="Shop Kiton"><span class="brand-wordmark serif-wordmark" aria-hidden="true">Kiton</span></button>
+      <button type="button" data-brand="PEUTEREY" aria-label="페트레이 상품" data-en-aria-label="Shop Peuterey"><span class="brand-wordmark" aria-hidden="true">PEUTEREY</span></button>
     </nav>
 
     <section class="wrap product-section" id="best" aria-labelledby="best-heading">
@@ -136,12 +140,12 @@
       </div>
     </section>
 
-    <section class="wrap signup-banner" aria-label="가입 혜택" data-en-aria-label="New member offer">
-      <div class="signup-offer">
-        <span class="signup-gift" aria-hidden="true"><span class="signup-gift-box"></span><span class="signup-gift-ribbon"></span></span>
-        <div><p data-en="New member offer">신규 회원 혜택</p><h2><span data-en="Sign up for a">회원가입 시</span> <strong data-en="₩5,000 discount coupon">5,000원 할인 쿠폰</strong><span data-en=""> 증정</span></h2></div>
+    <section class="wrap home-community" aria-labelledby="home-community-title">
+      <div class="section-heading">
+        <h2 id="home-community-title" data-en="Community">커뮤니티</h2>
+        <a href="#community/all" data-en="More posts">글 더보기</a>
       </div>
-      <button class="button light" data-account="회원가입" data-en="Sign up">회원가입</button>
+      <ul class="community-feed" id="home-community-list"></ul>
     </section>
 
     <section class="wrap review" id="home-review" aria-labelledby="review-heading">
@@ -316,6 +320,26 @@
       <div class="section-heading"><h1 id="brand-directory-title" tabindex="-1" data-en="Brands">브랜드</h1></div>
       <nav class="brand-alphabet" id="brand-alphabet" aria-label="알파벳 순 브랜드" data-en-aria-label="Brands in alphabetical order"></nav>
     </section>
+    <section id="community-page" aria-labelledby="community-page-title" hidden>
+      <div class="section-heading">
+        <h1 id="community-page-title" tabindex="-1" data-en="Community">커뮤니티</h1>
+        <a href="https://cafe.naver.com/kockoc11" target="_blank" rel="noopener" data-en="Nura Kokkok Naver Cafe">뉴라콕콕 네이버 카페</a>
+      </div>
+      <ul class="community-feed" id="community-list"></ul>
+    </section>
+    <section id="arrivals-page" aria-labelledby="arrivals-page-title" hidden>
+      <div class="section-heading">
+        <h1 id="arrivals-page-title" tabindex="-1" data-en="Arrivals">입고 소식</h1>
+        <a id="arrivals-blog-list" target="_blank" rel="noopener" data-en="All posts on the blog" hidden>블로그 전체 글</a>
+      </div>
+      <nav class="brand-lines" id="arrivals-tabs" aria-label="입고 소식 카테고리" data-en-aria-label="Arrival categories" hidden>
+        <a href="#arrivals/all" data-en="Arrivals">입고 소식</a>
+        <a href="#arrivals/arrival-note">Arrival Note</a>
+        <a href="#arrivals/new-in">New In</a>
+      </nav>
+      <ul class="magazine-grid arrival-categories" id="arrival-categories"></ul>
+      <ul class="magazine-grid arrival-posts" id="arrival-posts" hidden></ul>
+    </section>
     <section id="review-page" aria-labelledby="review-page-title" hidden>
       <div class="section-heading"><h1 id="review-page-title" tabindex="-1" data-en="Reviews">리뷰</h1></div>
       <ul class="review-list" id="review-page-list"></ul>
@@ -331,7 +355,10 @@
     <article class="editorial-article" id="editorial-article" aria-labelledby="editorial-title" hidden>
       <header><p class="editorial-source" id="editorial-source"></p><h1 id="editorial-title" tabindex="-1"></h1></header>
       <div class="editorial-body" id="editorial-body"></div>
-      <div class="editorial-actions"><a class="button outline" id="editorial-back" data-en="Back to list">목록으로</a></div>
+      <div class="editorial-actions">
+        <a class="button outline" id="editorial-back" data-en="Back to list">목록으로</a>
+        <a class="button outline" id="editorial-original" target="_blank" rel="noopener" data-en="Read the original post" hidden>블로그 원문 보기</a>
+      </div>
     </article>
   </main>
 
