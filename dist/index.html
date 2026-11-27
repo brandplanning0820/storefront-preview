@@ -21,9 +21,9 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=store-size-charts">
-  <script src="catalog.js?v=store-size-charts" defer></script>
-  <script src="app.js?v=store-size-charts" defer></script>
+  <link rel="stylesheet" href="styles.css?v=size-guide-popup">
+  <script src="catalog.js?v=size-guide-popup" defer></script>
+  <script src="app.js?v=size-guide-popup" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -249,21 +249,7 @@
               <legend><span data-en="Available sizes">주문 가능 사이즈</span><span class="detail-size-system" id="detail-size-system" hidden></span></legend>
               <div id="detail-sizes" class="size-list"></div>
             </fieldset>
-            <details class="detail-size-guide" id="detail-size-guide" hidden>
-              <summary><span data-en="Size guide">사이즈 가이드</span></summary>
-              <div class="detail-size-guide-content">
-                <table class="detail-size-chart">
-                  <caption id="detail-size-guide-title"></caption>
-                  <thead><tr id="detail-size-chart-columns"></tr></thead>
-                  <tbody id="detail-size-chart-rows"></tbody>
-                </table>
-                <p id="detail-size-guide-note"></p>
-                <div class="detail-size-measurement">
-                  <h2 data-en="How to measure">사이즈 재는 방법</h2>
-                  <p id="detail-size-guide-measurement"></p>
-                </div>
-              </div>
-            </details>
+            <button class="detail-size-guide" id="detail-size-guide" type="button" aria-haspopup="dialog" aria-controls="panel" data-en="Size guide">사이즈 가이드</button>
             <div class="detail-quantity">
               <label for="detail-quantity" data-en="Quantity">수량</label>
               <div class="quantity-stepper">
@@ -681,6 +667,21 @@
         <a class="login-signup" href="#mypage" data-en="My account">마이페이지</a>
       </div>
     </form>
+  </template>
+
+  <template id="size-guide-template">
+    <div class="detail-size-guide-content">
+      <table class="detail-size-chart" hidden>
+        <caption class="visually-hidden" data-en="Size conversion chart">사이즈 환산표</caption>
+        <thead><tr></tr></thead>
+        <tbody></tbody>
+      </table>
+      <p class="detail-size-guide-note" hidden></p>
+      <div class="detail-size-measurement">
+        <h3 data-en="How to measure">사이즈 재는 방법</h3>
+        <p></p>
+      </div>
+    </div>
   </template>
 
   <dialog id="panel" class="panel" aria-labelledby="panel-title">

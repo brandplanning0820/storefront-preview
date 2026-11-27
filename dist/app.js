@@ -842,11 +842,7 @@ const editorialOriginal = document.getElementById('editorial-original');
 const detailForm = document.getElementById('detail-form');
 const detailSizeSystem = document.getElementById('detail-size-system');
 const detailSizeGuide = document.getElementById('detail-size-guide');
-const detailSizeGuideTitle = document.getElementById('detail-size-guide-title');
-const detailSizeChartColumns = document.getElementById('detail-size-chart-columns');
-const detailSizeChartRows = document.getElementById('detail-size-chart-rows');
-const detailSizeGuideNote = document.getElementById('detail-size-guide-note');
-const detailSizeGuideMeasurement = document.getElementById('detail-size-guide-measurement');
+const sizeGuideTemplate = document.getElementById('size-guide-template');
 const detailQuantity = document.getElementById('detail-quantity');
 const quantityDecrease = document.getElementById('quantity-decrease');
 const quantityIncrease = document.getElementById('quantity-increase');
@@ -1167,72 +1163,67 @@ const sizeGuideCategories = {
     'Compare the dimensions in the product details with a similar item you already own.'],
 };
 
-function renderSizeGuideTable(table, optionColumn, sizes) {
-  const columns = table?.columns ?? [['등록 옵션', 'Listed option']];
-  const rows = table?.rows ?? sizes.map(size => [size]);
-  detailSizeChartColumns.replaceChildren(...columns.map(column => {
+function renderSizeGuideTable(element, { columns, rows }) {
+  element.tHead.rows[0].replaceChildren(...columns.map(column => {
     const cell = document.createElement('th');
     cell.scope = 'col';
     setLocalized(cell, ...(Array.isArray(column) ? column : [column]));
     return cell;
   }));
-  detailSizeChartRows.replaceChildren(...rows.map(values => {
+  element.tBodies[0].replaceChildren(...rows.map(values => {
     const row = document.createElement('tr');
-    const isOrderable = sizes.includes(values[optionColumn]);
-    row.classList.toggle('size-orderable', isOrderable);
     values.forEach((value, index) => {
-      const isOption = index === optionColumn;
-      const cell = document.createElement(isOption ? 'th' : 'td');
-      if (isOption) cell.scope = 'row';
+      const cell = document.createElement(index === 0 ? 'th' : 'td');
+      if (index === 0) cell.scope = 'row';
       cell.textContent = value;
-      if (isOption && isOrderable && table) {
-        const status = document.createElement('span');
-        status.className = 'size-orderable-label';
-        setLocalized(status, '주문 가능', 'Available');
-        cell.append(status);
-      }
       row.append(cell);
     });
     return row;
   }));
+  element.hidden = false;
 }
 
-function showDetailSizeGuide(product) {
+function productSizeSystem(product) {
   const { sizes } = product;
-  const guide = PRODUCT_SIZE_GUIDES[product.id];
-  const table = SIZE_GUIDE_TABLES[guide?.table];
-  detailSizeGuide.open = false;
-  detailSizeSystem.hidden = !sizes.length;
-  detailSizeGuide.hidden = !sizes.length && !table;
-  if (detailSizeGuide.hidden) return;
+  const system = PRODUCT_SIZE_GUIDES[product.id]?.system;
+  if (system) return system;
+  if (sizes.length && sizes.every(size => /^(?:OS|ONE SIZE)$/i.test(size))) return 'oneSize';
+  if (sizes.length && sizes.every(size => internationalSize.test(size))) return 'international';
+  return 'unspecified';
+}
 
-  let system = guide?.system;
-  if (!system && sizes.length) {
-    if (sizes.every(size => /^(?:OS|ONE SIZE)$/i.test(size))) system = 'oneSize';
-    else if (sizes.every(size => internationalSize.test(size))) system = 'international';
-    else system = 'unspecified';
-  }
-  if (system) setLocalized(detailSizeSystem, ...sizeSystemLabels[system]);
+function updateDetailSizeSystem(product) {
+  detailSizeSystem.hidden = !product.sizes.length;
+  if (!detailSizeSystem.hidden) setLocalized(detailSizeSystem, ...sizeSystemLabels[productSizeSystem(product)]);
+}
+
+detailSizeGuide.addEventListener('click', () => {
+  const product = currentProduct;
+  if (!product) return;
+  const table = SIZE_GUIDE_TABLES[PRODUCT_SIZE_GUIDES[product.id]?.table];
   const [category, categoryEn, measure, measureEn] = sizeGuideCategories[product.category] ?? sizeGuideCategories['패션잡화'];
   const isSkirt = product.category === '하의' && product.name.includes('스커트');
   const brand = brandNames.get(product.brand) || product.brand;
   const title = brand + ' ' + (isSkirt ? '스커트' : category) + ' 사이즈 가이드';
   const titleEn = product.brand + ' ' + (isSkirt ? 'Skirt' : categoryEn) + ' size guide';
-  setLocalized(detailSizeGuideTitle, title, titleEn);
-  setLocalized(detailSizeGuideMeasurement, measure, measureEn);
-  renderSizeGuideTable(table, guide?.optionColumn ?? 0, sizes);
-
+  const content = sizeGuideTemplate.content.firstElementChild.cloneNode(true);
+  setLocalized(content.querySelector('.detail-size-measurement p'), measure, measureEn);
   if (table) {
-    setLocalized(detailSizeGuideNote, '전체 사이즈는 환산표 기준입니다. 주문 가능 표시는 현재 이 상품의 옵션이에요.',
-      'The chart shows the full size range. Available marks the options listed for this product.');
-  } else if (system === 'oneSize') {
-    setLocalized(detailSizeGuideNote, 'OS는 단일 사이즈예요. 치수는 상품 상세 정보를 확인해 주세요.',
-      'OS means one size. See the product details for measurements.');
+    renderSizeGuideTable(content.querySelector('table'), table);
   } else {
-    setLocalized(detailSizeGuideNote, '이 상품은 등록 옵션을 먼저 안내해요. 전체 사이즈나 환산 기준은 문의해 주세요.',
-      'The table shows listed options. Contact us to check the full range or size conversions.');
+    const note = content.querySelector('.detail-size-guide-note');
+    note.hidden = false;
+    if (productSizeSystem(product) === 'oneSize') {
+      setLocalized(note, 'OS는 단일 사이즈를 뜻합니다. 제품 치수는 상품 상세 정보를 확인해 주세요.',
+        'OS means one size. See the product details for measurements.');
+    } else {
+      setLocalized(note, '이 상품의 사이즈 환산표는 확인 중입니다.',
+        'The size conversion chart for this item is being verified.');
+    }
   }
-}
+  applyLanguage(content);
+  openPanel(title, content, titleEn);
+});
 
 function showProduct(product, orderItem) {
   const group = groupFor(product);
@@ -1269,7 +1260,7 @@ function showProduct(product, orderItem) {
   showProductSpecs(product);
   if (!hasPrice) return;
   if (orderItem) detailQuantity.value = orderItem.quantity;
-  showDetailSizeGuide(product);
+  updateDetailSizeSystem(product);
 
   const chips = document.getElementById('detail-sizes');
   chips.replaceChildren();
@@ -1804,6 +1795,12 @@ skipLink.addEventListener('click', event => {
   document.getElementById(skipLink.hash.slice(1))?.focus();
 });
 panel.addEventListener('click', event => {
+  if (event.target === panel && panelBody.firstElementChild?.matches('.detail-size-guide-content')) {
+    const bounds = panel.getBoundingClientRect();
+    if (event.clientX < bounds.left || event.clientX > bounds.right ||
+        event.clientY < bounds.top || event.clientY > bounds.bottom) panel.close();
+    return;
+  }
   const link = event.target.closest('a[href^="#product/"], a[href="#mypage"]');
   if (!link || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
   panel.close();

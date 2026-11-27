@@ -656,19 +656,20 @@ html[lang="en"] .brand-letter a span[lang="ko"] { display: none; }
 .detail-options, .brand-filter { border: 0; padding: 0; margin: 0; min-inline-size: 0; }
 .detail-options legend, .brand-filter legend { font-weight: 700; margin-bottom: 10px; padding: 0; }
 .detail-size-system { display: inline-block; margin-inline-start: 8px; padding: 2px 7px; border-radius: 4px; background: var(--sand); color: var(--muted); font-size: .75rem; font-weight: 550; vertical-align: middle; }
-.detail-size-guide > summary { width: fit-content; margin-inline-start: auto; padding: 5px 0 3px 8px; color: var(--muted); font-size: .8125rem; cursor: pointer; }
-.detail-size-guide > summary span { text-decoration: underline; text-underline-offset: 3px; }
-.detail-size-guide-content { display: grid; gap: 10px; margin-top: 6px; padding: clamp(12px, 2.2vw, 20px); border: 1px solid var(--line); background: #fbf8f4; color: var(--muted); font-size: .8125rem; line-height: 1.5; }
+.detail-size-guide { justify-self: end; min-height: 36px; padding-inline: 8px 0; color: var(--muted); font-size: .8125rem; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.panel:has(.detail-size-guide-content) { width: min(92vw, 620px); max-height: 85dvh; padding: 0; overscroll-behavior: contain; }
+.panel:has(.detail-size-guide-content) .panel-header { position: sticky; top: 0; z-index: 1; margin: 0; padding: 8px clamp(12px, 3vw, 24px); border-bottom: 1px solid var(--line); background: #fff; }
+.panel:has(.detail-size-guide-content) .panel-header h2 { font-size: clamp(1rem, 2.5vw, 1.25rem); word-break: keep-all; }
+.panel:has(.detail-size-guide-content) .panel-header button { width: 44px; height: 44px; }
+.detail-size-guide-content { display: grid; gap: 12px; padding: clamp(12px, 3vw, 24px); color: var(--muted); font-size: .875rem; line-height: 1.5; }
 .detail-size-chart { width: 100%; table-layout: fixed; border-collapse: collapse; text-align: center; color: var(--ink); font-variant-numeric: tabular-nums; }
-.detail-size-chart caption { padding-bottom: 11px; color: var(--ink); text-align: start; font-size: 1rem; font-weight: 700; word-break: keep-all; }
 .detail-size-chart th, .detail-size-chart td { padding: 6px 3px; border: 1px solid var(--line); overflow-wrap: anywhere; }
-.detail-size-chart thead { background: #f0ece6; font-size: .75rem; }
-.detail-size-chart tbody tr { background: #fff; }
-.detail-size-chart .size-orderable { background: #e9eee8; }
-.size-orderable-label { display: block; font-size: .6875rem; font-weight: 650; color: #344b36; }
+.detail-size-chart thead { background: #f0ece6; font-size: .8125rem; }
+.detail-size-chart tbody tr:nth-child(even) { background: #fbf8f4; }
 .detail-size-measurement { border-top: 1px solid var(--line); padding-top: 9px; }
-.detail-size-measurement h2 { margin-bottom: 3px; color: var(--ink); font-size: .8125rem; }
-#detail-form .detail-size-guide:not([hidden]) + .detail-quantity { margin-top: 0; }
+.detail-size-measurement h3 { margin-bottom: 3px; color: var(--ink); font-size: .875rem; }
+.panel .detail-size-guide-content p { margin: 0; }
+#detail-form .detail-size-guide + .detail-quantity { margin-top: 0; }
 .size-list { display: flex; flex-wrap: wrap; gap: 8px; }
 .size-list label { position: relative; cursor: pointer; }
 .size-list input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
