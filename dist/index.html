@@ -12,7 +12,7 @@
     if (isReload) {
       const previousRestoration = history.scrollRestoration;
       history.scrollRestoration = 'manual';
-      if (location.hash && location.hash !== '#cart' && !location.hash.includes('/')) {
+      if (location.hash && !['#cart', '#mypage'].includes(location.hash) && !location.hash.includes('/')) {
         history.replaceState(history.state, '', location.pathname + location.search);
       }
       window.addEventListener('pageshow', () => requestAnimationFrame(() => {
@@ -21,9 +21,9 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=header-and-search-updates">
+  <link rel="stylesheet" href="styles.css?v=profile-and-view-history">
   <script src="catalog.js?v=home-ten-products" defer></script>
-  <script src="app.js?v=six-recent-products" defer></script>
+  <script src="app.js?v=profile-and-view-history" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -41,12 +41,20 @@
             <button type="button" data-language="en" lang="en" aria-pressed="false">English</button>
           </div>
         </details>
-        <button class="profile-launch" type="button" data-account="마이페이지" aria-label="마이페이지" aria-haspopup="dialog" data-en-aria-label="My account"><span class="account-icon" aria-hidden="true"></span></button>
+        <a class="profile-launch" href="#mypage" aria-label="마이페이지" data-en-aria-label="My account"><span class="account-icon" aria-hidden="true"></span></a>
         <button data-account="로그인" data-en="Log in">로그인</button>
         <button data-account="회원가입" data-en="Sign up">회원가입</button>
-        <button data-account="마이페이지" data-en="My account">마이페이지</button>
+        <a class="profile-text-link" href="#mypage" data-en="My account">마이페이지</a>
         <button class="utility-icon account-launch" type="button" data-account="로그인" aria-label="로그인" aria-haspopup="dialog" data-en-aria-label="Log in"><span class="account-icon" aria-hidden="true"></span></button>
-        <a id="cart-link" href="#cart" aria-label="장바구니" data-en-aria-label="Cart"><span class="shop-bag-icon" aria-hidden="true"></span><span id="cart-link-label" data-en="Cart">장바구니</span><span id="cart-icon-count" aria-hidden="true" hidden></span></a>
+        <a id="cart-link" href="#cart" aria-label="장바구니" data-en-aria-label="Cart">
+          <span class="shop-bag-icon" aria-hidden="true"></span>
+          <svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M2.5 4H5l2.4 10.5h11.2l2-7.5H5.7"></path>
+            <circle cx="8.5" cy="19" r="1.35"></circle><circle cx="17.5" cy="19" r="1.35"></circle>
+          </svg>
+          <span id="cart-link-label" data-en="Cart">장바구니</span>
+          <span id="cart-icon-count" aria-hidden="true" hidden></span>
+        </a>
       </div>
       <div class="navigation-row">
         <nav class="site-nav" id="site-nav" aria-label="주 메뉴" data-en-aria-label="Main navigation">
@@ -298,6 +306,29 @@
           <p class="collection-empty" id="collection-empty" hidden data-en="No products match your filters.">선택한 조건에 해당하는 상품이 없어요.</p>
         </div>
       </div>
+    </section>
+    <section id="profile-page" aria-labelledby="profile-title" hidden>
+      <div class="section-heading profile-heading">
+        <h1 id="profile-title" tabindex="-1" data-en="My account">마이페이지</h1>
+        <button class="button outline" type="button" data-account="로그인" aria-haspopup="dialog" data-en="Log in">로그인</button>
+      </div>
+      <div class="profile-panels">
+        <section class="profile-card" aria-labelledby="profile-orders-heading">
+          <h2 id="profile-orders-heading" data-en="Orders and delivery">주문·배송</h2>
+          <p data-en="Order history and tracking will be available when the live Cafe24 store is connected.">주문 내역과 배송 조회는 카페24 운영몰 연결 후 이용할 수 있어요.</p>
+          <button class="button outline" type="button" data-inquiry-launch aria-haspopup="dialog" data-en="Contact us">문의하기</button>
+        </section>
+        <section class="profile-card" aria-labelledby="profile-cart-heading">
+          <h2 id="profile-cart-heading" data-en="Cart">장바구니</h2>
+          <p id="profile-cart-status"></p>
+          <a class="button outline" href="#cart" data-en="View cart">장바구니 보기</a>
+        </section>
+      </div>
+      <section class="profile-history" aria-labelledby="profile-recent-heading">
+        <h2 id="profile-recent-heading" data-en="Recently viewed">최근 본 상품</h2>
+        <p id="profile-recent-empty" data-en="You haven’t viewed any products yet.">최근 본 상품이 없어요.</p>
+        <ul class="profile-products" id="profile-recent-products" hidden></ul>
+      </section>
     </section>
     <section id="cart-page" aria-labelledby="cart-title" hidden>
       <div class="section-heading"><h1 id="cart-title" tabindex="-1" data-en="Cart">장바구니</h1><a href="#top" data-en="Continue shopping">쇼핑 계속하기</a></div>
@@ -574,7 +605,10 @@
       <label><span data-en="Password">비밀번호</span><input type="password" autocomplete="current-password" required></label>
       <button type="submit" class="button dark" data-en="Log in">로그인</button>
       <p class="login-message" role="status" hidden data-en="You can log in once the live store is connected.">운영몰 연결 후 로그인할 수 있어요.</p>
-      <button type="button" class="login-signup" data-account="회원가입" data-en="Sign up">회원가입</button>
+      <div class="login-links">
+        <button type="button" class="login-signup" data-account="회원가입" data-en="Sign up">회원가입</button>
+        <a class="login-signup" href="#mypage" data-en="My account">마이페이지</a>
+      </div>
     </form>
   </template>
 

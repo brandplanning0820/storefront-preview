@@ -464,34 +464,41 @@ function showRecentSearchTerms(removedIndex) {
 function showSearchOverview() {
   searchResults.hidden = true;
   showRecentSearchTerms();
-  showRecentSearchProducts();
+  renderRecentlyViewedProducts(document.getElementById('search-viewed-products'), document.getElementById('search-viewed-empty'));
 }
 
-function recentSearchProductIds() {
-  return readSearchHistory(recentProductKey, recentProductLimit, id => byId.has(id));
+function productById(id) {
+  return byId.get(id) || reviewedProducts.get(id);
 }
 
-function rememberSearchProduct(id) {
-  const ids = [id, ...recentSearchProductIds().filter(productId => productId !== id)].slice(0, recentProductLimit);
+function recentlyViewedProductIds() {
+  return readSearchHistory(recentProductKey, recentProductLimit, id => Boolean(productById(id)));
+}
+
+function rememberViewedProduct(id) {
+  const recent = recentlyViewedProductIds();
+  if (recent[0] === id) return;
+  const ids = [id, ...recent.filter(productId => productId !== id)].slice(0, recentProductLimit);
   writeSearchHistory(recentProductKey, ids);
 }
 
-function showRecentSearchProducts() {
-  const list = document.getElementById('search-viewed-products');
+function renderRecentlyViewedProducts(list, empty) {
   const template = document.getElementById('search-viewed-product-template');
-  const cards = recentSearchProductIds().map(id => {
-    const product = byId.get(id);
+  const cards = recentlyViewedProductIds().map(id => {
+    const product = productById(id);
     const card = template.content.firstElementChild.cloneNode(true);
     card.querySelector('a').href = '#product/' + id;
     card.querySelector('img').src = asset(product.image);
     card.querySelector('.search-viewed-brand').textContent = product.brand;
-    setLocalized(card.querySelector('.search-viewed-name'), product.name, PRODUCT_NAMES_EN[id]);
-    setPrice(card.querySelector('.search-viewed-price'), product.price);
+    setLocalized(card.querySelector('.search-viewed-name'), product.name, PRODUCT_NAMES_EN[id] || product.nameEn);
+    const price = card.querySelector('.search-viewed-price');
+    if (Number.isFinite(product.price)) setPrice(price, product.price);
+    else setLocalized(price, '가격 문의', 'Ask for price');
     return card;
   });
   list.replaceChildren(...cards);
   list.hidden = !cards.length;
-  document.getElementById('search-viewed-empty').hidden = Boolean(cards.length);
+  empty.hidden = Boolean(cards.length);
 }
 
 function openSearch() {
@@ -539,8 +546,6 @@ searchPanel.addEventListener('click', event => {
   if (suggestion) showCatalogResults(suggestion.textContent);
   const resultLink = event.target.closest('#search-results a, #search-viewed-products a');
   if (searchResults.contains(resultLink)) rememberSearchTerm(searchResults.dataset.term);
-  const productId = resultLink?.hash.match(/^#product\/(\d+)$/)?.[1];
-  if (byId.has(productId)) rememberSearchProduct(productId);
   if (resultLink && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
     searchPanel.close(resultLink.hash === location.hash ? '' : 'result');
   }
@@ -563,7 +568,7 @@ const weeklyNavTooltip = document.getElementById('weekly-nav-tooltip');
 const arrivalsMenu = document.getElementById('arrivals-menu');
 const arrivalsMenuToggle = document.getElementById('arrivals-menu-toggle');
 const arrivalsMenuList = document.getElementById('arrivals-menu-list');
-const accountTitles = { 로그인: 'Log in', 회원가입: 'Sign up', 마이페이지: 'My account' };
+const accountTitles = { 로그인: 'Log in', 회원가입: 'Sign up' };
 
 function positionWeeklyTooltip() {
   if (weeklyNavTooltip.hidden) return;
@@ -753,6 +758,9 @@ const noticePage = document.getElementById('notice-page');
 const noticePageTitle = document.getElementById('notice-page-title');
 const cartPage = document.getElementById('cart-page');
 const cartTitle = document.getElementById('cart-title');
+const profilePage = document.getElementById('profile-page');
+const profileTitle = document.getElementById('profile-title');
+const profileLinks = document.querySelectorAll('.account-links a[href="#mypage"]');
 const editorialArticle = document.getElementById('editorial-article');
 const editorialTitle = document.getElementById('editorial-title');
 const editorialOriginal = document.getElementById('editorial-original');
@@ -1055,6 +1063,7 @@ function showProduct(product, orderItem) {
   const parentGroup = parentHash.split(/[/?]/)[1];
   storeParent.href = parentHash;
   if (parentHash === '#cart') setLocalized(storeParent, '장바구니', 'Cart');
+  else if (parentHash === '#mypage') setLocalized(storeParent, '마이페이지', 'My account');
   else if (parentHash === '#reviews/all') setLocalized(storeParent, '리뷰', 'Reviews');
   else setLocalized(storeParent, brandTitle(parentBrand) || collectionTitles[parentGroup] || '상품 목록',
     brandTitleEn(parentBrand) || collectionTitlesEn[parentGroup] || 'Products');
@@ -1103,6 +1112,7 @@ const cartKey = 'brandplanning-preview-cart';
 const cartLink = document.getElementById('cart-link');
 const cartLinkLabel = document.getElementById('cart-link-label');
 const cartIconCount = document.getElementById('cart-icon-count');
+const profileCartStatus = document.getElementById('profile-cart-status');
 const cartItems = document.getElementById('cart-items');
 const cartItemTemplate = document.getElementById('cart-item-template');
 const cartStatus = document.getElementById('cart-status');
@@ -1153,6 +1163,8 @@ function updateCartTotals() {
   setLocalized(cartLink, label, labelEn, 'aria-label');
   cartIconCount.hidden = !count;
   cartIconCount.textContent = count > 99 ? '99+' : count;
+  setLocalized(profileCartStatus, count ? '담은 상품 ' + money.format(count) + '개' : '장바구니가 비어 있어요.',
+    count ? countEn(count) + ' in your cart' : 'Your cart is empty.');
   cartEmpty.hidden = count > 0;
   cartFilled.hidden = !count;
   cartCheckAll.checked = selected.length > 0 && selected.length === cart.length;
@@ -1493,7 +1505,7 @@ function renderRoute(moveFocus = false) {
   const hash = location.hash;
   const checkout = checkoutFor(hash);
   const productId = hash.match(/^#product\/([0-9]+)$/)?.[1];
-  const product = byId.get(productId) || reviewedProducts.get(productId);
+  const product = productById(productId);
   const [requestedGroup, query] = hash.startsWith('#catalog/') ? hash.slice(9).split('?') : [];
   const scopedBrand = brandRoutes.get(hash) || (requestedGroup === 'max-mara' ? maxMaraGroup : undefined);
   const group = scopedBrand ? 'brand' : Object.hasOwn(collectionTitles, requestedGroup) ? requestedGroup : null;
@@ -1509,13 +1521,15 @@ function renderRoute(moveFocus = false) {
   const showMagazine = hash === '#magazine/all';
   const showNotices = hash === '#notices/all';
   const showCart = hash === '#cart';
+  const showProfile = hash === '#mypage';
   const magazineEntry = magazineById.get(hash.match(/^#magazine\/(\d+)$/)?.[1]);
   const notice = noticesById.get(hash.match(/^#notices\/([a-z-]+)$/)?.[1]);
   const entry = magazineEntry || notice || arrivalEntry || communityEntry;
   const wasStore = !storePage.hidden;
   const wasCart = !cartPage.hidden;
+  const wasProfile = !profilePage.hidden;
   const wasReviews = !reviewPage.hidden;
-  const heading = product ? detailName : checkout ? checkoutTitle : group ? collectionTitle : showCart ? cartTitle : showBrands ? brandDirectoryTitle
+  const heading = product ? detailName : checkout ? checkoutTitle : group ? collectionTitle : showCart ? cartTitle : showProfile ? profileTitle : showBrands ? brandDirectoryTitle
     : showCommunity ? communityPageTitle : showArrivals ? arrivalsPageTitle : showReviews ? reviewPageTitle : showMagazine ? magazinePageTitle
       : showNotices ? noticePageTitle : entry ? editorialTitle : null;
   storePage.hidden = !heading;
@@ -1526,6 +1540,11 @@ function renderRoute(moveFocus = false) {
   cartPage.hidden = !showCart;
   if (showCart) cartLink.setAttribute('aria-current', 'page');
   else cartLink.removeAttribute('aria-current');
+  profilePage.hidden = !showProfile;
+  for (const link of profileLinks) {
+    if (showProfile) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
+  }
   brandDirectory.hidden = !showBrands;
   communityPage.hidden = !showCommunity;
   arrivalsPage.hidden = !showArrivals;
@@ -1538,8 +1557,9 @@ function renderRoute(moveFocus = false) {
 
   if (product) {
     const returning = activeCheckout?.returnHash === hash ? activeCheckout.items[0] : undefined;
-    if (!returning) detailReturnHash = wasCart ? '#cart' : wasReviews ? '#reviews/all' : currentCollectionHash;
+    if (!returning) detailReturnHash = wasCart ? '#cart' : wasProfile ? '#mypage' : wasReviews ? '#reviews/all' : currentCollectionHash;
     showProduct(product, returning);
+    rememberViewedProduct(product.id);
   } else if (checkout) {
     showCheckout(checkout);
   } else if (group) {
@@ -1552,7 +1572,7 @@ function renderRoute(moveFocus = false) {
     detailReturnHash = undefined;
     if (heading) {
       if (showArrivals) showArrivalSeries(arrivalSeries);
-      const listPath = showCart ? '#cart' : showBrands ? '#brands/all' : showReviews ? '#reviews/all'
+      const listPath = showCart ? '#cart' : showProfile ? '#mypage' : showBrands ? '#brands/all' : showReviews ? '#reviews/all'
         : showCommunity || communityEntry ? '#community/all' : showArrivals || arrivalEntry ? arrivalHref(arrivalSeries)
           : showNotices || notice ? '#notices/all' : '#magazine/all';
       storeParent.href = listPath;
@@ -1566,6 +1586,7 @@ function renderRoute(moveFocus = false) {
         else showEditorialEntry(entry, listPath);
       } else storeParent.setAttribute('aria-current', 'page');
       if (showCart) renderCart();
+      if (showProfile) renderRecentlyViewedProducts(document.getElementById('profile-recent-products'), document.getElementById('profile-recent-empty'));
     } else {
       if (wasStore) document.getElementById(hash.slice(1) || 'top')?.scrollIntoView();
       else if (!moveFocus && (!hash || hash === '#top')) window.scrollTo(0, 0);
@@ -1617,7 +1638,7 @@ skipLink.addEventListener('click', event => {
   document.getElementById(skipLink.hash.slice(1))?.focus();
 });
 panel.addEventListener('click', event => {
-  const link = event.target.closest('a[href^="#product/"]');
+  const link = event.target.closest('a[href^="#product/"], a[href="#mypage"]');
   if (!link || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
   panel.close();
 });
