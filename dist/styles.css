@@ -199,7 +199,9 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
 .wishlist-toggle:hover { border-color: #ae9d8f; background: #faf7f3; }
 .wishlist-toggle[aria-pressed="true"] { color: #a1283d; }
 .wishlist-toggle[aria-pressed="true"] svg { fill: currentColor; }
-.product > .wishlist-toggle { grid-area: 1 / 1; place-self: end; z-index: 1; margin: 8px; }
+.product > .wishlist-toggle { grid-area: 1 / 1; place-self: end; z-index: 1; margin: 8px; border: 0; background: transparent; }
+.product > .wishlist-toggle svg { opacity: .8; filter: drop-shadow(0 0 1px rgb(255 255 255 / .8)); }
+.product > .wishlist-toggle:is(:hover, :focus-visible) svg { opacity: .95; }
 .product-copy { padding: clamp(10px, 1vw, 16px); display: grid; gap: 5px; }
 .product-card-heading { min-width: 0; font-size: .75rem; line-height: 1.3; }
 .product-brand { font-size: .75rem; font-weight: 750; overflow-wrap: anywhere; letter-spacing: .035em; color: #514337; }
