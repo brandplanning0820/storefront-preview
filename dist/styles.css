@@ -752,8 +752,10 @@ html[lang="en"] .brand-letter a span[lang="ko"] { display: none; }
   .detail-gallery { flex-direction: column; }
   .detail-photo { order: -1; flex: auto; max-height: 550px; }
   .detail-thumbnail-rail { width: 100%; }
-  .detail-thumbnails { position: static; flex-direction: row; }
-  .detail-thumbnails button { width: clamp(50px, 15vw, 74px); }
+  .detail-thumbnails { position: static; flex-direction: row; scrollbar-width: none; user-select: none; }
+  .detail-thumbnails::-webkit-scrollbar { display: none; }
+  .detail-thumbnails button { width: clamp(50px, 15vw, 74px); cursor: grab; }
+  .detail-thumbnails.is-dragging, .detail-thumbnails.is-dragging button { cursor: grabbing; }
   .collection-results .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .filter-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .brand-group { grid-column: 1 / -1; }

@@ -840,6 +840,7 @@ const editorialArticle = document.getElementById('editorial-article');
 const editorialTitle = document.getElementById('editorial-title');
 const editorialOriginal = document.getElementById('editorial-original');
 const detailForm = document.getElementById('detail-form');
+const detailThumbnails = document.getElementById('detail-thumbnails');
 const detailSizeSystem = document.getElementById('detail-size-system');
 const detailSizeGuide = document.getElementById('detail-size-guide');
 const sizeGuideTemplate = document.getElementById('size-guide-template');
@@ -1095,7 +1096,6 @@ function showProductSpecs(product) {
 function showProductGallery(product) {
   const gallery = PRODUCT_GALLERIES[product.id];
   const photos = [...new Set([product.image, ...(gallery?.photos || [])])];
-  const thumbnails = document.getElementById('detail-thumbnails');
   const rail = document.getElementById('detail-thumbnail-rail');
   const image = document.getElementById('detail-image');
 
@@ -1109,16 +1109,17 @@ function showProductGallery(product) {
     image.src = asset(photo);
     setLocalized(image, product.name + ' · ' + koreanTitle,
       (PRODUCT_NAMES_EN[product.id] || product.nameEn || product.name) + ' · ' + englishTitle, 'alt');
-    [...thumbnails.children].forEach((button, position) => button.setAttribute('aria-pressed', String(position === index)));
+    [...detailThumbnails.children].forEach((button, position) => button.setAttribute('aria-pressed', String(position === index)));
   }
 
   rail.hidden = photos.length < 2;
-  thumbnails.replaceChildren(...(rail.hidden ? [] : photos.map((photo, index) => {
+  detailThumbnails.replaceChildren(...(rail.hidden ? [] : photos.map((photo, index) => {
     const button = document.createElement('button');
     button.type = 'button';
     setLocalized(button, ...photoLabel(photo, index), 'aria-label');
     const thumb = document.createElement('img');
     thumb.alt = '';
+    thumb.draggable = false;
     thumb.loading = 'lazy';
     thumb.decoding = 'async';
     thumb.src = asset(photo);
@@ -1127,9 +1128,49 @@ function showProductGallery(product) {
     return button;
   })));
   selectPhoto(0);
-  thumbnails.scrollTop = 0;
-  thumbnails.scrollLeft = 0;
+  detailThumbnails.scrollTop = 0;
+  detailThumbnails.scrollLeft = 0;
 }
+
+let thumbnailDrag;
+let suppressThumbnailClick = false;
+
+detailThumbnails.addEventListener('pointerdown', (event) => {
+  suppressThumbnailClick = false;
+  if (event.pointerType !== 'mouse' || event.button !== 0 || detailThumbnails.scrollWidth <= detailThumbnails.clientWidth) return;
+  thumbnailDrag = { pointerId: event.pointerId, startX: event.clientX, scrollLeft: detailThumbnails.scrollLeft, dragging: false };
+});
+
+detailThumbnails.addEventListener('pointermove', (event) => {
+  if (thumbnailDrag?.pointerId !== event.pointerId) return;
+  const distance = event.clientX - thumbnailDrag.startX;
+  if (!thumbnailDrag.dragging) {
+    if (Math.abs(distance) < 5) return;
+    thumbnailDrag.dragging = true;
+    detailThumbnails.setPointerCapture(event.pointerId);
+    detailThumbnails.classList.add('is-dragging');
+  }
+  detailThumbnails.scrollLeft = thumbnailDrag.scrollLeft - distance;
+});
+
+function finishThumbnailDrag(event) {
+  if (thumbnailDrag?.pointerId !== event.pointerId) return;
+  suppressThumbnailClick = event.type === 'pointerup' && thumbnailDrag.dragging;
+  thumbnailDrag = undefined;
+  detailThumbnails.classList.remove('is-dragging');
+}
+
+detailThumbnails.addEventListener('pointerleave', (event) => {
+  if (!thumbnailDrag?.dragging) finishThumbnailDrag(event);
+});
+detailThumbnails.addEventListener('pointerup', finishThumbnailDrag);
+detailThumbnails.addEventListener('pointercancel', finishThumbnailDrag);
+detailThumbnails.addEventListener('lostpointercapture', finishThumbnailDrag);
+detailThumbnails.addEventListener('click', (event) => {
+  if (!suppressThumbnailClick || event.detail === 0) return;
+  suppressThumbnailClick = false;
+  event.stopPropagation();
+}, { capture: true });
 
 const sizeSystemLabels = {
   it: ['이탈리아 (IT)', 'Italian (IT)'],
