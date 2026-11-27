@@ -170,6 +170,47 @@ const CATALOG = {
       "category": "아우터"
     },
     {
+      "id": "13852122401",
+      "brand": "LORO PIANA",
+      "name": "26FW 남성 앤톤 워크 램스킨 로퍼 블랙",
+      "price": 930000,
+      "image": "13852122401.webp",
+      "sizes": [
+        "40",
+        "45"
+      ],
+      "delivery": "overseas",
+      "gender": "남성",
+      "category": "신발"
+    },
+    {
+      "id": "13856176025",
+      "brand": "MONCLER",
+      "name": "26FW 여성 미니 카라도크 토트백 블랙",
+      "price": 760000,
+      "image": "13856176025.webp",
+      "sizes": [
+        "OS"
+      ],
+      "delivery": "overseas",
+      "gender": "여성",
+      "category": "가방"
+    },
+    {
+      "id": "13852215075",
+      "brand": "KITON",
+      "name": "26FW 남성 테크니컬 베이스볼 캡 블랙",
+      "price": 460000,
+      "image": "13852215075.webp",
+      "sizes": [
+        "S",
+        "M"
+      ],
+      "delivery": "overseas",
+      "gender": "남성",
+      "category": "패션잡화"
+    },
+    {
       "id": "13862252891",
       "brand": "FENDI",
       "name": "26FW 남성 셀러리아 FF 실크 코튼 집업 폴로 내추럴 네이비",
@@ -181,6 +222,34 @@ const CATALOG = {
       ],
       "delivery": "overseas",
       "gender": "남성",
+      "category": "상의"
+    },
+    {
+      "id": "13856179602",
+      "brand": "MAX MARA",
+      "name": "26FW 여성 코르비노1 테디 케이프 베이지 핑크",
+      "price": 1330000,
+      "image": "13856179602.webp",
+      "sizes": [
+        "M~L"
+      ],
+      "delivery": "overseas",
+      "gender": "여성",
+      "category": "아우터"
+    },
+    {
+      "id": "13852689911",
+      "brand": "BRUNELLO CUCINELLI",
+      "name": "26FW 여성 캐시미어 잉글리시 리브 랩 가디건 커피",
+      "price": 2660000,
+      "image": "13852689911.webp",
+      "sizes": [
+        "XS",
+        "M",
+        "L"
+      ],
+      "delivery": "overseas",
+      "gender": "여성",
       "category": "상의"
     },
     {
@@ -582,25 +651,10 @@ function homeOverseasSelection(featured, candidates) {
 
 const newestOverseasSamples = [...CATALOG.best, ...CATALOG.classic, ...CATALOG.brands]
   .sort((a, b) => Number(b.id) - Number(a.id));
-const overseasSamplesById = new Map([...CATALOG.best, ...CATALOG.new, ...CATALOG.brands]
-  .map(product => [product.id, product]));
-const weeklyCompanions = [
-  '13851874254', '13871969099', '13892117876',
-  '13871854526', '13892302203', '13851900920',
-  '13850707048', '13892319386', '13855954759',
-  '13871846270', '13892310828', '13892114226',
-  '13892325902', '13871827399', '13892307125',
-].map(id => overseasSamplesById.get(id))
-  .filter(product => product?.delivery === 'overseas' && !CATALOG.weekly.includes(product))
-  .slice(0, Math.max(0, homeProductLimit - CATALOG.weekly.length));
-const mixedWeeklyProducts = CATALOG.weekly.flatMap((product, index) => [
-  product, ...weeklyCompanions.slice(index * 3, (index + 1) * 3),
-]);
-
 const HOME_CATALOG = {
   best: homeOverseasSelection(CATALOG.best, CATALOG.brands),
   new: homeOverseasSelection(CATALOG.new, newestOverseasSamples),
-  weekly: homeOverseasSelection(mixedWeeklyProducts, weeklyCompanions),
+  weekly: CATALOG.weekly.slice(0, homeProductLimit),
 };
 
 const ARRIVAL_SERIES = {
@@ -2299,6 +2353,11 @@ const NOTICES = [
 ];
 
 const PRODUCT_NAMES_EN = {
+  "13852122401": "FW26 Men’s Anton Walk Lambskin Loafers in Black",
+  "13856176025": "FW26 Women’s Mini Caradoc Tote in Black",
+  "13852215075": "FW26 Men’s Technical Baseball Cap in Black",
+  "13856179602": "FW26 Women’s Corvino1 Teddy Cape in Beige Pink",
+  "13852689911": "FW26 Women’s English Rib Cashmere Wrap Cardigan in Coffee",
   '13871969099': 'FW26 Small Check Cotswold Tote in Black',
   '13838058679': 'FW26 Women’s Monili Wool Flannel Baggy Trousers in Anthracite',
   '13837820556': 'FW26 Men’s Deerskin Boots in Brown',
@@ -2377,6 +2436,82 @@ const NOTICES_EN = {
 };
 
 const PRODUCT_DETAILS = {
+  "13852122401": {
+    color: ["블랙","Black"],
+    body: [
+      "부드러운 양가죽에 둥근 앞코와 도드라진 스티치를 더한 슬립온 로퍼입니다.",
+      "Soft lambskin slip-on loafers with a rounded toe and prominent stitching.",
+    ],
+    features: [
+      ["둥근 앞코와 강조된 스티치","Rounded toe with prominent stitching"],
+      ["가죽 밑창","Leather sole"],
+    ],
+    materials: [
+      ["갑피: 양가죽 100%","Upper: 100% lambskin"],
+      ["밑창: 가죽 90%, 고무 10%","Sole: 90% leather, 10% rubber"],
+      ["디테일: 송아지 가죽 100%","Details: 100% calfskin"],
+    ],
+  },
+  "13856176025": {
+    color: ["블랙","Black"],
+    body: [
+      "퀼팅 나일론 소재에 앞면 로고 패치를 더한 미니 토트백입니다.",
+      "A quilted nylon mini tote with a logo patch on the front.",
+    ],
+    features: [
+      ["가죽 그립을 댄 나일론 손잡이","Nylon handles with leather grips"],
+      ["지퍼 여밈","Zip closure"],
+      ["길이 조절 및 탈착이 가능한 숄더 스트랩","Adjustable, detachable shoulder strap"],
+      ["크기: 30 × 20 × 13cm","Dimensions: 30 × 20 × 13 cm"],
+    ],
+    materials: [
+      ["주 소재: 나일론","Main material: nylon"],
+    ],
+  },
+  "13852215075": {
+    color: ["블랙","Black"],
+    body: [
+      "톤온톤 로고 자수와 레드 스티치가 들어간 가벼운 나일론 베이스볼 캡입니다.",
+      "A lightweight nylon baseball cap with tonal logo embroidery and red stitching.",
+    ],
+    features: [
+      ["앞면 로고 자수","Embroidered front logo"],
+      ["뒤쪽 신축성 밴드와 내부 안감","Elastic back insert and lining"],
+    ],
+    materials: [
+      ["나일론","Nylon"],
+    ],
+  },
+  "13856179602": {
+    color: ["베이지 핑크","Beige pink"],
+    body: [
+      "알파카, 버진울, 실크 혼방 테디 소재에 넓은 라펠과 여유로운 짧은 소매를 더한 케이프입니다.",
+      "A teddy cape made from an alpaca, virgin wool and silk blend, with wide lapels and relaxed short sleeves.",
+    ],
+    features: [
+      ["앞면 단추 여밈과 포켓","Front button closure and pockets"],
+      ["옆면 단추와 로고 안감","Side buttons and logo lining"],
+    ],
+    materials: [
+      ["겉감: 알파카 62%, 버진울 26%, 실크 12%","Outer: 62% alpaca, 26% virgin wool, 12% silk"],
+      ["안감: 비스코스 100%","Lining: 100% viscose"],
+    ],
+  },
+  "13852689911": {
+    color: ["커피","Coffee"],
+    body: [
+      "드롭 숄더와 넓은 소매, 비대칭 옆 여밈이 특징인 잉글리시 리브 캐시미어 가디건입니다.",
+      "An English rib cashmere cardigan with dropped shoulders, wide sleeves and an asymmetric wrap closure.",
+    ],
+    features: [
+      ["숄 칼라와 혼 버튼 여밈","Shawl collar and horn-button closure"],
+      ["가슴 패치 포켓","Chest patch pocket"],
+      ["리브 소맷단과 밑단","Ribbed cuffs and hem"],
+    ],
+    materials: [
+      ["캐시미어 100%","100% cashmere"],
+    ],
+  },
   "13871969099": {
     color: ["블랙","Black"],
     body: [
@@ -3128,6 +3263,11 @@ const PRODUCT_DETAILS = {
 };
 
 const PRODUCT_GALLERIES = {
+  "13852122401": { photos: ["13852122401-photo-02.webp", "13852122401-photo-03.webp", "13852122401-photo-04.webp", "13852122401-photo-05.webp", "13852122401-photo-06.webp", "13852122401-photo-07.webp"] },
+  "13856176025": { photos: ["13856176025-photo-02.webp", "13856176025-photo-03.webp", "13856176025-photo-04.webp", "13856176025-photo-05.webp"] },
+  "13852215075": { photos: ["13852215075-photo-02.webp", "13852215075-photo-03.webp", "13852215075-photo-04.webp", "13852215075-photo-05.webp"] },
+  "13856179602": { photos: ["13856179602-photo-02.webp", "13856179602-photo-03.webp", "13856179602-photo-04.webp", "13856179602-photo-05.webp"] },
+  "13852689911": { photos: ["13852689911-photo-02.webp", "13852689911-photo-03.webp", "13852689911-photo-04.webp", "13852689911-photo-05.webp", "13852689911-photo-06.webp"] },
   "13871969099": {
     photos: ["13871969099-photo-02.webp", "13871969099-photo-03.webp", "13871969099-photo-04.webp", "13871969099-photo-05.webp", "13871969099-photo-06.webp", "13871969099-photo-07.webp"],
     wearing: "13871969099-photo-06.webp",

@@ -1439,52 +1439,6 @@ document.getElementById('checkout-pay')?.addEventListener('click', () => {
   openPanel('결제 안내', description(note.dataset.ko, note.dataset.en), 'Payment information');
 });
 
-function showInquiryConfirmation(byEmail, sent = false) {
-  const confirmation = document.createElement('form');
-  confirmation.method = 'dialog';
-  const confirm = document.createElement('button');
-  confirm.type = 'submit';
-  confirm.className = 'button dark';
-  setLocalized(confirm, '확인', 'OK');
-  const message = sent
-    ? description('입력하신 이메일로 연락드리겠습니다.', 'We’ll get back to you at the email address you entered.')
-    : byEmail
-      ? description('이 화면은 시안입니다. 메일 발송은 전송 서비스 연결 후 이용할 수 있어요.',
-        'This is a preview. Email delivery becomes available once a submission service is connected.')
-      : description('이 화면은 시안입니다. 문의 접수는 카페24 운영몰 연결 후 이용할 수 있어요.',
-        'This is a preview. Store inquiries become available once the Cafe24 store is connected.');
-  confirmation.append(message, confirm);
-  openPanel(byEmail ? '메일로 문의가 전송되었습니다' : '문의가 전송되었습니다',
-    confirmation, byEmail ? 'Inquiry sent by email' : 'Inquiry submitted');
-  confirm.focus();
-}
-
-async function sendInquiry(form, endpoint, data, note) {
-  const fields = form.querySelectorAll('input:enabled, textarea:enabled');
-  const buttons = form.querySelectorAll('button[type="submit"]');
-  buttons.forEach(button => { button.disabled = true; });
-  fields.forEach(field => { field.readOnly = true; });
-  setLocalized(note, '문의 내용을 보내고 있어요.', 'Sending your inquiry…');
-  try {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      body: data,
-      headers: { Accept: 'application/json' },
-      credentials: 'omit',
-      redirect: 'error',
-      signal: AbortSignal.timeout(15000),
-    });
-    if (!response.ok || (await response.json()).ok !== true) throw new Error('Inquiry was not accepted');
-    if (form.isConnected && panel.open) showInquiryConfirmation(true, true);
-  } catch {
-    setLocalized(note, '문의 접수를 확인하지 못했어요. 잠시 후 다시 시도해 주세요.',
-      'We couldn’t confirm your inquiry was received. Please try again in a moment.');
-  } finally {
-    fields.forEach(field => { field.readOnly = false; });
-    buttons.forEach(button => { button.disabled = false; });
-  }
-}
-
 const supportChat = document.getElementById('support-chat');
 const chatLaunchers = document.querySelectorAll('[data-chat-launch]');
 const chatClose = supportChat.querySelector('.chat-close');
@@ -1531,50 +1485,60 @@ chatForm.addEventListener('submit', event => {
   chatInput.focus({ preventScroll: true });
 });
 
-function openInquiry() {
-  closeChat(false);
+function createInquiryForm(startingTopic = 'product') {
   const form = document.getElementById('inquiry-template').content.firstElementChild.cloneNode(true);
-  const endpoint = form.dataset.inquiryEndpoint?.trim();
-  const note = form.querySelector('.inquiry-note');
-  if (endpoint) {
-    form.elements.email.disabled = false;
-    form.elements.email.closest('label').hidden = false;
-  }
-  if (!productPage.hidden && currentProduct) {
-    form.elements.brand.value = currentProduct.brand || '';
-    if (detailForm.hidden) {
-      if (/^https?:$/.test(location.protocol)) form.elements.url.value = location.href;
-      form.elements.message.value = currentProduct.name;
-    } else {
-      form.elements.size.value = detailForm.querySelector('[name="size"]:checked')?.value || '';
+  const { topic, product, size, order, message } = form.elements;
+  const status = form.querySelector('.inquiry-status');
+  const updateFields = () => {
+    const isDelivery = topic.value === 'delivery';
+    for (const field of [product, size]) {
+      field.disabled = isDelivery;
+      field.closest('label').hidden = isDelivery;
     }
-  }
+    order.disabled = !isDelivery;
+    order.closest('label').hidden = !isDelivery;
+  };
+  topic.value = startingTopic;
+  updateFields();
+  form.querySelector('.inquiry-types').addEventListener('change', updateFields);
   form.addEventListener('input', () => {
-    setLocalized(note, '', '');
+    setLocalized(status, '', '');
   });
   form.addEventListener('submit', event => {
     event.preventDefault();
-    if (form.querySelector('button[type="submit"]').disabled) return;
-    const byEmail = event.submitter?.value === 'email';
-    if (!byEmail || !endpoint) {
-      showInquiryConfirmation(byEmail);
+    if (!message.value.trim()) {
+      setLocalized(status, '문의 내용을 입력해 주세요.', 'Enter your message.');
+      message.focus();
       return;
     }
-    if (!form.elements.email.value) {
-      setLocalized(note, '회신받을 이메일을 입력해 주세요.', 'Enter an email address for our reply.');
-      form.elements.email.focus();
-      return;
-    }
-    const data = new FormData(form);
-    data.set('subject', '브랜드플래닝 상품 문의 · ' + data.get('brand').trim());
-    sendInquiry(form, endpoint, data, note);
+    setLocalized(status, '문의 양식을 확인했습니다. 실제 접수는 운영몰에서 가능합니다.',
+      'Inquiry form checked. Submissions will open on the live store.');
   });
-  openPanel('상품 문의', form, 'Product inquiry');
+  applyLanguage(form);
+  return form;
+}
+
+function openInquiry(event) {
+  if (event.currentTarget instanceof HTMLAnchorElement &&
+      (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey)) return;
+  event.preventDefault();
+  closeChat(false);
+  const form = createInquiryForm(event.currentTarget.dataset.inquiryLaunch || 'product');
+  if (!productPage.hidden && currentProduct) {
+    form.elements.product.value = [currentProduct.brand, currentProduct.name].filter(Boolean).join(' ');
+    form.elements.size.value = detailForm.querySelector('[name="size"]:checked')?.value || '';
+  }
+  openPanel('문의하기', form, 'Contact us');
 }
 
 document.querySelectorAll('[data-inquiry-launch]').forEach(button => {
   button.addEventListener('click', openInquiry);
 });
+
+const customerInquiryPage = document.getElementById('customer-inquiry-page');
+const customerInquiryTitle = document.getElementById('customer-inquiry-title');
+const customerInquiryLink = document.querySelector('.site-footer a[href="#inquiries"]');
+document.getElementById('customer-inquiry-form').append(createInquiryForm());
 
 function updatePageTitle() {
   const heading = storePage.hidden ? null : storePage.querySelector(':scope > :not([hidden]) h1');
@@ -1603,6 +1567,7 @@ function renderRoute(moveFocus = false) {
   const showReviews = hash === '#reviews/all';
   const showMagazine = hash === '#magazine/all';
   const showNotices = hash === '#notices/all';
+  const showCustomerInquiry = hash === '#inquiries';
   const showCart = hash === '#cart';
   const showProfile = hash === '#mypage';
   const magazineEntry = magazineById.get(hash.match(/^#magazine\/(\d+)$/)?.[1]);
@@ -1614,7 +1579,7 @@ function renderRoute(moveFocus = false) {
   const wasReviews = !reviewPage.hidden;
   const heading = product ? detailName : checkout ? checkoutTitle : group ? collectionTitle : showCart ? cartTitle : showProfile ? profileTitle : showBrands ? brandDirectoryTitle
     : showCommunity ? communityPageTitle : showArrivals ? arrivalsPageTitle : showReviews ? reviewPageTitle : showMagazine ? magazinePageTitle
-      : showNotices ? noticePageTitle : entry ? editorialTitle : null;
+      : showNotices ? noticePageTitle : showCustomerInquiry ? customerInquiryTitle : entry ? editorialTitle : null;
   storePage.hidden = !heading;
   home.hidden = !storePage.hidden;
   productPage.hidden = !product;
@@ -1634,6 +1599,9 @@ function renderRoute(moveFocus = false) {
   reviewPage.hidden = !showReviews;
   magazinePage.hidden = !showMagazine;
   noticePage.hidden = !showNotices;
+  customerInquiryPage.hidden = !showCustomerInquiry;
+  if (showCustomerInquiry) customerInquiryLink.setAttribute('aria-current', 'page');
+  else customerInquiryLink.removeAttribute('aria-current');
   editorialArticle.hidden = !entry;
   editorialOriginal.hidden = !arrivalEntry;
   skipLink.href = heading ? '#' + heading.id : '#main';
@@ -1660,7 +1628,7 @@ function renderRoute(moveFocus = false) {
       if (showArrivals) showArrivalSeries(arrivalSeries);
       const listPath = showCart ? '#cart' : showProfile ? '#mypage' : showBrands ? '#brands/all' : showReviews ? '#reviews/all'
         : showCommunity || communityEntry ? '#community/all' : showArrivals || arrivalEntry ? arrivalHref(arrivalSeries)
-          : showNotices || notice ? '#notices/all' : '#magazine/all';
+          : showNotices || notice ? '#notices/all' : showCustomerInquiry ? '#inquiries' : '#magazine/all';
       storeParent.href = listPath;
       const parent = entry ? notice ? noticePageTitle : communityEntry ? communityPageTitle : magazinePageTitle : heading;
       if (arrivalEntry) setLocalized(storeParent, ARRIVAL_SERIES[arrivalSeries].title);

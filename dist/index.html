@@ -21,9 +21,9 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=carousel-arrow-controls">
-  <script src="catalog.js?v=cucinelli-fw-classic-offer" defer></script>
-  <script src="app.js?v=carousel-arrow-controls" defer></script>
+  <link rel="stylesheet" href="styles.css?v=store-inquiries">
+  <script src="catalog.js?v=smartstore-weekly-selection" defer></script>
+  <script src="app.js?v=store-inquiries" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -334,7 +334,7 @@
         <section class="profile-card" aria-labelledby="profile-orders-heading">
           <h2 id="profile-orders-heading" data-en="Orders and delivery">주문·배송</h2>
           <p data-en="Order history and tracking will be available when the live Cafe24 store is connected.">주문 내역과 배송 조회는 카페24 운영몰 연결 후 이용할 수 있어요.</p>
-          <button class="button outline" type="button" data-inquiry-launch aria-haspopup="dialog" data-en="Contact us">문의하기</button>
+          <button class="button outline" type="button" data-inquiry-launch="delivery" aria-haspopup="dialog" data-en="Contact us">문의하기</button>
         </section>
         <section class="profile-card" aria-labelledby="profile-cart-heading">
           <h2 id="profile-cart-heading" data-en="Cart">장바구니</h2>
@@ -431,6 +431,10 @@
       <div class="section-heading"><h1 id="notice-page-title" tabindex="-1" data-en="Announcements">공지사항</h1></div>
       <ul class="notice-list" id="notice-list"></ul>
     </section>
+    <section class="customer-inquiry" id="customer-inquiry-page" aria-labelledby="customer-inquiry-title" hidden>
+      <div class="section-heading"><h1 id="customer-inquiry-title" tabindex="-1" data-en="Product and delivery inquiries">상품 및 배송 문의</h1></div>
+      <div id="customer-inquiry-form"></div>
+    </section>
     <article class="editorial-article" id="editorial-article" aria-labelledby="editorial-title" hidden>
       <header><p class="editorial-source" id="editorial-source"></p><h1 id="editorial-title" tabindex="-1"></h1></header>
       <div class="editorial-body" id="editorial-body"></div>
@@ -457,7 +461,7 @@
         <h2 data-en="Customer support">고객 안내</h2>
         <a href="tel:+821030865286" data-en="Customer service +82 10-3086-5286">고객센터 010-3086-5286</a>
         <a href="#notices/all" data-en="Announcements">공지사항</a>
-        <a href="https://smartstore.naver.com/brandplanning/qna?cp=2" target="_blank" rel="noopener" data-en="Product and delivery inquiries">상품·배송 문의</a>
+        <a href="#inquiries" data-inquiry-launch aria-haspopup="dialog" data-en="Product and delivery inquiries">상품·배송 문의</a>
         <a href="mailto:brandplanning.ltd@gmail.com">brandplanning.ltd@gmail.com</a>
       </section>
       <section class="footer-business">
@@ -560,17 +564,23 @@
   </template>
 
   <template id="inquiry-template">
-    <form class="inquiry-form" data-inquiry-endpoint="https://formspree.io/f/mvkalrpd">
-      <label><span data-en="Brand">상품 브랜드</span><input name="brand" required pattern=".*\S.*" maxlength="80" autofocus></label>
-      <label><span data-en="Product listing URL">판매 페이지 URL</span><input type="url" name="url" placeholder="https://" pattern="https?://.+" required maxlength="400"></label>
-      <label><span data-en="Preferred size">원하는 사이즈</span><input name="size" required pattern=".*\S.*" maxlength="40"></label>
-      <label hidden><span data-en="Reply email">회신받을 이메일</span><input type="email" name="email" autocomplete="email" maxlength="254" disabled></label>
-      <label><span data-en="Additional details">기타 요청사항</span><textarea name="message" rows="4" maxlength="500"></textarea></label>
+    <form class="inquiry-form">
+      <fieldset class="inquiry-types">
+        <legend class="visually-hidden" data-en="Inquiry type">문의 유형</legend>
+        <label><input class="visually-hidden" type="radio" name="topic" value="product" checked><span data-en="Product inquiry">상품 문의</span></label>
+        <label><input class="visually-hidden" type="radio" name="topic" value="delivery"><span data-en="Delivery inquiry">배송 문의</span></label>
+      </fieldset>
+      <label><span data-en="Product name or listing link (optional)">상품명 또는 판매 페이지 링크 (선택)</span><input name="product" maxlength="400"></label>
+      <label><span data-en="Size (optional)">사이즈 (선택)</span><input name="size" maxlength="40"></label>
+      <label hidden><span data-en="Order number (optional)">주문번호 (선택)</span><input name="order" maxlength="80" disabled></label>
+      <label><span data-en="Reply email">회신받을 이메일</span><input type="email" name="email" autocomplete="email" required maxlength="254"></label>
+      <label><span data-en="Subject">제목</span><input name="subject" required pattern=".*\S.*" maxlength="100"></label>
+      <label><span data-en="Message">문의 내용</span><textarea name="message" rows="5" required maxlength="1000"></textarea></label>
       <div class="inquiry-actions">
-        <button type="submit" class="button dark" value="inquiry" data-en="Contact us">문의하기</button>
-        <button type="submit" class="button outline" value="email" data-en="Send inquiry by email">메일로 문의 보내기</button>
+        <button type="submit" class="button dark" data-en="Submit inquiry">문의하기</button>
       </div>
-      <p class="inquiry-note" role="status"></p>
+      <p class="inquiry-note" data-en="This is a preview. Inquiries can be submitted once the live Cafe24 store is connected.">시안 화면입니다. 실제 문의 접수는 카페24 운영몰 연결 후 이용하실 수 있습니다.</p>
+      <p class="inquiry-note inquiry-status" role="status"></p>
     </form>
   </template>
 

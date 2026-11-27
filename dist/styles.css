@@ -428,6 +428,13 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
 .inquiry-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .inquiry-form .inquiry-note { margin: 0; color: var(--muted); font-size: .875rem; }
 .inquiry-note:empty { display: none; }
+.customer-inquiry { max-width: 680px; margin-inline: auto; }
+.customer-inquiry .inquiry-form { margin-top: 22px; padding: clamp(16px, 4vw, 36px); background: #f8f6f2; border: 1px solid var(--line); }
+.inquiry-form .inquiry-note { line-height: 1.5; }
+.inquiry-types { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); min-width: 0; padding: 0; margin: 0 0 3px; border: 0; }
+.inquiry-types label { position: relative; display: grid; place-items: center; min-height: 44px; padding: 7px; border-bottom: 2px solid var(--line); text-align: center; color: var(--muted); cursor: pointer; }
+.inquiry-types label:has(:checked) { border-color: var(--ink); color: var(--ink); }
+.inquiry-types label:has(:focus-visible) { outline: 2px solid var(--ink); outline-offset: -4px; }
 .search-panel { position: fixed; inset: var(--search-top, 0px) 0 auto; width: 100%; max-width: none; max-height: calc(100dvh - var(--search-top, 0px)); margin: 0; padding: 0; overflow: auto; overscroll-behavior: contain; border: 0; border-block: 1px solid var(--line); background: #fff; color: var(--ink); }
 .search-panel::backdrop { background: rgb(27 20 14 / .22); }
 .search-inner {
