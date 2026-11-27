@@ -350,7 +350,7 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
 .brand-message-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 57%; z-index: -2; }
 .brand-message::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(110deg, rgb(22 18 15 / .81), rgb(26 19 16 / .67) 50%, rgb(26 20 16 / .83)); }
 .brand-message-content { width: min(100%, 740px); }
-.brand-slogan { font-size: clamp(2rem, 3.75vw, 5rem); font-weight: 600; line-height: 1.3; letter-spacing: -0.125rem; margin-bottom: 18px; word-break: keep-all; }
+.brand-slogan { font-size: clamp(2rem, 3.75vw, 5rem); font-weight: 600; line-height: 1.25; letter-spacing: -0.125rem; margin-bottom: 18px; word-break: keep-all; }
 .brand-message-content > p { width: min(100%, 590px); margin-inline: auto; font-size: 1rem; line-height: 1.55; word-break: keep-all; }
 .brand-message-actions { margin-top: 22px; display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
 .brand-message-actions button:focus-visible { outline-color: #fff; }
