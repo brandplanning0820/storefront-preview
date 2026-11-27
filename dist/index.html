@@ -573,7 +573,11 @@
       <label><span data-en="Product name or listing link (optional)">상품명 또는 판매 페이지 링크 (선택)</span><input name="product" maxlength="400"></label>
       <label><span data-en="Size (optional)">사이즈 (선택)</span><input name="size" maxlength="40"></label>
       <label hidden><span data-en="Order number (optional)">주문번호 (선택)</span><input name="order" maxlength="80" disabled></label>
-      <label><span data-en="Reply email">회신받을 이메일</span><input type="email" name="email" autocomplete="email" required maxlength="254"></label>
+      <label>
+        <span data-en="Contact number">회신받을 연락처</span>
+        <input type="tel" name="contact" autocomplete="tel" required maxlength="32" pattern=".*\S.*"
+          placeholder="예: 010-1234-5678" data-en-placeholder="e.g. +82 10-1234-5678">
+      </label>
       <label><span data-en="Subject">제목</span><input name="subject" required pattern=".*\S.*" maxlength="100"></label>
       <label><span data-en="Message">문의 내용</span><textarea name="message" rows="5" required maxlength="1000"></textarea></label>
       <div class="inquiry-actions">
