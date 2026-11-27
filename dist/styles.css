@@ -657,9 +657,17 @@ html[lang="en"] .brand-letter a span[lang="ko"] { display: none; }
 .detail-options legend, .brand-filter legend { font-weight: 700; margin-bottom: 10px; padding: 0; }
 .detail-size-system { display: inline-block; margin-inline-start: 8px; padding: 2px 7px; border-radius: 4px; background: var(--sand); color: var(--muted); font-size: .75rem; font-weight: 550; vertical-align: middle; }
 .detail-size-guide > summary { width: fit-content; margin-inline-start: auto; padding: 5px 0 3px 8px; color: var(--muted); font-size: .8125rem; cursor: pointer; }
-.detail-size-guide > summary span, .detail-size-guide-content a { text-decoration: underline; text-underline-offset: 3px; }
-.detail-size-guide-content { margin-top: 6px; padding: 12px 14px; border: 1px solid var(--line); background: #fbf8f4; color: var(--muted); font-size: .875rem; line-height: 1.5; }
-.detail-size-guide-content a { display: inline-block; margin-top: 6px; color: var(--ink); }
+.detail-size-guide > summary span { text-decoration: underline; text-underline-offset: 3px; }
+.detail-size-guide-content { display: grid; gap: 10px; margin-top: 6px; padding: clamp(12px, 2.2vw, 20px); border: 1px solid var(--line); background: #fbf8f4; color: var(--muted); font-size: .8125rem; line-height: 1.5; }
+.detail-size-chart { width: 100%; table-layout: fixed; border-collapse: collapse; text-align: center; color: var(--ink); font-variant-numeric: tabular-nums; }
+.detail-size-chart caption { padding-bottom: 11px; color: var(--ink); text-align: start; font-size: 1rem; font-weight: 700; word-break: keep-all; }
+.detail-size-chart th, .detail-size-chart td { padding: 6px 3px; border: 1px solid var(--line); overflow-wrap: anywhere; }
+.detail-size-chart thead { background: #f0ece6; font-size: .75rem; }
+.detail-size-chart tbody tr { background: #fff; }
+.detail-size-chart .size-orderable { background: #e9eee8; }
+.size-orderable-label { display: block; font-size: .6875rem; font-weight: 650; color: #344b36; }
+.detail-size-measurement { border-top: 1px solid var(--line); padding-top: 9px; }
+.detail-size-measurement h2 { margin-bottom: 3px; color: var(--ink); font-size: .8125rem; }
 #detail-form .detail-size-guide:not([hidden]) + .detail-quantity { margin-top: 0; }
 .size-list { display: flex; flex-wrap: wrap; gap: 8px; }
 .size-list label { position: relative; cursor: pointer; }

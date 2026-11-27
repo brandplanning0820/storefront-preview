@@ -635,39 +635,103 @@ const CATALOG = {
   ]
 };
 const homeProductLimit = 10;
-const cucinelliSizeGuide = 'https://shop.brunellocucinelli.com/en-gl/sizeguide';
-const maxMaraSizeGuide = 'https://brand.maxmara.com/info/customer-care/size-guide';
-const weekendMaxMaraSizeGuide = 'https://gb.weekendmaxmara.com/info/customer-care/size-guide';
+const SIZE_GUIDE_TABLES = {
+  // https://shop.brunellocucinelli.com/en-gl/sizeguide
+  cucinelliMen: {
+    columns: ['INT', 'IT', 'FR', 'UK / US'],
+    rows: [
+      ['XXS', '44', '38', '32'], ['XS', '46', '40', '34'], ['S', '48', '42', '36'],
+      ['M', '50', '44', '38'], ['L', '52', '46', '40'], ['XL', '54', '48', '42'],
+      ['XXL', '56', '50', '44'], ['3XL', '58', '52', '46'],
+    ],
+  },
+  cucinelliWomen: {
+    columns: ['INT', 'IT', 'FR', 'US'],
+    rows: [
+      ['XXS', '36', '32', '0'], ['XS', '38', '34', '2'], ['S', '40', '36', '4'],
+      ['M', '42', '38', '6'], ['L', '44', '40', '8'], ['XL', '46', '42', '10'],
+      ['XXL', '48', '44', '12'], ['3XL', '50–52', '46–48', '14–16'],
+    ],
+  },
+  cucinelliMenShoes: {
+    columns: ['IT/EU', 'UK', 'US'],
+    rows: [
+      ['39', '5', '6'], ['39.5', '5.5', '6.5'], ['40', '6', '7'], ['40.5', '6.5', '7.5'],
+      ['41', '7', '8'], ['41.5', '7.5', '8.5'], ['42', '8', '9'], ['42.5', '8.5', '9.5'],
+      ['43', '9', '10'], ['43.5', '9.5', '10.5'], ['44', '10', '11'], ['44.5', '10.5', '11.5'],
+      ['45', '11', '12'], ['45.5', '11.5', '12.5'], ['46', '12', '13'], ['46.5', '12.5', '13.5'],
+      ['47', '13', '14'],
+    ],
+  },
+  // https://www.loewe.com/on/demandware.static/-/Library-Sites-LOW_SharedLibrary/default/dw5ed8398a/Size%20Guide/Size%20Guides%20Doc.pdf
+  loeweMenShoes: {
+    columns: ['EU', 'UK', 'US'],
+    rows: [
+      ['39', '5.5', '6'], ['40', '6.5', '7'], ['41', '7.5', '8'], ['42', '8', '8.5'],
+      ['43', '9', '9.5'], ['44', '9.5', '10'], ['45', '10.5', '11'],
+    ],
+  },
+  // https://brand.maxmara.com/info/customer-care/size-guide
+  maxMaraWomen: {
+    columns: ['INT', 'IT', 'UK', 'US'],
+    rows: [
+      ['XS', '36', '4', '2'], ['S', '38', '6', '4'], ['S–M', '40', '8', '6'],
+      ['M', '42', '10', '8'], ['M–L', '44', '12', '10'], ['L', '46', '14', '12'],
+      ['L–XL', '48', '16', '14'], ['XL', '50', '18', '16'], ['XXL', '52', '20', '18'],
+    ],
+  },
+  // https://gb.weekendmaxmara.com/info/customer-care/size-guide
+  weekendMaxMaraWomen: {
+    columns: ['INT', 'IT', 'UK', 'US'],
+    rows: [
+      ['XXS', '34', '2', '0'], ['XS', '36', '4', '2'], ['S', '38', '6', '4'],
+      ['S–M', '40', '8', '6'], ['M', '42', '10', '8'], ['M–L', '44', '12', '10'],
+      ['L', '46', '14', '12'], ['L–XL', '48', '16', '14'], ['XL', '50', '18', '16'],
+      ['XXL', '52', '20', '18'],
+    ],
+  },
+  // https://www.fendi.com/us-en/man/ready-to-wear/jeans-shirt-washed-blue-denim-shirt-flf002b1pdf19s8
+  fendiMenJacket: {
+    columns: ['INT', 'IT/EU', 'UK / US'],
+    rows: [
+      ['XS', '44', '34'], ['S', '46', '36'], ['M', '48', '38'], ['L', '50', '40'],
+      ['XL', '52', '42'], ['XXL', '54', '44'], ['XXXL', '56', '46'], ['4XL', '58', '48'],
+    ],
+  },
+  // https://www.moncler.com/en-gb/women/grenoble/ski-jackets/tolima-hooded-insulated-ski-jacket-black-L20981A00030597S5999.html
+  monclerTolima: {
+    columns: ['MONCLER', 'IT', ['가슴 (cm)', 'Chest (cm)'], ['허리 (cm)', 'Waist (cm)']],
+    rows: [
+      ['000', '36', '78', '59'], ['00', '38', '82', '61'], ['0', '40', '86', '63'],
+      ['1', '42', '90', '67'], ['2', '44', '94', '71'], ['3', '46', '98', '75'],
+      ['4', '48', '102', '79'], ['5', '50', '108', '83'], ['6', '52', '114', '89'],
+      ['7', '54', '118', '95'],
+    ],
+  },
+};
 const PRODUCT_SIZE_GUIDES = {
-  '13838058679': { system: 'it', source: cucinelliSizeGuide },
-  '13837820556': { system: 'itEu', source: cucinelliSizeGuide },
-  '13837188140': { source: cucinelliSizeGuide },
-  '13837109522': { system: 'it', source: cucinelliSizeGuide },
-  '13892310828': { system: 'uk', source: 'https://us.burberry.com/check-collar-cotton-polo-shirt-p81269661' },
+  '13838058679': { system: 'it', table: 'cucinelliWomen', optionColumn: 1 },
+  '13837820556': { system: 'itEu', table: 'cucinelliMenShoes' },
+  '13837188140': { table: 'cucinelliMen' },
+  '13837109522': { system: 'it', table: 'cucinelliMen', optionColumn: 1 },
+  '13892310828': { system: 'uk' },
   '13892307125': { system: 'uk' },
-  '13892302203': { system: 'it', source: 'https://uk.burberry.com/long-kensington-heritage-trench-coat-p81172281' },
-  '13862254499': { system: 'itEu', source: 'https://www.fendi.com/us-en/man/ready-to-wear/jeans-shirt-washed-blue-denim-shirt-flf002b1pdf19s8' },
-  '13852122401': { source: 'https://it.loropiana.com/en/shoes/man/loafers/anton-walk-loafer-FAO7135_8000.html' },
+  '13892302203': { system: 'it' },
+  '13862254499': { system: 'itEu', table: 'fendiMenJacket', optionColumn: 1 },
   '13862252891': { system: 'it' },
-  '13856179602': { source: maxMaraSizeGuide },
-  '13852689911': { source: cucinelliSizeGuide },
-  '13862251029': { system: 'denim', source: 'https://www.fendi.com/gb-en/man/ready-to-wear/long-jeans-washed-blue-jeans-flp377b1pdf19s8' },
-  '13886054581': { source: cucinelliSizeGuide },
-  '13888380600': { source: 'https://us.herno.com/en/women-clothing-aline/elisa-black-PI0650DIC12017ZM059300.html' },
-  '13888384529': { source: 'https://www.herno.com/it-it/a-shape/amelia-PI0505DIC120179300.html' },
-  '13812808803': { source: cucinelliSizeGuide },
-  '13763757759': { system: 'itEu', source: cucinelliSizeGuide },
-  '13871854526': { source: 'https://www.moncler.com/en-it/client-service/size_guide' },
-  '13851874254': { system: 'eu', source: 'https://www.loewe.com/usa/en/pd/others/faqs.html' },
-  '13856637332': { system: 'it', source: weekendMaxMaraSizeGuide },
-  '13850707048': { source: 'https://www.bottegaveneta.com/en-ro/cherry-ankle-boot-black-814493307.html' },
-  '13856634833': { system: 'it', source: 'https://fi.weekendmaxmara.com/p-we5046066206001-wkdcanapa-navy' },
-  '13856647708': { system: 'it', source: weekendMaxMaraSizeGuide },
-  '13871846270': { source: 'https://www.moncler.com/en-it/client-service/size_guide' },
-  '13871827399': { system: 'moncler', source: 'https://www.moncler.com/en-gb/women/grenoble/ski-jackets/tolima-hooded-insulated-ski-jacket-black-L20981A00030597S5999.html?size=0' },
-  '13856627314': { system: 'it', source: maxMaraSizeGuide },
-  '13856631606': { system: 'it', source: maxMaraSizeGuide },
-  '13856629339': { system: 'it', source: maxMaraSizeGuide },
+  '13852689911': { table: 'cucinelliWomen' },
+  '13862251029': { system: 'denim' },
+  '13886054581': { table: 'cucinelliWomen' },
+  '13812808803': { table: 'cucinelliMen' },
+  '13763757759': { system: 'itEu', table: 'cucinelliMenShoes' },
+  '13851874254': { system: 'eu', table: 'loeweMenShoes' },
+  '13856637332': { system: 'it', table: 'weekendMaxMaraWomen', optionColumn: 1 },
+  '13856634833': { system: 'it', table: 'weekendMaxMaraWomen', optionColumn: 1 },
+  '13856647708': { system: 'it', table: 'weekendMaxMaraWomen', optionColumn: 1 },
+  '13871827399': { system: 'moncler', table: 'monclerTolima' },
+  '13856627314': { system: 'it', table: 'maxMaraWomen', optionColumn: 1 },
+  '13856631606': { system: 'it', table: 'maxMaraWomen', optionColumn: 1 },
+  '13856629339': { system: 'it', table: 'maxMaraWomen', optionColumn: 1 },
 };
 const CLASSIC_OFFER_IDS = [
   '13886054581', '13886151623', '13886249922', '13812808803', '13763757759',

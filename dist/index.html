@@ -21,9 +21,9 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=product-size-guide">
-  <script src="catalog.js?v=product-size-guide" defer></script>
-  <script src="app.js?v=product-size-guide" defer></script>
+  <link rel="stylesheet" href="styles.css?v=store-size-charts">
+  <script src="catalog.js?v=store-size-charts" defer></script>
+  <script src="app.js?v=store-size-charts" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -252,8 +252,16 @@
             <details class="detail-size-guide" id="detail-size-guide" hidden>
               <summary><span data-en="Size guide">사이즈 가이드</span></summary>
               <div class="detail-size-guide-content">
+                <table class="detail-size-chart">
+                  <caption id="detail-size-guide-title"></caption>
+                  <thead><tr id="detail-size-chart-columns"></tr></thead>
+                  <tbody id="detail-size-chart-rows"></tbody>
+                </table>
                 <p id="detail-size-guide-note"></p>
-                <a id="detail-size-guide-source" target="_blank" rel="noopener" data-en="Official brand size information" hidden>브랜드 공식 사이즈 안내</a>
+                <div class="detail-size-measurement">
+                  <h2 data-en="How to measure">사이즈 재는 방법</h2>
+                  <p id="detail-size-guide-measurement"></p>
+                </div>
               </div>
             </details>
             <div class="detail-quantity">

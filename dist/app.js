@@ -842,8 +842,11 @@ const editorialOriginal = document.getElementById('editorial-original');
 const detailForm = document.getElementById('detail-form');
 const detailSizeSystem = document.getElementById('detail-size-system');
 const detailSizeGuide = document.getElementById('detail-size-guide');
+const detailSizeGuideTitle = document.getElementById('detail-size-guide-title');
+const detailSizeChartColumns = document.getElementById('detail-size-chart-columns');
+const detailSizeChartRows = document.getElementById('detail-size-chart-rows');
 const detailSizeGuideNote = document.getElementById('detail-size-guide-note');
-const detailSizeGuideSource = document.getElementById('detail-size-guide-source');
+const detailSizeGuideMeasurement = document.getElementById('detail-size-guide-measurement');
 const detailQuantity = document.getElementById('detail-quantity');
 const quantityDecrease = document.getElementById('quantity-decrease');
 const quantityIncrease = document.getElementById('quantity-increase');
@@ -1145,37 +1148,90 @@ const sizeSystemLabels = {
 };
 const internationalSize = /^(?:XS|XXS|XXXS|S|M|L|XL|XXL|XXXL|[2-9]XL)(?:\s*[~-]\s*(?:XS|XXS|XXXS|S|M|L|XL|XXL|XXXL|[2-9]XL))?$/i;
 
+const sizeGuideCategories = {
+  '하의': ['팬츠', 'Trousers', '허리의 가장 잘록한 부분과 엉덩이의 가장 넓은 부분을 수평으로 둘러 재세요.',
+    'Measure around your natural waist and the fullest part of your hips, keeping the tape level.'],
+  '상의': ['상의', 'Top', '가슴의 가장 넓은 부분을 수평으로 둘러 재세요.',
+    'Measure around the fullest part of your chest, keeping the tape level.'],
+  '아우터': ['아우터', 'Outerwear', '가슴 둘레를 재고, 안에 입을 옷의 두께도 고려해 주세요.',
+    'Measure around your chest and allow space for the layers you plan to wear.'],
+  '스키웨어': ['스키웨어', 'Skiwear', '가슴과 허리 둘레를 재고, 안에 입을 옷의 두께도 고려해 주세요.',
+    'Measure around your chest and waist and allow space for your base layers.'],
+  '신발': ['신발', 'Footwear', '서 있는 상태에서 양발의 뒤꿈치부터 가장 긴 발가락까지 재고, 더 긴 쪽을 기준으로 보세요.',
+    'While standing, measure from heel to longest toe on both feet and use the longer measurement.'],
+  '가방': ['가방', 'Bag', '상품 상세의 가로·세로·폭을 확인하고, 넣을 물건의 치수와 비교해 보세요.',
+    'Compare the bag dimensions in the product details with the items you plan to carry.'],
+  '주얼리': ['주얼리', 'Jewellery', '길이와 폭 등 착용에 필요한 치수는 상품 상세에서 확인해 주세요.',
+    'See the product details for dimensions such as length and width.'],
+  '패션잡화': ['잡화', 'Accessory', '상품 상세의 치수를 가지고 있는 비슷한 제품과 비교해 보세요.',
+    'Compare the dimensions in the product details with a similar item you already own.'],
+};
+
+function renderSizeGuideTable(table, optionColumn, sizes) {
+  const columns = table?.columns ?? [['등록 옵션', 'Listed option']];
+  const rows = table?.rows ?? sizes.map(size => [size]);
+  detailSizeChartColumns.replaceChildren(...columns.map(column => {
+    const cell = document.createElement('th');
+    cell.scope = 'col';
+    setLocalized(cell, ...(Array.isArray(column) ? column : [column]));
+    return cell;
+  }));
+  detailSizeChartRows.replaceChildren(...rows.map(values => {
+    const row = document.createElement('tr');
+    const isOrderable = sizes.includes(values[optionColumn]);
+    row.classList.toggle('size-orderable', isOrderable);
+    values.forEach((value, index) => {
+      const isOption = index === optionColumn;
+      const cell = document.createElement(isOption ? 'th' : 'td');
+      if (isOption) cell.scope = 'row';
+      cell.textContent = value;
+      if (isOption && isOrderable && table) {
+        const status = document.createElement('span');
+        status.className = 'size-orderable-label';
+        setLocalized(status, '주문 가능', 'Available');
+        cell.append(status);
+      }
+      row.append(cell);
+    });
+    return row;
+  }));
+}
+
 function showDetailSizeGuide(product) {
   const { sizes } = product;
-  detailSizeGuide.open = false;
-  detailSizeGuide.hidden = detailSizeSystem.hidden = !sizes.length;
-  if (!sizes.length) return;
-
   const guide = PRODUCT_SIZE_GUIDES[product.id];
+  const table = SIZE_GUIDE_TABLES[guide?.table];
+  detailSizeGuide.open = false;
+  detailSizeSystem.hidden = !sizes.length;
+  detailSizeGuide.hidden = !sizes.length && !table;
+  if (detailSizeGuide.hidden) return;
+
   let system = guide?.system;
-  if (!system) {
+  if (!system && sizes.length) {
     if (sizes.every(size => /^(?:OS|ONE SIZE)$/i.test(size))) system = 'oneSize';
     else if (sizes.every(size => internationalSize.test(size))) system = 'international';
     else system = 'unspecified';
   }
-  setLocalized(detailSizeSystem, ...sizeSystemLabels[system]);
-  const [label, labelEn] = sizeSystemLabels[system];
-  const available = sizes.join(' · ');
-  if (system === 'unspecified') {
-    setLocalized(detailSizeGuideNote, '등록 옵션 ' + available + ' · 사이즈 기준은 문의해 주세요.',
-      'Available options ' + available + ' · Contact us to confirm the sizing system.');
+  if (system) setLocalized(detailSizeSystem, ...sizeSystemLabels[system]);
+  const [category, categoryEn, measure, measureEn] = sizeGuideCategories[product.category] ?? sizeGuideCategories['패션잡화'];
+  const isSkirt = product.category === '하의' && product.name.includes('스커트');
+  const brand = brandNames.get(product.brand) || product.brand;
+  const title = brand + ' ' + (isSkirt ? '스커트' : category) + ' 사이즈 가이드';
+  const titleEn = product.brand + ' ' + (isSkirt ? 'Skirt' : categoryEn) + ' size guide';
+  setLocalized(detailSizeGuideTitle, title, titleEn);
+  setLocalized(detailSizeGuideMeasurement, measure, measureEn);
+  renderSizeGuideTable(table, guide?.optionColumn ?? 0, sizes);
+
+  if (table) {
+    setLocalized(detailSizeGuideNote, '전체 사이즈는 환산표 기준입니다. 주문 가능 표시는 현재 이 상품의 옵션이에요.',
+      'The chart shows the full size range. Available marks the options listed for this product.');
   } else if (system === 'oneSize') {
     setLocalized(detailSizeGuideNote, 'OS는 단일 사이즈예요. 치수는 상품 상세 정보를 확인해 주세요.',
       'OS means one size. See the product details for measurements.');
-  } else if (system === 'international' && !guide?.source) {
-    setLocalized(detailSizeGuideNote, available + ' · 같은 문자 사이즈라도 상품마다 실제 치수가 다를 수 있어요.',
-      available + ' · Measurements can vary between products with the same letter size.');
   } else {
-    setLocalized(detailSizeGuideNote, label + ' · ' + available, labelEn + ' · ' + available);
+    setLocalized(detailSizeGuideNote, '이 상품은 등록 옵션을 먼저 안내해요. 전체 사이즈나 환산 기준은 문의해 주세요.',
+      'The table shows listed options. Contact us to check the full range or size conversions.');
   }
-  detailSizeGuideSource.hidden = !guide?.source;
-  detailSizeGuideSource.removeAttribute('href');
-  if (guide?.source) detailSizeGuideSource.href = guide.source;
 }
 
 function showProduct(product, orderItem) {
