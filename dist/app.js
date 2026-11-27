@@ -1733,9 +1733,9 @@ panel.addEventListener('click', event => {
 });
 
 const heroTrack = document.getElementById('hero-track');
+const heroCarousel = heroTrack.closest('.hero');
 const heroSlides = [...heroTrack.children];
 const heroDots = [...document.querySelectorAll('[data-hero-page]')];
-const heroToggle = document.getElementById('hero-toggle');
 const heroIntervalMs = 5000;
 const heroFirst = 1;
 const heroLast = heroSlides.length;
@@ -1744,7 +1744,6 @@ let heroWidth = 0;
 let heroDestination;
 let heroTimeout;
 let heroVisible = false;
-let heroPaused = reducedMotion.matches;
 
 function copyHeroSlide(slide) {
   const copy = slide.cloneNode(true);
@@ -1768,10 +1767,13 @@ function syncHeroControls() {
   });
 }
 
+function carouselInUse(carousel) {
+  return carousel.querySelector(':focus-visible') || (hoverPointer.matches && carousel.matches(':hover'));
+}
+
 function scheduleHero() {
   window.clearTimeout(heroTimeout);
-  const keyboardFocus = heroTrack.matches(':focus-visible') || heroTrack.querySelector(':focus-visible');
-  if (!heroVisible || heroPaused || home.hidden || document.hidden || keyboardFocus) return;
+  if (!heroVisible || reducedMotion.matches || home.hidden || document.hidden || carouselInUse(heroCarousel)) return;
   heroTimeout = window.setTimeout(() => {
     if (document.querySelector('dialog[open]') || heroDestination !== undefined) scheduleHero();
     else moveHero({ step: 1 });
@@ -1824,13 +1826,6 @@ function sizeHero() {
   if (width) heroTrack.scrollTo({ left: width * (heroPage + heroFirst), behavior: 'instant' });
 }
 
-function updateHeroToggle() {
-  setLocalized(heroToggle, heroPaused ? '배너 자동재생 시작' : '배너 자동재생 멈추기',
-    heroPaused ? 'Play banner slideshow' : 'Pause banner slideshow', 'aria-label');
-  heroToggle.firstElementChild.textContent = heroPaused ? '▶' : 'Ⅱ';
-  scheduleHero();
-}
-
 heroDots.forEach((button) => button.addEventListener('click', () => moveHero({ page: Number(button.dataset.heroPage) })));
 document.querySelectorAll('[data-hero-step]').forEach((button) => {
   button.addEventListener('click', () => moveHero({ step: Number(button.dataset.heroStep) }));
@@ -1855,13 +1850,12 @@ heroTrack.addEventListener('keydown', (event) => {
   event.preventDefault();
   moveHero({ step: event.key === 'ArrowRight' ? 1 : -1 });
 });
-heroTrack.addEventListener('focusin', scheduleHero);
-heroTrack.addEventListener('focusout', () => queueMicrotask(scheduleHero));
-heroToggle.addEventListener('click', () => {
-  heroPaused = !heroPaused;
-  updateHeroToggle();
-});
+heroCarousel.addEventListener('focusin', scheduleHero);
+heroCarousel.addEventListener('focusout', () => queueMicrotask(scheduleHero));
+heroCarousel.addEventListener('pointerenter', scheduleHero);
+heroCarousel.addEventListener('pointerleave', scheduleHero);
 document.addEventListener('visibilitychange', scheduleHero);
+reducedMotion.addEventListener('change', scheduleHero);
 new ResizeObserver(sizeHero).observe(heroTrack);
 new IntersectionObserver(([entry]) => {
   heroVisible = entry.intersectionRatio >= 0.35;
@@ -1869,7 +1863,7 @@ new IntersectionObserver(([entry]) => {
 }, { threshold: 0.35 }).observe(heroTrack);
 sizeHero();
 syncHeroControls();
-updateHeroToggle();
+scheduleHero();
 
 const millisecondsPerSecond = 1000;
 const secondsPerMinute = 60;
@@ -1910,10 +1904,8 @@ updateCountdown();
 
 const reviewStage = document.getElementById('review-stage');
 const reviewCarousel = document.getElementById('review-carousel');
-const reviewToggle = document.getElementById('review-toggle');
 const reviewIntervalMs = 4000;
 let featuredReview = 0;
-let reviewPaused = false;
 let reviewVisible = false;
 let reviewTimeout;
 
@@ -1987,7 +1979,10 @@ function positionReviews() {
     const slot = reviewSlot(index, featuredReview, reviewCards.length);
     const previous = Number(card.dataset.slot);
     const hidden = slot < 0 || slot > 3;
-    if (hidden && card === document.activeElement) reviewToggle.focus({ preventScroll: true });
+    if (hidden && card === document.activeElement) {
+      const direction = previous === 0 ? -1 : 1;
+      reviewCarousel.querySelector(`[data-review-step="${direction}"]`).focus({ preventScroll: true });
+    }
     card.dataset.wrap = String(Number.isFinite(previous) && Math.abs(previous - slot) > 1);
     card.dataset.slot = String(slot);
     card.inert = hidden;
@@ -2001,8 +1996,7 @@ function positionReviews() {
 
 function scheduleReview() {
   window.clearTimeout(reviewTimeout);
-  const focusedCard = document.activeElement?.matches('.review-card:focus-visible');
-  if (!reviewVisible || reviewPaused || home.hidden || document.hidden || panel.open || searchPanel.open || focusedCard) return;
+  if (!reviewVisible || reducedMotion.matches || home.hidden || document.hidden || panel.open || searchPanel.open || carouselInUse(reviewCarousel)) return;
   reviewTimeout = window.setTimeout(() => moveReviews(1), reviewIntervalMs);
 }
 
@@ -2012,19 +2006,8 @@ function moveReviews(step) {
   scheduleReview();
 }
 
-function updateReviewControl() {
-  setLocalized(reviewToggle, reviewPaused ? '리뷰 자동재생 시작' : '리뷰 자동재생 멈추기',
-    reviewPaused ? 'Resume review carousel' : 'Pause review carousel', 'aria-label');
-  reviewToggle.firstElementChild.textContent = reviewPaused ? '▶' : 'Ⅱ';
-  scheduleReview();
-}
-
 document.querySelectorAll('[data-review-step]').forEach((button) => {
   button.addEventListener('click', () => moveReviews(Number(button.dataset.reviewStep)));
-});
-reviewToggle.addEventListener('click', () => {
-  reviewPaused = !reviewPaused;
-  updateReviewControl();
 });
 const reviewObserver = new IntersectionObserver(([entry]) => {
   reviewVisible = entry.intersectionRatio >= 0.2;
@@ -2033,14 +2016,17 @@ const reviewObserver = new IntersectionObserver(([entry]) => {
 reviewObserver.observe(reviewStage);
 reviewCarousel.addEventListener('focusin', scheduleReview);
 reviewCarousel.addEventListener('focusout', () => queueMicrotask(scheduleReview));
+reviewCarousel.addEventListener('pointerenter', scheduleReview);
+reviewCarousel.addEventListener('pointerleave', scheduleReview);
 reviewCarousel.addEventListener('keydown', (event) => {
   if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
   event.preventDefault();
   moveReviews(event.key === 'ArrowRight' ? 1 : -1);
 });
 document.addEventListener('visibilitychange', scheduleReview);
+reducedMotion.addEventListener('change', scheduleReview);
 positionReviews();
-updateReviewControl();
+scheduleReview();
 
 const reviewList = document.getElementById('review-page-list');
 reviewList.append(...REVIEWS.map((review) => {
