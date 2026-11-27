@@ -431,14 +431,15 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
 .search-inner {
   --search-padding-block: clamp(18px, 3vw, 42px);
   display: grid;
-  grid-template-columns: clamp(210px, 25%, 330px) minmax(0, 1fr);
-  grid-template-areas: "viewed search";
-  gap: clamp(24px, 4.8vw, 72px);
+  grid-template:
+    "viewed topline" max-content
+    "viewed keywords" max-content
+    "viewed results" 1fr / clamp(210px, 25%, 330px) minmax(0, 1fr);
+  column-gap: clamp(24px, 4.8vw, 72px);
   width: min(1440px, calc(100% - clamp(32px, 5vw, 64px)));
   margin-inline: auto;
   padding-block: var(--search-padding-block);
 }
-.search-main { grid-area: search; min-width: 0; }
 .search-viewed { grid-area: viewed; min-width: 0; padding-inline-end: clamp(14px, 2.8vw, 36px); border-inline-end: 1px solid var(--line); }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -460,12 +461,14 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
   from { background-color: transparent; }
 }
 
-.search-topline { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: clamp(12px, 3vw, 46px); }
+.search-topline { grid-area: topline; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: clamp(12px, 3vw, 46px); }
 .search-topline h2 { font-size: clamp(1.1rem, 1.65vw, 1.6rem); font-weight: 760; }
 .search-topline .search-box { border-radius: 8px; height: 48px; }
 .search-topline .search-box input { font-size: 1rem; }
 .search-close { font-size: 1.85rem; }
-.search-keyword-groups { display: grid; grid-template-columns: min(65%, 28rem) minmax(0, 1fr); gap: clamp(12px, 2vw, 26px); margin-top: 23px; }
+.search-keyword-groups { grid-area: keywords; display: grid; grid-template: "suggested recent" / min(65%, 28rem) minmax(0, 1fr); gap: clamp(12px, 2vw, 26px); margin-top: 23px; }
+.search-recent-group { grid-area: recent; }
+.search-suggested-group { grid-area: suggested; }
 :is(.search-keyword-groups, .search-viewed) h3 { font-size: .9375rem; padding-bottom: 10px; border-bottom: 1px solid var(--line); margin-bottom: 10px; }
 :is(.search-keyword-groups, .search-viewed) p, #search-count { color: var(--muted); font-size: .875rem; }
 .search-chips { display: flex; flex-wrap: wrap; gap: 7px; }
@@ -507,7 +510,7 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
 .search-viewed-name { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-size: .8125rem; line-height: 1.3; overflow-wrap: anywhere; }
 .search-viewed-card:hover .search-viewed-name { text-decoration: underline; text-underline-offset: 3px; }
 .search-viewed-price { color: var(--muted); font-size: .75rem; font-weight: 600; }
-#search-results { margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--line); }
+#search-results { grid-area: results; min-width: 0; margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--line); }
 #search-count { margin-bottom: 12px; }
 #search-brand-results { display: grid; gap: 8px; margin-bottom: 16px; }
 #search-brand-results h3 { font-size: .875rem; }
@@ -527,8 +530,20 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
   #search-products { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 760px) {
-  .search-inner { grid-template-columns: minmax(0, 1fr); grid-template-areas: "search" "viewed"; gap: 24px; }
-  .search-viewed { padding: 16px 0 0; border: 0; border-top: 1px solid var(--line); }
+  .search-inner { grid-template: "topline" "keywords" "viewed" "results" / minmax(0, 1fr); }
+  .search-keyword-groups { grid-template: "recent" "suggested" / minmax(0, 1fr); gap: 16px; margin-top: 18px; }
+  .search-suggested-chips { flex-wrap: wrap; overflow: visible; padding-bottom: 0; }
+  .search-viewed { margin-top: 18px; padding: 14px 0 0; border: 0; border-top: 1px solid var(--line); }
+  .search-viewed .search-viewed-products { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; max-width: none; }
+  .search-viewed-products > li:nth-child(n + 6) { display: none; }
+  .search-viewed .search-viewed-card { grid-template-rows: repeat(4, auto); gap: 3px; }
+  .search-viewed .search-viewed-card img { aspect-ratio: 4 / 5; }
+  .search-viewed :is(.search-viewed-brand, .search-viewed-name, .search-viewed-price) { display: block; min-height: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .search-viewed .search-viewed-brand { display: -webkit-box; min-height: 2.4em; font-size: clamp(.5625rem, 2.35vw, .625rem); white-space: normal; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+  .search-viewed .search-viewed-name { font-size: .6875rem; }
+  .search-viewed .search-viewed-price { font-size: clamp(.5625rem, 2.4vw, .6875rem); }
+  .search-viewed .search-viewed-card:focus-visible { outline-offset: -2px; }
+  #search-results { margin-top: 18px; }
 }
 .review-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap: clamp(12px, 2vw, 28px); }
 .review-list li { display: grid; grid-template-columns: clamp(88px, 13vw, 164px) minmax(0, 1fr); align-items: start; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }

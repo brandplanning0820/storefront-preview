@@ -21,7 +21,7 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=outline-card-hearts">
+  <link rel="stylesheet" href="styles.css?v=mobile-search-layout">
   <script src="catalog.js?v=home-ten-products" defer></script>
   <script src="app.js?v=wishlist-and-promotion-badges" defer></script>
 </head>
@@ -570,39 +570,29 @@
 
   <dialog id="search-panel" class="search-panel" aria-labelledby="search-heading">
     <div class="search-inner">
-      <div class="search-main">
-        <div class="search-topline">
-          <h2 id="search-heading" data-en="Product search">상품 검색</h2>
-          <form class="search-box" id="search-form" role="search">
-            <label for="search" class="visually-hidden" data-en="Brand or product name">브랜드 또는 상품명</label>
-            <input id="search" name="q" type="search" placeholder="브랜드 또는 상품명" required maxlength="80" autofocus data-en-placeholder="Brand or product name">
-            <button type="submit" aria-label="검색" data-en-aria-label="Search"><span class="search-icon" aria-hidden="true"></span></button>
-          </form>
-          <form method="dialog"><button type="submit" class="nav-button search-close" aria-label="검색 닫기" data-en-aria-label="Close search">×</button></form>
-        </div>
-        <div id="search-keywords" class="search-keyword-groups">
-          <section>
-            <h3 data-en="Suggested searches">추천 검색어</h3>
-            <div class="search-chips search-suggested-chips">
-              <button type="button" data-search-term="브루넬로 쿠치넬리" data-en="Brunello Cucinelli">브루넬로 쿠치넬리</button>
-              <button type="button" data-search-term="막스마라" data-en="Max Mara">막스마라</button>
-              <button type="button" data-search-term="버버리" data-en="Burberry">버버리</button>
-              <button type="button" data-search-term="펜디" data-en="Fendi">펜디</button>
-            </div>
-          </section>
-          <section>
-            <h3 data-en="Recent searches">최근 검색어</h3>
-            <div class="search-chips" id="search-recent"></div>
-          </section>
-        </div>
-        <div id="search-results" hidden>
-          <p id="search-count" role="status"></p>
-          <section id="search-brand-results" aria-labelledby="search-brand-heading" hidden>
-            <h3 id="search-brand-heading" data-en="Brands">브랜드</h3>
-            <div class="search-chips"></div>
-          </section>
-          <ul class="product-grid" id="search-products"></ul>
-        </div>
+      <div class="search-topline">
+        <h2 id="search-heading" data-en="Product search">상품 검색</h2>
+        <form class="search-box" id="search-form" role="search">
+          <label for="search" class="visually-hidden" data-en="Brand or product name">브랜드 또는 상품명</label>
+          <input id="search" name="q" type="search" placeholder="브랜드 또는 상품명" required maxlength="80" autofocus data-en-placeholder="Brand or product name">
+          <button type="submit" aria-label="검색" data-en-aria-label="Search"><span class="search-icon" aria-hidden="true"></span></button>
+        </form>
+        <form method="dialog"><button type="submit" class="nav-button search-close" aria-label="검색 닫기" data-en-aria-label="Close search">×</button></form>
+      </div>
+      <div id="search-keywords" class="search-keyword-groups">
+        <section class="search-recent-group">
+          <h3 data-en="Recent searches">최근 검색어</h3>
+          <div class="search-chips" id="search-recent"></div>
+        </section>
+        <section class="search-suggested-group">
+          <h3 data-en="Suggested searches">추천 검색어</h3>
+          <div class="search-chips search-suggested-chips">
+            <button type="button" data-search-term="브루넬로 쿠치넬리" data-en="Brunello Cucinelli">브루넬로 쿠치넬리</button>
+            <button type="button" data-search-term="막스마라" data-en="Max Mara">막스마라</button>
+            <button type="button" data-search-term="버버리" data-en="Burberry">버버리</button>
+            <button type="button" data-search-term="펜디" data-en="Fendi">펜디</button>
+          </div>
+        </section>
       </div>
       <section class="search-viewed" aria-labelledby="search-viewed-heading">
         <div class="search-viewed-content">
@@ -611,6 +601,14 @@
           <ul class="search-viewed-products" id="search-viewed-products" hidden></ul>
         </div>
       </section>
+      <div id="search-results" hidden>
+        <p id="search-count" role="status"></p>
+        <section id="search-brand-results" aria-labelledby="search-brand-heading" hidden>
+          <h3 id="search-brand-heading" data-en="Brands">브랜드</h3>
+          <div class="search-chips"></div>
+        </section>
+        <ul class="product-grid" id="search-products"></ul>
+      </div>
     </div>
   </dialog>
 
