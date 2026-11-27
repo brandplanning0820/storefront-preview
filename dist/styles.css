@@ -655,6 +655,12 @@ html[lang="en"] .brand-letter a span[lang="ko"] { display: none; }
 .detail-material-description { margin-top: 1.55em; }
 .detail-options, .brand-filter { border: 0; padding: 0; margin: 0; min-inline-size: 0; }
 .detail-options legend, .brand-filter legend { font-weight: 700; margin-bottom: 10px; padding: 0; }
+.detail-size-system { display: inline-block; margin-inline-start: 8px; padding: 2px 7px; border-radius: 4px; background: var(--sand); color: var(--muted); font-size: .75rem; font-weight: 550; vertical-align: middle; }
+.detail-size-guide > summary { width: fit-content; margin-inline-start: auto; padding: 5px 0 3px 8px; color: var(--muted); font-size: .8125rem; cursor: pointer; }
+.detail-size-guide > summary span, .detail-size-guide-content a { text-decoration: underline; text-underline-offset: 3px; }
+.detail-size-guide-content { margin-top: 6px; padding: 12px 14px; border: 1px solid var(--line); background: #fbf8f4; color: var(--muted); font-size: .875rem; line-height: 1.5; }
+.detail-size-guide-content a { display: inline-block; margin-top: 6px; color: var(--ink); }
+#detail-form .detail-size-guide:not([hidden]) + .detail-quantity { margin-top: 0; }
 .size-list { display: flex; flex-wrap: wrap; gap: 8px; }
 .size-list label { position: relative; cursor: pointer; }
 .size-list input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }

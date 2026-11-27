@@ -21,9 +21,9 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=store-inquiries">
-  <script src="catalog.js?v=smartstore-weekly-selection" defer></script>
-  <script src="app.js?v=chat-connection-message" defer></script>
+  <link rel="stylesheet" href="styles.css?v=product-size-guide">
+  <script src="catalog.js?v=product-size-guide" defer></script>
+  <script src="app.js?v=product-size-guide" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -245,7 +245,17 @@
             <p data-en="Every Monday at 3 PM Korea time">매주 월요일 오후 3시 · 한국 시간</p>
           </div>
           <form id="detail-form">
-            <fieldset class="detail-options"><legend data-en="Available sizes">주문 가능 사이즈</legend><div id="detail-sizes" class="size-list"></div></fieldset>
+            <fieldset class="detail-options">
+              <legend><span data-en="Available sizes">주문 가능 사이즈</span><span class="detail-size-system" id="detail-size-system" hidden></span></legend>
+              <div id="detail-sizes" class="size-list"></div>
+            </fieldset>
+            <details class="detail-size-guide" id="detail-size-guide" hidden>
+              <summary><span data-en="Size guide">사이즈 가이드</span></summary>
+              <div class="detail-size-guide-content">
+                <p id="detail-size-guide-note"></p>
+                <a id="detail-size-guide-source" target="_blank" rel="noopener" data-en="Official brand size information" hidden>브랜드 공식 사이즈 안내</a>
+              </div>
+            </details>
             <div class="detail-quantity">
               <label for="detail-quantity" data-en="Quantity">수량</label>
               <div class="quantity-stepper">
@@ -461,7 +471,7 @@
         <h2 data-en="Customer support">고객 안내</h2>
         <a href="tel:+821030865286" data-en="Customer service +82 10-3086-5286">고객센터 010-3086-5286</a>
         <a href="#notices/all" data-en="Announcements">공지사항</a>
-        <a href="#inquiries" data-inquiry-launch aria-haspopup="dialog" data-en="Product and delivery inquiries">상품·배송 문의</a>
+        <a href="#inquiries" data-en="Product and delivery inquiries">상품·배송 문의</a>
         <a href="mailto:brandplanning.ltd@gmail.com">brandplanning.ltd@gmail.com</a>
       </section>
       <section class="footer-business">

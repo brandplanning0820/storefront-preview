@@ -840,6 +840,10 @@ const editorialArticle = document.getElementById('editorial-article');
 const editorialTitle = document.getElementById('editorial-title');
 const editorialOriginal = document.getElementById('editorial-original');
 const detailForm = document.getElementById('detail-form');
+const detailSizeSystem = document.getElementById('detail-size-system');
+const detailSizeGuide = document.getElementById('detail-size-guide');
+const detailSizeGuideNote = document.getElementById('detail-size-guide-note');
+const detailSizeGuideSource = document.getElementById('detail-size-guide-source');
 const detailQuantity = document.getElementById('detail-quantity');
 const quantityDecrease = document.getElementById('quantity-decrease');
 const quantityIncrease = document.getElementById('quantity-increase');
@@ -1128,6 +1132,52 @@ function showProductGallery(product) {
   thumbnails.scrollLeft = 0;
 }
 
+const sizeSystemLabels = {
+  it: ['이탈리아 (IT)', 'Italian (IT)'],
+  eu: ['유럽 (EU)', 'European (EU)'],
+  itEu: ['이탈리아·유럽 (IT/EU)', 'Italian / European (IT/EU)'],
+  uk: ['영국 (UK)', 'UK sizing'],
+  international: ['국제 (INT)', 'International (INT)'],
+  oneSize: ['단일 사이즈 (OS)', 'One size (OS)'],
+  moncler: ['몽클레르 기준', 'Moncler sizing'],
+  denim: ['데님 허리 기준', 'Denim waist sizing'],
+  unspecified: ['기준 확인 필요', 'Sizing system to confirm'],
+};
+const internationalSize = /^(?:XS|XXS|XXXS|S|M|L|XL|XXL|XXXL|[2-9]XL)(?:\s*[~-]\s*(?:XS|XXS|XXXS|S|M|L|XL|XXL|XXXL|[2-9]XL))?$/i;
+
+function showDetailSizeGuide(product) {
+  const { sizes } = product;
+  detailSizeGuide.open = false;
+  detailSizeGuide.hidden = detailSizeSystem.hidden = !sizes.length;
+  if (!sizes.length) return;
+
+  const guide = PRODUCT_SIZE_GUIDES[product.id];
+  let system = guide?.system;
+  if (!system) {
+    if (sizes.every(size => /^(?:OS|ONE SIZE)$/i.test(size))) system = 'oneSize';
+    else if (sizes.every(size => internationalSize.test(size))) system = 'international';
+    else system = 'unspecified';
+  }
+  setLocalized(detailSizeSystem, ...sizeSystemLabels[system]);
+  const [label, labelEn] = sizeSystemLabels[system];
+  const available = sizes.join(' · ');
+  if (system === 'unspecified') {
+    setLocalized(detailSizeGuideNote, '등록 옵션 ' + available + ' · 사이즈 기준은 문의해 주세요.',
+      'Available options ' + available + ' · Contact us to confirm the sizing system.');
+  } else if (system === 'oneSize') {
+    setLocalized(detailSizeGuideNote, 'OS는 단일 사이즈예요. 치수는 상품 상세 정보를 확인해 주세요.',
+      'OS means one size. See the product details for measurements.');
+  } else if (system === 'international' && !guide?.source) {
+    setLocalized(detailSizeGuideNote, available + ' · 같은 문자 사이즈라도 상품마다 실제 치수가 다를 수 있어요.',
+      available + ' · Measurements can vary between products with the same letter size.');
+  } else {
+    setLocalized(detailSizeGuideNote, label + ' · ' + available, labelEn + ' · ' + available);
+  }
+  detailSizeGuideSource.hidden = !guide?.source;
+  detailSizeGuideSource.removeAttribute('href');
+  if (guide?.source) detailSizeGuideSource.href = guide.source;
+}
+
 function showProduct(product, orderItem) {
   const group = groupFor(product);
   const hasPrice = Number.isFinite(product.price);
@@ -1163,6 +1213,7 @@ function showProduct(product, orderItem) {
   showProductSpecs(product);
   if (!hasPrice) return;
   if (orderItem) detailQuantity.value = orderItem.quantity;
+  showDetailSizeGuide(product);
 
   const chips = document.getElementById('detail-sizes');
   chips.replaceChildren();
