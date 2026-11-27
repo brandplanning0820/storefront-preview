@@ -40,10 +40,20 @@ img { display: block; max-width: 100%; }
 .visually-hidden, .skip-link:not(:focus) { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .skip-link:focus { position: fixed; z-index: 20; top: 12px; left: 12px; background: white; padding: 12px 16px; }
 
-.site-header { position: relative; display: grid; align-content: end; gap: clamp(14px, 1.5vw, 29px); min-height: var(--expanded-header-height); padding: 17px 4.5% 13px 14.25%; background: #fff; }
-.brand-mark { display: inline-grid; place-items: center; inline-size: clamp(76px, 6.15vw, 118px); aspect-ratio: 118 / 82; border-radius: clamp(10px, .78vw, 15px); background: #000; }
+.site-header {
+  --brand-mark-inset: 1%;
+  --brand-mark-width: clamp(76px, 6.15vw, 118px);
+  position: relative;
+  display: grid;
+  align-content: end;
+  gap: clamp(14px, 1.5vw, 29px);
+  min-height: var(--expanded-header-height);
+  padding: 17px 4.5% 13px calc(var(--brand-mark-inset) + var(--brand-mark-width));
+  background: #fff;
+}
+.brand-mark { display: inline-grid; place-items: center; inline-size: var(--brand-mark-width); aspect-ratio: 118 / 82; border-radius: clamp(10px, .78vw, 15px); background: #000; }
 .brand-mark img { width: 84.9%; height: auto; }
-.site-header > .brand-mark { position: absolute; left: 1%; top: 17px; }
+.site-header > .brand-mark { position: absolute; left: var(--brand-mark-inset); top: 17px; }
 .account-links { display: flex; justify-content: end; align-items: center; flex-wrap: wrap; gap: clamp(9px, .84vw, 16px); font-size: .875rem; color: var(--muted); }
 .account-links :is(a, button):hover, :is(.site-nav-group, .arrivals-menu, .weekly-nav) > a:hover { text-decoration: underline; text-underline-offset: 5px; }
 .account-links a[aria-current] { color: var(--ink); font-weight: 750; }
@@ -59,8 +69,8 @@ img { display: block; max-width: 100%; }
 .globe-icon::before { content: ""; position: absolute; inset: -1px 3px; border: 1px solid currentColor; border-radius: 50%; }
 .globe-icon::after { content: ""; position: absolute; inset: calc(50% - .5px) 0 auto; border-top: 1px solid currentColor; }
 .mobile-menu-toggle, .account-launch, .shop-bag-icon, #cart-icon-count { display: none; }
-.navigation-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(180px, 25.65%); gap: clamp(18px, 4vw, 76px); align-items: center; }
-.site-nav { display: flex; align-items: center; justify-content: space-between; gap: 13px; min-width: 0; max-width: 888px; padding-block: 5px; overflow-x: auto; scrollbar-width: thin; white-space: nowrap; font-weight: 620; }
+.navigation-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(180px, 23.6%); align-items: center; }
+.site-nav { display: flex; align-items: center; justify-content: space-evenly; min-width: 0; padding-block: 5px; overflow-x: auto; scrollbar-width: thin; white-space: nowrap; font-weight: 620; }
 .site-nav-group { display: contents; }
 .weekly-nav { display: inline-flex; align-items: center; }
 .weekly-nav-tooltip { position: fixed; z-index: 12; padding: 3px 8px; border-radius: 5px; background: #302822; color: #fff; font-size: .75rem; font-weight: 620; line-height: 1.15; white-space: nowrap; pointer-events: none; box-shadow: 0 2px 9px rgb(30 24 19 / .14); }
@@ -629,7 +639,6 @@ html[lang="en"] .brand-letter a span[lang="ko"] { display: none; }
   .brand-group-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 6px; }
 }
 @media (max-width: 1150px) {
-  .site-header { padding-left: 11%; }
   .site-nav { font-size: .9rem; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
@@ -682,11 +691,25 @@ html[lang="en"] .brand-letter a span[lang="ko"] { display: none; }
 @media (1150px < width <= 1350px) {
   .site-nav { white-space: nowrap; }
 }
+@media (800px < width <= 1350px) {
+  .site-nav { grid-template-columns: repeat(5, minmax(min-content, 1fr)) minmax(min-content, max-content); padding-inline: clamp(12px, 2vw, 28px); }
+}
+@media (800px < width <= 1050px) {
+  html[lang="en"] .site-nav { padding-inline: 12px; column-gap: 6px; }
+}
 @media (980px < width <= 1350px) {
-  .site-header.is-compact .navigation-row { grid-template-columns: minmax(0, 1fr) clamp(110px, 18%, 194px); gap: 16px; }
+  .site-header.is-compact .navigation-row { grid-template-columns: minmax(0, 1fr) clamp(110px, 18%, 194px); }
+}
+@media (width > 980px) {
+  .site-header.is-compact { column-gap: 0; }
+  .site-header.is-compact .navigation-row { column-gap: 0; }
+  .site-header.is-compact .account-links { margin-inline-start: clamp(12px, 2.3vw, 42px); }
+}
+@media (1350px < width <= 1550px) {
+  html[lang="en"] .site-header.is-compact .navigation-row { grid-template-columns: minmax(0, 1fr) 120px; }
 }
 @media (800px < width <= 980px) {
-  .site-header:not(.is-compact) .navigation-row { grid-template-columns: minmax(0, 1fr) minmax(135px, 21%); gap: 18px; }
+  .site-header:not(.is-compact) .navigation-row { grid-template-columns: minmax(0, 1fr) minmax(135px, 21%); }
 }
 @media (520px < width <= 980px) {
   html { scroll-padding-top: 130px; }
