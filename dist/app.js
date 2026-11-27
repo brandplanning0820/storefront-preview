@@ -65,7 +65,7 @@ const brandNames = new Map([
   ['LORO PIANA', '로로피아나'], ['BRIONI', '브리오니'], ['ZEGNA', '제냐'],
   ['CESARE ATTOLINI', '체사레 아톨리니'], ['KITON', '키톤'], ['PEUTEREY', '페트레이'],
 ]);
-const classicBrands = new Set(['BRUNELLO CUCINELLI', 'TOM FORD']);
+const classicOfferIds = new Set(CLASSIC_OFFER_IDS);
 const maxMaraBrands = ['MAX MARA', "'S MAX MARA", 'MAX MARA STUDIO', 'WEEKEND MAX MARA'];
 const maxMaraGroup = 'max-mara-group';
 const genderOrder = ['남성', '여성'];
@@ -113,7 +113,7 @@ function describeProductBadges(badges, product) {
     setLocalized(delivery, title + '배송', deliveryTitlesEn[product.delivery] + ' shipping', 'aria-label');
   }
   const promotion = badges.querySelector('.promotion');
-  const offer = weeklyOfferIds.has(product.id) ? 'weekly' : classicBrands.has(product.brand) ? 'classic' : '';
+  const offer = weeklyOfferIds.has(product.id) ? 'weekly' : classicOfferIds.has(product.id) ? 'classic' : '';
   promotion.hidden = !offer;
   if (offer) {
     promotion.dataset.promotion = offer;
@@ -214,7 +214,8 @@ let wishlistIds = readWishlist();
 document.querySelectorAll('[data-catalog]').forEach(list => {
   const group = list.dataset.catalog;
   const products = HOME_CATALOG[group] ?? CATALOG[group];
-  list.replaceChildren(...products.map(product => {
+  const featured = group === 'classic' ? products.filter(product => classicOfferIds.has(product.id)) : products;
+  list.replaceChildren(...featured.map(product => {
     const card = productCard(product);
     if (group === 'classic') card.querySelector('.product-card-heading').append(card.querySelector('.product-badges'));
     return card;
@@ -943,7 +944,7 @@ function showCollection(group, initialBrand, scopedBrand) {
   if (scopedBrand === maxMaraGroup) collectionProducts = allProducts.filter(product => maxMaraBrands.includes(product.brand));
   else if (scopedBrand) collectionProducts = allProducts.filter(product => product.brand === scopedBrand);
   else if (group === 'all') collectionProducts = allProducts;
-  else if (group === 'classic') collectionProducts = allProducts.filter(product => classicBrands.has(product.brand));
+  else if (group === 'classic') collectionProducts = allProducts.filter(product => classicOfferIds.has(product.id));
   else if (group === 'men' || group === 'women') {
     const gender = group === 'men' ? '남성' : '여성';
     collectionProducts = allProducts.filter(product => product.gender === gender);

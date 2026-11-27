@@ -566,6 +566,9 @@ const CATALOG = {
   ]
 };
 const homeProductLimit = 10;
+const CLASSIC_OFFER_IDS = [
+  '13886054581', '13886151623', '13886249922', '13812808803', '13763757759',
+];
 
 function homeOverseasSelection(featured, candidates) {
   const products = new Map();
