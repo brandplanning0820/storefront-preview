@@ -54,6 +54,8 @@ function asset(name) {
 
 const deliveryTitles = { overseas: '해외', domestic: '국내' };
 const deliveryTitlesEn = { overseas: 'Overseas', domestic: 'Domestic' };
+const weeklyOfferIds = new Set(CATALOG.weekly.map(product => product.id));
+const promotionTitles = { weekly: ['위클리', 'Weekly'], classic: ['기획전', 'Specials'] };
 const brandNames = new Map([
   ['BRUNELLO CUCINELLI', '브루넬로 쿠치넬리'], ['MONCLER', '몽클레르'],
   ['HERNO', '에르노'], ['BURBERRY', '버버리'], ['FENDI', '펜디'],
@@ -101,10 +103,34 @@ function countEn(count) {
   return money.format(count) + (count === 1 ? ' item' : ' items');
 }
 
-function describeDelivery(badge, product) {
-  badge.dataset.delivery = product.delivery;
-  setLocalized(badge, deliveryTitles[product.delivery], deliveryTitlesEn[product.delivery]);
-  setLocalized(badge, deliveryTitles[product.delivery] + '배송', deliveryTitlesEn[product.delivery] + ' shipping', 'aria-label');
+function describeProductBadges(badges, product) {
+  const delivery = badges.querySelector('.delivery');
+  const title = deliveryTitles[product.delivery];
+  delivery.hidden = !title;
+  if (title) {
+    delivery.dataset.delivery = product.delivery;
+    setLocalized(delivery, title, deliveryTitlesEn[product.delivery]);
+    setLocalized(delivery, title + '배송', deliveryTitlesEn[product.delivery] + ' shipping', 'aria-label');
+  }
+  const promotion = badges.querySelector('.promotion');
+  const offer = weeklyOfferIds.has(product.id) ? 'weekly' : classicBrands.has(product.brand) ? 'classic' : '';
+  promotion.hidden = !offer;
+  if (offer) {
+    promotion.dataset.promotion = offer;
+    setLocalized(promotion, ...promotionTitles[offer]);
+  }
+  badges.hidden = delivery.hidden && promotion.hidden;
+}
+
+function createWishlistButton() {
+  return document.getElementById('wishlist-button-template').content.firstElementChild.cloneNode(true);
+}
+
+function configureWishlistButton(button, product) {
+  button.dataset.wishlistId = product.id;
+  button.setAttribute('aria-pressed', String(wishlistIds.includes(product.id)));
+  const englishName = PRODUCT_NAMES_EN[product.id] || product.nameEn || product.name;
+  setLocalized(button, product.name + ' 찜하기', 'Save ' + englishName, 'aria-label');
 }
 
 function productCard(product) {
@@ -121,36 +147,30 @@ function productCard(product) {
     preview.alt = '';
     preview.decoding = 'async';
     preview.addEventListener('load', () => { preview.dataset.ready = ''; }, { once: true });
-    item.querySelector('.product-photo').insertBefore(preview, item.querySelector('.delivery'));
+    item.querySelector('.product-photo').insertBefore(preview, item.querySelector('.product-badges'));
     link.addEventListener('pointerenter', event => {
       if (!hoverPointer.matches || event.pointerType === 'touch' || preview.hasAttribute('src')) return;
       preview.src = asset(hoverPhoto);
     });
   }
-  item.querySelector('.product-brand').textContent = product.brand;
-  setLocalized(item.querySelector('.product-name'), product.name, PRODUCT_NAMES_EN[product.id]);
-  setPrice(item.querySelector('.product-price'), product.price);
-  if (product.sizes.length) item.querySelector('.product-size').textContent = product.sizes.join(' · ');
-  else setLocalized(item.querySelector('.product-size'), '품절', 'Sold out');
-  describeDelivery(item.querySelector('.delivery'), product);
+  const brand = item.querySelector('.product-brand');
+  brand.textContent = product.brand || '';
+  brand.hidden = !product.brand;
+  setLocalized(item.querySelector('.product-name'), product.name, PRODUCT_NAMES_EN[product.id] || product.nameEn);
+  const price = item.querySelector('.product-price');
+  const sizes = item.querySelector('.product-size');
+  if (Number.isFinite(product.price)) {
+    setPrice(price, product.price);
+    if (product.sizes.length) sizes.textContent = product.sizes.join(' · ');
+    else setLocalized(sizes, '품절', 'Sold out');
+  } else {
+    setLocalized(price, '가격 문의', 'Ask for price');
+    sizes.hidden = true;
+  }
+  describeProductBadges(item.querySelector('.product-badges'), product);
+  configureWishlistButton(item.appendChild(createWishlistButton()), product);
   return item;
 }
-
-document.querySelectorAll('[data-catalog]').forEach((list) => {
-  const group = list.dataset.catalog;
-  const products = HOME_CATALOG[group] ?? CATALOG[group];
-  const cards = products.map(product => {
-    const card = productCard(product);
-    if (group === 'weekly' && CATALOG.weekly.includes(product)) {
-      const badge = card.querySelector('.delivery');
-      badge.dataset.weeklyOffer = '';
-      setLocalized(badge, '위클리', 'Weekly');
-      setLocalized(badge, '위클리 해외배송', 'Weekly overseas shipping', 'aria-label');
-    }
-    return card;
-  });
-  list.replaceChildren(...cards);
-});
 
 const panel = document.getElementById('panel');
 const panelTitle = document.getElementById('panel-title');
@@ -163,7 +183,8 @@ const recentTermKey = 'brandplanning-recent-search-terms';
 const recentTermLimit = 5;
 const recentProductKey = 'brandplanning-recent-search-products';
 const recentProductLimit = 6;
-const temporarySearchHistory = new Map();
+const temporarySavedLists = new Map();
+const wishlistKey = 'brandplanning-wishlist';
 const headerShell = document.querySelector('.site-header-shell');
 const siteHeader = headerShell.querySelector('.site-header');
 
@@ -189,6 +210,16 @@ const reviewedProducts = new Map(REVIEWS.map(review => [review.productId, {
   image: review.image,
   sizes: [],
 }]));
+let wishlistIds = readWishlist();
+document.querySelectorAll('[data-catalog]').forEach(list => {
+  const group = list.dataset.catalog;
+  const products = HOME_CATALOG[group] ?? CATALOG[group];
+  list.replaceChildren(...products.map(product => {
+    const card = productCard(product);
+    if (group === 'classic') card.querySelector('.product-card-heading').append(card.querySelector('.product-badges'));
+    return card;
+  }));
+});
 const collectionTitles = {
   all: '브랜드', men: '남성', women: '여성', weekly: '위클리',
   classic: '기획전', domestic: '당일출고', best: 'BEST', new: 'NEW', 'max-mara': '막스마라',
@@ -352,27 +383,27 @@ function rankedSearch(tokens, index) {
 
 let searchPreviewTimer;
 
-function readSearchHistory(key, limit, isValid) {
-  const temporary = temporarySearchHistory.get(key);
+function readSavedList(key, limit, isValid) {
+  const temporary = temporarySavedLists.get(key);
   if (temporary) return temporary;
   try {
     const saved = JSON.parse(localStorage.getItem(key));
     if (Array.isArray(saved)) return [...new Set(saved.filter(isValid))].slice(0, limit);
-  } catch { /* Search remains available without browser storage. */ }
+  } catch { /* Keep the storefront usable without browser storage. */ }
   return [];
 }
 
-function writeSearchHistory(key, entries) {
+function writeSavedList(key, entries) {
   try {
     localStorage.setItem(key, JSON.stringify(entries));
-    temporarySearchHistory.delete(key);
+    temporarySavedLists.delete(key);
   } catch {
-    temporarySearchHistory.set(key, entries);
+    temporarySavedLists.set(key, entries);
   }
 }
 
 function recentSearchTerms() {
-  return readSearchHistory(recentTermKey, recentTermLimit, term =>
+  return readSavedList(recentTermKey, recentTermLimit, term =>
     typeof term === 'string' && term.length > 0 && term.length <= searchInput.maxLength && term === term.trim());
 }
 
@@ -381,7 +412,7 @@ function rememberSearchTerm(term) {
   const previous = recentSearchTerms();
   if (previous[0] !== term) {
     const terms = [term, ...previous.filter(entry => entry !== term)].slice(0, recentTermLimit);
-    writeSearchHistory(recentTermKey, terms);
+    writeSavedList(recentTermKey, terms);
   }
   showRecentSearchTerms();
 }
@@ -471,15 +502,53 @@ function productById(id) {
   return byId.get(id) || reviewedProducts.get(id);
 }
 
+function readWishlist() {
+  return readSavedList(wishlistKey, Infinity, id => Boolean(productById(id)));
+}
+
+function renderWishlist() {
+  wishlistList.replaceChildren(...wishlistIds.map(id => productCard(productById(id))));
+  wishlistList.hidden = !wishlistIds.length;
+  wishlistEmpty.hidden = Boolean(wishlistIds.length);
+}
+
+function updateWishlistControls() {
+  document.querySelectorAll('[data-wishlist-id]').forEach(button => {
+    button.setAttribute('aria-pressed', String(wishlistIds.includes(button.dataset.wishlistId)));
+  });
+  if (!profilePage.hidden) renderWishlist();
+}
+
+document.addEventListener('click', event => {
+  const button = event.target.closest('[data-wishlist-id]');
+  if (!button) return;
+  const id = button.dataset.wishlistId;
+  const index = [...wishlistList.children].findIndex(item => item.contains(button));
+  const saved = readWishlist();
+  wishlistIds = saved.includes(id) ? saved.filter(entry => entry !== id) : [id, ...saved];
+  writeSavedList(wishlistKey, wishlistIds);
+  updateWishlistControls();
+  if (index !== -1) {
+    const next = wishlistList.children[Math.min(index, wishlistList.children.length - 1)];
+    (next?.querySelector('[data-wishlist-id]') ?? wishlistEmpty.querySelector('a')).focus({ preventScroll: true });
+  }
+});
+
+window.addEventListener('storage', event => {
+  if (event.key !== wishlistKey && event.key !== null) return;
+  wishlistIds = readWishlist();
+  updateWishlistControls();
+});
+
 function recentlyViewedProductIds() {
-  return readSearchHistory(recentProductKey, recentProductLimit, id => Boolean(productById(id)));
+  return readSavedList(recentProductKey, recentProductLimit, id => Boolean(productById(id)));
 }
 
 function rememberViewedProduct(id) {
   const recent = recentlyViewedProductIds();
   if (recent[0] === id) return;
   const ids = [id, ...recent.filter(productId => productId !== id)].slice(0, recentProductLimit);
-  writeSearchHistory(recentProductKey, ids);
+  writeSavedList(recentProductKey, ids);
 }
 
 function renderRecentlyViewedProducts(list, empty) {
@@ -538,7 +607,7 @@ searchPanel.addEventListener('click', event => {
     const term = remove.dataset.removeSearchTerm;
     const terms = recentSearchTerms();
     const index = terms.indexOf(term);
-    if (index !== -1) writeSearchHistory(recentTermKey, terms.filter(entry => entry !== term));
+    if (index !== -1) writeSavedList(recentTermKey, terms.filter(entry => entry !== term));
     showRecentSearchTerms(Math.max(0, index));
     return;
   }
@@ -761,6 +830,8 @@ const cartTitle = document.getElementById('cart-title');
 const profilePage = document.getElementById('profile-page');
 const profileTitle = document.getElementById('profile-title');
 const profileLinks = document.querySelectorAll('.account-links a[href="#mypage"]');
+const wishlistList = document.getElementById('profile-wishlist-products');
+const wishlistEmpty = document.getElementById('profile-wishlist-empty');
 const editorialArticle = document.getElementById('editorial-article');
 const editorialTitle = document.getElementById('editorial-title');
 const editorialOriginal = document.getElementById('editorial-original');
@@ -772,6 +843,10 @@ const detailName = document.getElementById('detail-name');
 const detailStatus = document.getElementById('detail-status');
 const detailCartLink = document.getElementById('detail-cart-link');
 const detailBuyNow = document.getElementById('detail-buy-now');
+const detailWishlistButtons = [...productPage.querySelectorAll('.detail-actions, .detail-inquiry-actions')]
+  .map(actions => actions.appendChild(createWishlistButton()));
+const detailRecent = document.getElementById('detail-recent');
+const detailRecentProducts = document.getElementById('detail-recent-products');
 const skipLink = document.querySelector('.skip-link');
 const siteTitle = document.title;
 let currentProduct;
@@ -1069,17 +1144,18 @@ function showProduct(product, orderItem) {
     brandTitleEn(parentBrand) || collectionTitlesEn[parentGroup] || 'Products');
   storeParent.removeAttribute('aria-current');
   showProductGallery(product);
-  const delivery = document.getElementById('detail-delivery');
+  const badges = document.getElementById('detail-badges');
   const brand = document.getElementById('detail-brand');
-  delivery.hidden = !product.delivery;
+  describeProductBadges(badges, product);
   brand.textContent = product.brand || '';
-  brand.parentElement.hidden = !product.brand && !product.delivery;
-  if (product.delivery) describeDelivery(delivery, product);
+  brand.hidden = !product.brand;
+  brand.parentElement.hidden = brand.hidden && badges.hidden;
+  detailWishlistButtons.forEach(button => configureWishlistButton(button, product));
   setLocalized(detailName, product.name, PRODUCT_NAMES_EN[product.id] || product.nameEn);
   const price = document.getElementById('detail-price');
   price.hidden = !hasPrice;
   if (hasPrice) setPrice(price, product.price);
-  document.getElementById('detail-deadline').hidden = group !== 'weekly';
+  document.getElementById('detail-deadline').hidden = !weeklyOfferIds.has(product.id);
   showProductSpecs(product);
   if (!hasPrice) return;
   if (orderItem) detailQuantity.value = orderItem.quantity;
@@ -1560,6 +1636,9 @@ function renderRoute(moveFocus = false) {
     if (!returning) detailReturnHash = wasCart ? '#cart' : wasProfile ? '#mypage' : wasReviews ? '#reviews/all' : currentCollectionHash;
     showProduct(product, returning);
     rememberViewedProduct(product.id);
+    const recent = recentlyViewedProductIds().filter(id => id !== product.id).map(id => productCard(productById(id)));
+    detailRecentProducts.replaceChildren(...recent);
+    detailRecent.hidden = !recent.length;
   } else if (checkout) {
     showCheckout(checkout);
   } else if (group) {
@@ -1586,7 +1665,10 @@ function renderRoute(moveFocus = false) {
         else showEditorialEntry(entry, listPath);
       } else storeParent.setAttribute('aria-current', 'page');
       if (showCart) renderCart();
-      if (showProfile) renderRecentlyViewedProducts(document.getElementById('profile-recent-products'), document.getElementById('profile-recent-empty'));
+      if (showProfile) {
+        renderWishlist();
+        renderRecentlyViewedProducts(document.getElementById('profile-recent-products'), document.getElementById('profile-recent-empty'));
+      }
     } else {
       if (wasStore) document.getElementById(hash.slice(1) || 'top')?.scrollIntoView();
       else if (!moveFocus && (!hash || hash === '#top')) window.scrollTo(0, 0);

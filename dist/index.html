@@ -21,9 +21,9 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=profile-and-view-history">
+  <link rel="stylesheet" href="styles.css?v=wishlist-and-promotion-badges">
   <script src="catalog.js?v=home-ten-products" defer></script>
-  <script src="app.js?v=profile-and-view-history" defer></script>
+  <script src="app.js?v=wishlist-and-promotion-badges" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -217,13 +217,20 @@
           <div class="detail-photo"><img id="detail-image" alt=""></div>
         </div>
         <div class="detail-info">
-          <div class="detail-meta"><span id="detail-delivery" class="delivery"></span><span class="product-brand" id="detail-brand"></span></div>
+          <div class="detail-meta">
+            <span class="product-badges" id="detail-badges">
+              <span class="product-badge delivery"></span><span class="product-badge promotion" hidden></span>
+            </span>
+            <span class="product-brand" id="detail-brand"></span>
+          </div>
           <h1 id="detail-name" tabindex="-1"></h1>
           <strong class="detail-price" id="detail-price"></strong>
           <p class="detail-description" id="detail-description"></p>
           <div class="detail-availability" id="detail-availability" hidden>
             <p data-en="Contact us to confirm the price and available sizes.">가격과 주문 가능 사이즈는 문의해 주세요.</p>
-            <button class="button dark" type="button" data-inquiry-launch aria-haspopup="dialog" data-en="Ask about this product">상품 문의하기</button>
+            <div class="detail-inquiry-actions">
+              <button class="button dark" type="button" data-inquiry-launch aria-haspopup="dialog" data-en="Ask about this product">상품 문의하기</button>
+            </div>
           </div>
           <div class="weekly-deadline detail-deadline" id="detail-deadline" hidden>
             <h2 id="detail-deadline-heading" data-en="Weekly order deadline">위클리 주문 마감</h2>
@@ -266,6 +273,10 @@
             <p class="detail-material-description" id="detail-material-description" hidden></p>
           </section>
         </div>
+      </section>
+      <section class="detail-recent" id="detail-recent" aria-labelledby="detail-recent-heading" hidden>
+        <div class="section-heading"><h2 id="detail-recent-heading" data-en="Recently viewed">최근 본 상품</h2></div>
+        <ul class="product-grid" id="detail-recent-products"></ul>
       </section>
     </section>
     <section id="collection-page" aria-labelledby="collection-title" hidden>
@@ -324,6 +335,14 @@
           <a class="button outline" href="#cart" data-en="View cart">장바구니 보기</a>
         </section>
       </div>
+      <section class="profile-history" aria-labelledby="profile-wishlist-heading">
+        <h2 id="profile-wishlist-heading" data-en="Saved products">찜한 상품</h2>
+        <div class="profile-wishlist-empty" id="profile-wishlist-empty">
+          <p data-en="You haven’t saved any products yet.">아직 찜한 상품이 없어요.</p>
+          <a class="button outline" href="#catalog/all" data-en="Browse products">상품 둘러보기</a>
+        </div>
+        <ul class="product-grid" id="profile-wishlist-products" hidden></ul>
+      </section>
       <section class="profile-history" aria-labelledby="profile-recent-heading">
         <h2 id="profile-recent-heading" data-en="Recently viewed">최근 본 상품</h2>
         <p id="profile-recent-empty" data-en="You haven’t viewed any products yet.">최근 본 상품이 없어요.</p>
@@ -490,10 +509,24 @@
   <template id="product-template">
     <li class="product">
       <a class="product-link">
-        <div class="product-photo"><img alt="" loading="lazy"><span class="delivery">해외</span></div>
-        <div class="product-copy"><span class="product-brand"></span><span class="product-name"></span><strong class="product-price"></strong><span class="product-size"></span></div>
+        <div class="product-photo">
+          <img alt="" loading="lazy">
+          <span class="product-badges"><span class="product-badge delivery"></span><span class="product-badge promotion" hidden></span></span>
+        </div>
+        <div class="product-copy">
+          <div class="product-card-heading"><span class="product-brand"></span></div>
+          <span class="product-name"></span><strong class="product-price"></strong><span class="product-size"></span>
+        </div>
       </a>
     </li>
+  </template>
+
+  <template id="wishlist-button-template">
+    <button class="wishlist-toggle" type="button" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <path d="M12 20.3 4.1 12.6a4.7 4.7 0 0 1 6.6-6.7L12 7.2l1.3-1.3a4.7 4.7 0 0 1 6.6 6.7Z"></path>
+      </svg>
+    </button>
   </template>
 
   <template id="cart-item-template">
