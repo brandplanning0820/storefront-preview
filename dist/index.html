@@ -23,7 +23,7 @@
   </script>
   <link rel="stylesheet" href="styles.css?v=store-inquiries">
   <script src="catalog.js?v=smartstore-weekly-selection" defer></script>
-  <script src="app.js?v=store-inquiries" defer></script>
+  <script src="app.js?v=product-inquiry-fields" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -570,16 +570,18 @@
         <label><input class="visually-hidden" type="radio" name="topic" value="product" checked><span data-en="Product inquiry">상품 문의</span></label>
         <label><input class="visually-hidden" type="radio" name="topic" value="delivery"><span data-en="Delivery inquiry">배송 문의</span></label>
       </fieldset>
-      <label><span data-en="Product name or listing link (optional)">상품명 또는 판매 페이지 링크 (선택)</span><input name="product" maxlength="400"></label>
-      <label><span data-en="Size (optional)">사이즈 (선택)</span><input name="size" maxlength="40"></label>
-      <label hidden><span data-en="Order number (optional)">주문번호 (선택)</span><input name="order" maxlength="80" disabled></label>
+      <label data-inquiry-topic="product"><span data-en="Brand">상품 브랜드</span><input name="brand" required pattern=".*\S.*" maxlength="80"></label>
+      <label data-inquiry-topic="product"><span data-en="Product listing URL">판매 페이지 URL</span><input type="url" name="url" placeholder="https://" pattern="https?://.+" required maxlength="400"></label>
+      <label data-inquiry-topic="product"><span data-en="Preferred size">원하는 사이즈</span><input name="size" required pattern=".*\S.*" maxlength="40"></label>
+      <label data-inquiry-topic="delivery" hidden><span data-en="Order number (optional)">주문번호 (선택)</span><input name="order" maxlength="80" disabled></label>
       <label>
         <span data-en="Contact number">회신받을 연락처</span>
         <input type="tel" name="contact" autocomplete="tel" required maxlength="32" pattern=".*\S.*"
           placeholder="예: 010-1234-5678" data-en-placeholder="e.g. +82 10-1234-5678">
       </label>
-      <label><span data-en="Subject">제목</span><input name="subject" required pattern=".*\S.*" maxlength="100"></label>
-      <label><span data-en="Message">문의 내용</span><textarea name="message" rows="5" required maxlength="1000"></textarea></label>
+      <label data-inquiry-topic="product"><span data-en="Additional details">기타 요청사항</span><textarea name="details" rows="4" maxlength="500"></textarea></label>
+      <label data-inquiry-topic="delivery" hidden><span data-en="Subject">제목</span><input name="subject" required pattern=".*\S.*" maxlength="100" disabled></label>
+      <label data-inquiry-topic="delivery" hidden><span data-en="Message">문의 내용</span><textarea name="message" rows="5" required maxlength="1000" disabled></textarea></label>
       <div class="inquiry-actions">
         <button type="submit" class="button dark" data-en="Submit inquiry">문의하기</button>
       </div>

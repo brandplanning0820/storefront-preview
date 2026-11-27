@@ -1487,16 +1487,15 @@ chatForm.addEventListener('submit', event => {
 
 function createInquiryForm(startingTopic = 'product') {
   const form = document.getElementById('inquiry-template').content.firstElementChild.cloneNode(true);
-  const { topic, product, size, order, message } = form.elements;
+  const { topic, message } = form.elements;
+  const topicFields = form.querySelectorAll('[data-inquiry-topic]');
   const status = form.querySelector('.inquiry-status');
   const updateFields = () => {
-    const isDelivery = topic.value === 'delivery';
-    for (const field of [product, size]) {
-      field.disabled = isDelivery;
-      field.closest('label').hidden = isDelivery;
+    for (const label of topicFields) {
+      const inactive = label.dataset.inquiryTopic !== topic.value;
+      label.hidden = inactive;
+      label.querySelector('input, textarea').disabled = inactive;
     }
-    order.disabled = !isDelivery;
-    order.closest('label').hidden = !isDelivery;
   };
   topic.value = startingTopic;
   updateFields();
@@ -1506,7 +1505,7 @@ function createInquiryForm(startingTopic = 'product') {
   });
   form.addEventListener('submit', event => {
     event.preventDefault();
-    if (!message.value.trim()) {
+    if (!message.disabled && !message.value.trim()) {
       setLocalized(status, '문의 내용을 입력해 주세요.', 'Enter your message.');
       message.focus();
       return;
@@ -1525,8 +1524,11 @@ function openInquiry(event) {
   closeChat(false);
   const form = createInquiryForm(event.currentTarget.dataset.inquiryLaunch || 'product');
   if (!productPage.hidden && currentProduct) {
-    form.elements.product.value = [currentProduct.brand, currentProduct.name].filter(Boolean).join(' ');
-    form.elements.size.value = detailForm.querySelector('[name="size"]:checked')?.value || '';
+    const { brand, url, size, details } = form.elements;
+    brand.value = currentProduct.brand || '';
+    if (/^https?:$/.test(location.protocol)) url.value = location.href;
+    size.value = detailForm.querySelector('[name="size"]:checked')?.value || '';
+    if (detailForm.hidden) details.value = currentProduct.name;
   }
   openPanel('문의하기', form, 'Contact us');
 }
