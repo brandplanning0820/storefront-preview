@@ -21,9 +21,9 @@
       }), { once: true });
     }
   </script>
-  <link rel="stylesheet" href="styles.css?v=mobile-search-layout">
+  <link rel="stylesheet" href="styles.css?v=arrival-breadcrumbs">
   <script src="catalog.js?v=cucinelli-fw-classic-offer" defer></script>
-  <script src="app.js?v=cucinelli-fw-classic-offer" defer></script>
+  <script src="app.js?v=arrival-breadcrumbs" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#main" data-en="Skip to content">본문으로 바로가기</a>
@@ -207,7 +207,16 @@
   </main>
 
   <main class="wrap store-page" id="store-page" hidden>
-    <nav class="store-path" aria-label="현재 위치" data-en-aria-label="Breadcrumb"><a href="#top" data-en="Home">홈</a><span aria-hidden="true">/</span><a id="store-parent"></a></nav>
+    <nav class="store-path" aria-label="현재 위치" data-en-aria-label="Breadcrumb">
+      <a href="#top" data-en="Home">홈</a>
+      <span class="store-path-segment" id="store-arrivals-path" hidden>
+        <span aria-hidden="true">/</span><a href="#arrivals/all" data-en="Arrivals">입고 소식</a>
+      </span>
+      <span class="store-path-segment"><span aria-hidden="true">/</span><a id="store-parent"></a></span>
+      <span class="store-path-segment" id="store-arrival-post-path" hidden>
+        <span aria-hidden="true">/</span><span id="store-arrival-post-title" aria-current="page"></span>
+      </span>
+    </nav>
     <section id="product-page" aria-labelledby="detail-name" hidden>
       <div class="detail-layout">
         <div class="detail-gallery">

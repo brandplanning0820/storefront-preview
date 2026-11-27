@@ -555,8 +555,10 @@ html[lang="en"] .hero-english { position: absolute; inset: 0 auto 0 0; display: 
 
 .store-page { margin-block: clamp(20px, 3vw, 54px) clamp(70px, 9vw, 166px); max-width: 1440px; }
 .store-path { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; color: var(--muted); font-size: .875rem; margin-bottom: 24px; }
+.store-path-segment { display: inline-flex; align-items: baseline; gap: 10px; min-width: 0; max-width: 100%; }
+.store-path-segment > :last-child { min-width: 0; overflow-wrap: anywhere; }
 .store-path a:hover { text-decoration: underline; text-underline-offset: 4px; }
-.store-path a[aria-current] { color: var(--ink); }
+.store-path [aria-current] { color: var(--ink); }
 .store-page h1:focus { outline: none; }
 .profile-heading { align-items: center; margin-bottom: clamp(18px, 2vw, 30px); }
 .profile-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); gap: clamp(12px, 2vw, 22px); }
